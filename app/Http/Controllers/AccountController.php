@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAccountRequest;
 use App\Models\Account;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
+
+public function __construct(public AccountService $accountService)
+    {
+        $this->accountService = $accountService;
+    }
     public function index()
     {
         $accounts = Account::all();
@@ -19,17 +26,13 @@ class AccountController extends Controller
         return view('accounts.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAccountRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'string', 'max:50'],
-            'balance' => ['required', 'numeric', 'min:0'],
-        ]);
+        $validatedData = $request->validated();
 
-        Account::create($data);
-
-        return redirect()->route('accounts.index')->with('success', 'Cuenta creada correctamente.');
+        $account = $this->accountService->crear($validatedData);
+    
+        return $account;
     }
 
     public function show(Account $account)

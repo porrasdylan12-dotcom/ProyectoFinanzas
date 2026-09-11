@@ -47,4 +47,37 @@ class User extends Authenticatable implements PasskeyUser
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+    public function accounts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    public function categories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function budgets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Budget::class);
+    }
+
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(Transaction::class, Account::class);
+    }
+
+    public function groups(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'user_group', 'user_id', 'group_id')
+
+       ->withPivot('role', 'joined_at')
+       ->withTimestamps();
+    }
+
+    public function sharedExpenses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SharedExpenses::class);
+    }
+
 }

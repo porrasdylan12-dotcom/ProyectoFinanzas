@@ -30,8 +30,8 @@ public function __construct(public AccountService $accountService)
     {
         $validatedData = $request->validated();
 
-        $account = $this->accountService->crear($validatedData);
-
+        $account = $this->accountService->create($validatedData);
+    
         return $account;
     }
 
@@ -45,17 +45,13 @@ public function __construct(public AccountService $accountService)
         return view('accounts.edit', compact('account'));
     }
 
-    public function update(Request $request, Account $account)
+    public function update(StoreAccountRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'string', 'max:50'],
-            'balance' => ['required', 'numeric', 'min:0'],
-        ]);
+        $validatedData = $request->validated();
 
-        $account->update($data);
+        $account = $this->accountService->update($validatedData);
 
-        return redirect()->route('accounts.index')->with('success', 'Cuenta actualizada correctamente.');
+        return $account;
     }
 
     public function destroy(Account $account)

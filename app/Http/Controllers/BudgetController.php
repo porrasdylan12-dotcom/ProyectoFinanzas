@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BudgetRequest;
+use App\Services\BudgetService;
 use Illuminate\Http\Request;
 
 class BudgetController extends Controller
 {
+	public function __construct(public BudgetService $budgetService)
+    {
+        $this->budgetService = $budgetService;
+    }
 	public function index()
 	{
 		return view('budgets.index');
 	}
 
-	public function create()
-	{
-		return view('budgets.create');
-	}
 
-	public function store(Request $request)
-	{
-		$validated = $request->validate([
-			'name' => ['required', 'string', 'max:255'],
-			'amount' => ['required', 'numeric', 'min:0'],
-		]);
+	public function store(BudgetRequest $request)
+    {
+        $validatedData = $request->validated();
 
-		// Persist the validated budget data here.
-		return redirect()->route('budgets.index');
+        $account = $this->budgetService->create($validatedData);
+    
+        return $account;
 	}
 }

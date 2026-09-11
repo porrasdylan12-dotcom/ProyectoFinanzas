@@ -28,4 +28,15 @@ class StoreAccountRequest extends FormRequest
             'balance' => ['required', 'numeric', 'min:0'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'El nombre de la cuenta es obligatorio.',
+            'type.required' => 'El tipo de cuenta es obligatorio.',
+            'balance.required' => 'El saldo inicial es obligatorio.',
+            'balance.numeric' => 'El saldo inicial debe ser un número válido.',
+            'balance.min' => 'El saldo inicial no puede ser menor a 0.',
+        ];
+    }
 }

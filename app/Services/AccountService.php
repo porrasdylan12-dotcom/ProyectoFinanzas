@@ -12,9 +12,16 @@ class AccountService
         return $account->delete();
     }
 
-    public function crear(array $data)
+    public function create(array $data)
     {
 
         return Account::create($data);
+    }
+
+    public function update(array $data)
+    {
+        $account = Account::findOrFail($data['id']);
+        $account->update($data);
+        return $account;
     }
 }

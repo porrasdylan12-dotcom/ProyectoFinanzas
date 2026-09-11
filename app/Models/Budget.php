@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Budget extends Model
 {
     use HasFactory;
 
+    protected $table = 'budgets';
+
     protected $fillable = [
-        'id',
-        'name',
-        'category_id',
         'user_id',
+        'category_id',
+        'name',
         'maxAmount',
         'month',
         'year',
@@ -25,13 +27,13 @@ class Budget extends Model
         'year' => 'integer',
     ];
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

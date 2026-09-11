@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SharedExpenses extends Model
 {
@@ -12,22 +14,35 @@ class SharedExpenses extends Model
     protected $table = 'shared_expenses';
 
     protected $fillable = [
-        'id',
         'group_id',
         'user_id',
         'amount',
         'description',
         'date',
+        'participants',
     ];
 
     protected $casts = [
-        'date' => 'date',
         'amount' => 'decimal:2',
+        'date' => 'date',
         'participants' => 'array',
     ];
 
-    public function user()
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(Group::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function debts(): HasMany
+    {
+        return $this->hasMany(
+            GroupDebt::class,
+            'shared_expense_id'
+            );
     }
 }

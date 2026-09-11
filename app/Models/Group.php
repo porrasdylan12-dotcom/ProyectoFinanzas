@@ -4,25 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Group extends Model
 {
-    /** @use HasFactory<\Database\Factories\GroupFactory> */
     use HasFactory;
 
+    protected $table = 'groups';
+
     protected $fillable = [
-        'id',
         'name',
     ];
 
-    protected $hidden = [
-
-    ];
-
-    public function users()
+    public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_group', 'group_id', 'user_id');
+        return $this->belongsToMany(
+            User::class,
+            'user_group',
+            'group_id',
+            'user_id'
+        )
+        ->withPivot('role', 'joined_at')
+        ->withTimestamps();
     }
 
-    protected $table = 'group';
+    public function sharedExpenses(): HasMany
+    {
+        return $this->hasMany(SharedExpenses::class);
+    }
 }

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GroupDebt extends Model
 {
@@ -14,9 +13,9 @@ class GroupDebt extends Model
     protected $table = 'group_debts';
 
     protected $fillable = [
-        'id',
-        'sharedExpense_id',
-        'user_id',
+        'shared_expense_id',
+        'debtor_id',
+        'creditor_id',
         'name',
         'description',
         'total_amount',
@@ -27,9 +26,27 @@ class GroupDebt extends Model
         'total_amount' => 'decimal:2',
     ];
 
-    public function group(): BelongsTo
+    public function sharedExpense(): BelongsTo
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(
+            SharedExpenses::class,
+            'shared_expense_id'
+        );
     }
 
+    public function debtor(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'debtor_id'
+        );
+    }
+
+    public function creditor(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'creditor_id'
+        );
+    }
 }

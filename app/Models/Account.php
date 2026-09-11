@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
 {
@@ -12,9 +14,9 @@ class Account extends Model
     protected $table = 'accounts';
 
     protected $fillable = [
-        'id',
         'user_id',
         'name',
+        'type',
         'balance',
     ];
 
@@ -22,8 +24,13 @@ class Account extends Model
         'balance' => 'decimal:2',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

@@ -10,58 +10,39 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'transactions';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'id',
         'account_id',
         'category_id',
+        'type',
         'amount',
         'description',
-        'date',
+        'transaction_date',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'amount' => 'decimal:2',
-        'date' => 'date',
+        'transaction_date' => 'date',
     ];
 
-    /**
-     * Get the user that owns the transaction.
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the account associated with the transaction.
-     */
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
     }
 
-    /**
-     * Get the category associated with the transaction.
-     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function scopeExpenses($query)
+    {
+        return $query->where('transactions.type', 'gasto');
+    }
+
+    public function scopeIncome($query)
+    {
+        return $query->where('transactions.type', 'ingreso');
     }
 }

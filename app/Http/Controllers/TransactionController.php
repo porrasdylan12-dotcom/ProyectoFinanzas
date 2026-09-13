@@ -2,53 +2,63 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TransactionRequest;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
+use App\Services\TransactionService;
 
 class TransactionController extends Controller
 {
-	public function index()
-	{
-		return response()->json(Transaction::latest()->get());
-	}
+    public function __construct(public TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
 
-	public function store(Request $request)
-	{
-		$data = $request->validate([
-			'type' => ['required', 'string', 'max:50'],
-			'amount' => ['required', 'numeric', 'min:0'],
-			'description' => ['nullable', 'string'],
-			'transaction_date' => ['required', 'date'],
-		]);
+    public function index()
+    {
+        $transactions = Transaction::latest()->get();
 
-		$transaction = Transaction::create($data);
+        return view('transactions.index', compact('transactions'));
+    }
 
-		return response()->json($transaction, 201);
-	}
+    public function create()
+    {
+        return view('transactions.create');
+    }
 
-	public function show(Transaction $transaction)
-	{
-		return response()->json($transaction);
-	}
+    public function store(TransactionRequest $request)
+    {
+        $transaction = $this->transactionService->create($request->validated());
 
-	public function update(Request $request, Transaction $transaction)
-	{
-		$data = $request->validate([
-			'type' => ['sometimes', 'string', 'max:50'],
-			'amount' => ['sometimes', 'numeric', 'min:0'],
-			'description' => ['nullable', 'string'],
-			'transaction_date' => ['sometimes', 'date'],
-		]);
+        return redirect()
+            ->route('transactions.show', $transaction)
+            ->with('success', 'Transacción creada correctamente.');
+    }
 
-		$transaction->update($data);
+    public function show(Transaction $transaction)
+    {
+        return view('transactions.show', compact('transaction'));
+    }
 
-		return response()->json($transaction);
-	}
+    public function edit(Transaction $transaction)
+    {
+        return view('transactions.edit', compact('transaction'));
+    }
 
-	public function destroy(Transaction $transaction)
-	{
-		$transaction->delete();
+    public function update(TransactionRequest $request, Transaction $transaction)
+    {
+        $this->transactionService->update($transaction, $request->validated());
 
-		return response()->noContent();
-	}
+        return redirect()
+            ->route('transactions.show', $transaction)
+            ->with('success', 'Transacción actualizada correctamente.');
+    }
+
+    public function destroy(Transaction $transaction)
+    {
+        $transaction->delete();
+
+        return redirect()
+            ->route('transactions.index')
+            ->with('success', 'Transacción eliminada correctamente.');
+    }
 }

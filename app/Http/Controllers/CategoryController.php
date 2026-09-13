@@ -2,65 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
-use CategoryRequest;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-	public function __construct(public CategoryService $categoryService)
+    public function __construct(public CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
     }
-	public function index()
-	{
-		$categories = Category::all();
 
-		return view('categories.index', compact('categories'));
-	}
+    public function index()
+    {
+        $categories = Category::all();
 
-	public function create()
-	{
-		return view('categories.create');
-	}
+        return view('categories.index', compact('categories'));
+    }
 
-	public function store( $request)
-	{
-		$validatedData = $request->validated();
+    public function create()
+    {
+        return view('categories.create');
+    }
 
-        $account = $this->categoryService->create($validatedData);
-    
-        return $account;
-	}
+    public function store(CategoryRequest $request)
+    {
+        $validatedData = $request->validated();
+        $validatedData['user_id'] = $request->user()->id;
 
-	public function show(Category $category)
-	{
-		return view('categories.show', compact('category'));
-	}
+        $this->categoryService->create($validatedData);
 
-	public function edit(Category $category)
-	{
-		return view('categories.edit', compact('category'));
-	}
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Categoría creada correctamente.');
+    }
 
-	public function update(Request $request, Category $category)
-	{
-		$validated = $request->validate([
-			'name' => ['required', 'string', 'max:255'],
-		]);
+    public function show(Category $category)
+    {
+        return view('categories.show', compact('category'));
+    }
 
-		$category->update($validated);
+    public function edit(Category $category)
+    {
+        return view('categories.edit', compact('category'));
+    }
 
-		return redirect()->route('categories.index')
-			->with('success', 'Categoría actualizada correctamente.');
-	}
+    public function update(CategoryRequest $request, Category $category)
+    {
+        $this->categoryService->update($category, $request->validated());
 
-	public function destroy(Category $category)
-	{
-		$category->delete();
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Categoría actualizada correctamente.');
+    }
 
-		return redirect()->route('categories.index')
-			->with('success', 'Categoría eliminada correctamente.');
-	}
+    public function destroy(Category $category)
+    {
+        $category->delete();
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Categoría eliminada correctamente.');
+    }
 }

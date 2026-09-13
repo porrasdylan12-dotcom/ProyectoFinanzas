@@ -9,7 +9,7 @@ class CategoryService
     /**
      * Create a new category.
      */
-    public function create(array $data)
+    public function create(array $data): Category
     {
         return Category::create($data);
     }
@@ -17,10 +17,10 @@ class CategoryService
     /**
      * Update a category.
      */
-    public function update(array $data)
+    public function update(Category $category, array $data): Category
     {
-        $category = Category::findOrFail($data['id']);
         $category->update($data);
+
         return $category;
     }
 }

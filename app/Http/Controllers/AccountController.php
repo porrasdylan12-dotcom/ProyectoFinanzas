@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAccountRequest;
 use App\Models\Account;
 use App\Services\AccountService;
-use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {

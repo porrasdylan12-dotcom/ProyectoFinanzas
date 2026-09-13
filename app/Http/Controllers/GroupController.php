@@ -2,29 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Group;
+use App\Http\Requests\GroupRequest;
+use App\Services\GroupService;
 
 class GroupController extends Controller
 {
-	/**
-	 * Display a listing of the groups.
-	 */
-	public function index()
-	{
-		return view('groups.index');
-	}
+    public function __construct(public GroupService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
 
-	/**
-	 * Store a newly created group.
-	 */
-	public function store(Request $request)
-	{
-		$validated = $request->validate([
-			'name' => ['required', 'string', 'max:255'],
-		]);
+    /**
+     * Display a listing of the groups.
+     */
+    public function index()
+    {
+        return view('groups.index');
+    }
 
-		Group::create($validated);
-		return redirect()->route('groups.index');
-	}
+    /**
+     * Store a newly created group.
+     */
+    public function store(GroupRequest $request)
+    {
+        $this->groupService->create($request->validated());
+
+        return redirect()
+            ->route('groups.index')
+            ->with('success', 'Grupo creado correctamente.');
+    }
 }

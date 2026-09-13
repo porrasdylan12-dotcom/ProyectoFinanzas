@@ -2,65 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SharedExpensesRequest;
 use App\Models\SharedExpenses;
-use Illuminate\Http\Request;
+use App\Services\SharedExpensesService;
 
 class SharedExpensesController extends Controller
 {
-	public function index()
-	{
-		$sharedExpenses = SharedExpenses::latest()->paginate(15);
+    public function __construct(public SharedExpensesService $sharedExpensesService)
+    {
+        $this->sharedExpensesService = $sharedExpensesService;
+    }
 
-		return view('shared_expenses.index', compact('sharedExpenses'));
-	}
+    public function index()
+    {
+        $sharedExpenses = SharedExpenses::latest()->paginate(15);
 
-	public function create()
-	{
-		return view('shared_expenses.create');
-	}
+        return view('shared_expenses.index', compact('sharedExpenses'));
+    }
 
-	public function store(Request $request)
-	{
-		$data = $request->validate([
-			// Add the model's required fields here.
-		]);
+    public function create()
+    {
+        return view('shared_expenses.create');
+    }
 
-		$sharedExpense = SharedExpenses::create($data);
+    public function store(SharedExpensesRequest $request)
+    {
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
 
-		return redirect()
-			->route('shared-expenses.show', $sharedExpense)
-			->with('success', 'Shared expense created successfully.');
-	}
+        $sharedExpense = $this->sharedExpensesService->create($data);
 
-	public function show(SharedExpenses $sharedExpense)
-	{
-		return view('shared_expenses.show', compact('sharedExpense'));
-	}
+        return redirect()
+            ->route('shared-expenses.show', $sharedExpense)
+            ->with('success', 'Gasto compartido creado correctamente.');
+    }
 
-	public function edit(SharedExpenses $sharedExpense)
-	{
-		return view('shared_expenses.edit', compact('sharedExpense'));
-	}
+    public function show(SharedExpenses $sharedExpense)
+    {
+        return view('shared_expenses.show', compact('sharedExpense'));
+    }
 
-	public function update(Request $request, SharedExpenses $sharedExpense)
-	{
-		$data = $request->validate([
-			// Add the model's required fields here.
-		]);
+    public function edit(SharedExpenses $sharedExpense)
+    {
+        return view('shared_expenses.edit', compact('sharedExpense'));
+    }
 
-		$sharedExpense->update($data);
+    public function update(SharedExpensesRequest $request, SharedExpenses $sharedExpense)
+    {
+        $this->sharedExpensesService->update($sharedExpense, $request->validated());
 
-		return redirect()
-			->route('shared-expenses.show', $sharedExpense)
-			->with('success', 'Shared expense updated successfully.');
-	}
+        return redirect()
+            ->route('shared-expenses.show', $sharedExpense)
+            ->with('success', 'Gasto compartido actualizado correctamente.');
+    }
 
-	public function destroy(SharedExpenses $sharedExpense)
-	{
-		$sharedExpense->delete();
+    public function destroy(SharedExpenses $sharedExpense)
+    {
+        $sharedExpense->delete();
 
-		return redirect()
-			->route('shared-expenses.index')
-			->with('success', 'Shared expense deleted successfully.');
-	}
+        return redirect()
+            ->route('shared-expenses.index')
+            ->with('success', 'Gasto compartido eliminado correctamente.');
+    }
 }

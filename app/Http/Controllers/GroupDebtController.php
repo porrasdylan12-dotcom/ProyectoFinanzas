@@ -2,53 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupDebtRequest;
 use App\Models\GroupDebt;
-use Illuminate\Http\Request;
+use App\Services\GroupDebtService;
 
 class GroupDebtController extends Controller
 {
-	public function index()
-	{
-		return response()->json(GroupDebt::all());
-	}
+    public function __construct(public GroupDebtService $groupDebtService)
+    {
+        $this->groupDebtService = $groupDebtService;
+    }
 
-	public function store(Request $request)
-	{
-		$data = $request->validate([
-			'group_id' => ['required', 'integer'],
-			'user_id' => ['required', 'integer'],
-			'amount' => ['required', 'numeric', 'min:0'],
-			'description' => ['nullable', 'string'],
-			'status' => ['nullable', 'string'],
-		]);
+    public function index()
+    {
+        $groupDebts = GroupDebt::all();
 
-		return response()->json(GroupDebt::create($data), 201);
-	}
+        return view('group_debts.index', compact('groupDebts'));
+    }
 
-	public function show(GroupDebt $groupDebt)
-	{
-		return response()->json($groupDebt);
-	}
+    public function create()
+    {
+        return view('group_debts.create');
+    }
 
-	public function update(Request $request, GroupDebt $groupDebt)
-	{
-		$data = $request->validate([
-			'group_id' => ['sometimes', 'integer'],
-			'user_id' => ['sometimes', 'integer'],
-			'amount' => ['sometimes', 'numeric', 'min:0'],
-			'description' => ['nullable', 'string'],
-			'status' => ['nullable', 'string'],
-		]);
+    public function store(GroupDebtRequest $request)
+    {
+        $data = $request->validated();
+        $data['debtor_id'] = $request->user()->id;
 
-		$groupDebt->update($data);
+        $groupDebt = $this->groupDebtService->create($data);
 
-		return response()->json($groupDebt);
-	}
+        return redirect()
+            ->route('group-debts.show', $groupDebt)
+            ->with('success', 'Deuda creada correctamente.');
+    }
 
-	public function destroy(GroupDebt $groupDebt)
-	{
-		$groupDebt->delete();
+    public function show(GroupDebt $groupDebt)
+    {
+        return view('group_debts.show', compact('groupDebt'));
+    }
 
-		return response()->json(null, 204);
-	}
+    public function edit(GroupDebt $groupDebt)
+    {
+        return view('group_debts.edit', compact('groupDebt'));
+    }
+
+    public function update(GroupDebtRequest $request, GroupDebt $groupDebt)
+    {
+        $this->groupDebtService->update($groupDebt, $request->validated());
+
+        return redirect()
+            ->route('group-debts.show', $groupDebt)
+            ->with('success', 'Deuda actualizada correctamente.');
+    }
+
+    public function destroy(GroupDebt $groupDebt)
+    {
+        $groupDebt->delete();
+
+        return redirect()
+            ->route('group-debts.index')
+            ->with('success', 'Deuda eliminada correctamente.');
+    }
 }

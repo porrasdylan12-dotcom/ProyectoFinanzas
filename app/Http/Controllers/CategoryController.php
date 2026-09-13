@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\CategoryService;
+use CategoryRequest;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+	public function __construct(public CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
 	public function index()
 	{
 		$categories = Category::all();
@@ -19,16 +25,13 @@ class CategoryController extends Controller
 		return view('categories.create');
 	}
 
-	public function store(Request $request)
+	public function store( $request)
 	{
-		$validated = $request->validate([
-			'name' => ['required', 'string', 'max:255'],
-		]);
+		$validatedData = $request->validated();
 
-		Category::create($validated);
-
-		return redirect()->route('categories.index')
-			->with('success', 'Categoría creada correctamente.');
+        $account = $this->categoryService->create($validatedData);
+    
+        return $account;
 	}
 
 	public function show(Category $category)

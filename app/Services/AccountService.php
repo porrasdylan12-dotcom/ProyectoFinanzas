@@ -2,26 +2,106 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessRuleException;
 use App\Models\Account;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class AccountService
 {
-    public function confirmar(Account $account)
+
+    private const MAX_PAGE_SIZE = 50;
+
+    private const SORTABLE_FIELDS = ['name', 'balance', 'created_at'];
+
+    public function list(array $filters = []): LengthAwarePaginator
     {
-        throw new \RuntimeException('Error al confirmar la cuenta.');
-        return $account->delete();
+        $query = Account::query();
+
+        if (! empty($filters['user_id'])) {
+            $query->where('user_id', $filters['user_id']);
+        }
+
+        if (! empty($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        if (! empty($filters['name'])) {
+            $query->where('name', 'like', '%'.$filters['name'].'%');
+        }
+
+        if (isset($filters['balance_min'])) {
+            $query->where('balance', '>=', $filters['balance_min']);
+        }
+
+        if (isset($filters['balance_max'])) {
+            $query->where('balance', '<=', $filters['balance_max']);
+        }
+
+        $sortBy = $filters['sort_by'] ?? 'name';
+        $sortDir = $filters['sort_dir'] ?? 'asc';
+
+        if (! in_array($sortBy, self::SORTABLE_FIELDS)) {
+            $sortBy = 'name';
+        }
+
+        $sortDir = strtolower($sortDir) === 'desc' ? 'desc' : 'asc';
+        $query->orderBy($sortBy, $sortDir);
+
+        $secondSort = $sortBy === 'name' ? 'balance' : 'name';
+        $query->orderBy($secondSort, 'asc');
+
+        $perPage = min((int) ($filters['per_page'] ?? 15), self::MAX_PAGE_SIZE);
+
+        return $query->paginate($perPage);
     }
 
-    public function create(array $data)
+    public function create(array $data): Account
     {
+        $this->validateNoDuplicateCashAccount($data);
 
         return Account::create($data);
     }
 
-    public function update(array $data)
+    public function update(Account $account, array $data): Account
     {
-        $account = Account::findOrFail($data['id']);
         $account->update($data);
+
         return $account;
+    }
+
+    public function delete(Account $account): bool
+    {
+        return DB::transaction(function () use ($account) {
+            if ($account->transactions()->exists()) {
+                throw new BusinessRuleException(
+                    'No se puede eliminar la cuenta porque tiene transacciones asociadas.',
+                    'CUENTA_CON_DEPENDENCIAS',
+                    409
+                );
+            }
+
+            return $account->delete();
+        });
+    }
+
+    private function validateNoDuplicateCashAccount(array $data): void
+    {
+        if (
+            ($data['type'] ?? '') === 'efectivo'
+            && ($data['balance'] ?? 0) > 0
+        ) {
+            $exists = Account::where('user_id', $data['user_id'])
+                ->where('type', 'efectivo')
+                ->exists();
+
+            if ($exists) {
+                throw new BusinessRuleException(
+                    'El usuario ya tiene una cuenta de efectivo. No se puede crear otra con saldo mayor a 0.',
+                    'CUENTA_EFECTIVO_DUPLICADA',
+                    422
+                );
+            }
+        }
     }
 }

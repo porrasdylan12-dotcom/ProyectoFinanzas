@@ -2,16 +2,117 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessRuleException;
 use App\Models\Budget;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BudgetService
 {
-    /**
-     * Calculates the remaining amount for a budget.
-     */
-    public function create(array $data)
-    {
 
-        return Budget::create($data);
+    private const MAX_PAGE_SIZE = 50;
+
+    private const SORTABLE_FIELDS = ['name', 'maxAmount', 'month', 'year', 'created_at'];
+   
+    private const DISCOUNT_THRESHOLD = 500000;
+   
+    private const DISCOUNT_PERCENTAGE = 10;
+   
+    public function list(array $filters = []): LengthAwarePaginator
+    {
+        $query = Budget::query();
+   
+        if (! empty($filters['user_id'])) {
+            $query->where('user_id', $filters['user_id']);
+        }
+
+        if (! empty($filters['category_id'])) {
+            $query->where('category_id', $filters['category_id']);
+        }
+
+        if (! empty($filters['month'])) {
+            $query->where('month', $filters['month']);
+        }
+
+        if (! empty($filters['year'])) {
+            $query->where('year', $filters['year']);
+        }
+
+        if (! empty($filters['name'])) {
+            $query->where('name', 'like', '%'.$filters['name'].'%');
+        }
+
+        $sortBy = $filters['sort_by'] ?? 'name';
+        $sortDir = $filters['sort_dir'] ?? 'asc';
+
+        if (! in_array($sortBy, self::SORTABLE_FIELDS)) {
+            $sortBy = 'name';
+        }
+
+        $sortDir = strtolower($sortDir) === 'desc' ? 'desc' : 'asc';
+        $query->orderBy($sortBy, $sortDir);
+   
+        $secondSort = $sortBy === 'name' ? 'maxAmount' : 'name';
+        $query->orderBy($secondSort, 'asc');
+   
+        $perPage = min((int) ($filters['per_page'] ?? 15), self::MAX_PAGE_SIZE);
+
+        return $query->paginate($perPage);
+    }
+
+   
+    public function create(array $data): Budget
+    {
+        $this->validateNotRetroactive($data);
+        $data = $this->applyDiscountIfApplicable($data);
+
+        return DB::transaction(function () use ($data) {
+            return Budget::create($data);
+        });
+    }
+   
+    public function update(Budget $budget, array $data): Budget
+    {
+        $data = $this->applyDiscountIfApplicable($data);
+
+        $budget->update($data);
+
+        return $budget;
+    }
+   
+    public function delete(Budget $budget): bool
+    {
+        return $budget->delete();
+    }
+   
+    private function validateNotRetroactive(array $data): void
+    {
+        $now = Carbon::now();
+        $budgetYear = (int) ($data['year'] ?? 0);
+        $budgetMonth = (int) ($data['month'] ?? 0);
+
+        $budgetDate = Carbon::createFromDate($budgetYear, $budgetMonth, 1)->startOfMonth();
+        $currentMonth = $now->copy()->startOfMonth();
+
+        if ($budgetDate->lt($currentMonth)) {
+            throw new BusinessRuleException(
+                'No se puede crear un presupuesto para un período que ya ha pasado.',
+                'PRESUPUESTO_RETROACTIVO',
+                422
+            );
+        }
+    }
+   
+    private function applyDiscountIfApplicable(array $data): array
+    {
+        $maxAmount = (float) ($data['maxAmount'] ?? 0);
+
+        if ($maxAmount > self::DISCOUNT_THRESHOLD) {
+            $discount = $maxAmount * (self::DISCOUNT_PERCENTAGE / 100);
+            $data['maxAmount'] = round($maxAmount - $discount, 2);
+        }
+
+        return $data;
     }
 }

@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAccountRequest;
+use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
 use App\Services\AccountService;
+use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
+    public function __construct(private AccountService $accountService) {}
 
-public function __construct(public AccountService $accountService)
+    public function index(Request $request)
     {
-        $this->accountService = $accountService;
-    }
-    public function index()
-    {
-        $accounts = Account::all();
+        $accounts = $this->accountService->list($request->all());
 
         return view('accounts.index', compact('accounts'));
     }
@@ -27,11 +26,10 @@ public function __construct(public AccountService $accountService)
 
     public function store(StoreAccountRequest $request)
     {
-        $validatedData = $request->validated();
+        $this->accountService->create($request->validated());
 
-        $account = $this->accountService->create($validatedData);
-    
-        return $account;
+        return redirect()->route('accounts.index')
+            ->with('success', 'Cuenta creada correctamente.');
     }
 
     public function show(Account $account)
@@ -44,19 +42,19 @@ public function __construct(public AccountService $accountService)
         return view('accounts.edit', compact('account'));
     }
 
-    public function update(StoreAccountRequest $request)
+    public function update(UpdateAccountRequest $request, Account $account)
     {
-        $validatedData = $request->validated();
+        $this->accountService->update($account, $request->validated());
 
-        $account = $this->accountService->update($validatedData);
-
-        return $account;
+        return redirect()->route('accounts.show', $account)
+            ->with('success', 'Cuenta actualizada correctamente.');
     }
 
     public function destroy(Account $account)
     {
-        $account->delete();
+        $this->accountService->delete($account);
 
-        return redirect()->route('accounts.index')->with('success', 'Cuenta eliminada correctamente.');
+        return redirect()->route('accounts.index')
+            ->with('success', 'Cuenta eliminada correctamente.');
     }
 }

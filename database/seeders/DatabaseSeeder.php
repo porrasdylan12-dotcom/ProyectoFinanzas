@@ -69,17 +69,10 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        /*
-         * 3. Crear grupos
-         */
         $groups = Group::factory()
             ->count(4)
             ->create();
 
-        /*
-         * 4. Asociar usuarios a los grupos mediante
-         *    la tabla pivote user_group.
-         */
         foreach ($groups as $index => $group) {
 
             $groupUsers = $users
@@ -96,9 +89,6 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        /*
-         * 5. Crear gastos compartidos.
-         */
         foreach ($groups as $group) {
 
             $groupUsers = $group->users()->get();
@@ -123,10 +113,6 @@ class DatabaseSeeder extends Seeder
                     'participants' => $participants,
                 ]);
 
-                /*
-                 * 6. Crear una deuda relacionada con
-                 *    el gasto compartido.
-                 */
                 $debtor = $groupUsers
                     ->where('id', '!=', $payer->id)
                     ->random();

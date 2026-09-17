@@ -8,7 +8,7 @@ class AccountService
 {
     public function confirmar(Account $account)
     {
-        throw new \RuntimeException('Error al confirmar la cuenta.');
+        throw new \App\Exceptions\Regla500Exception();
         return $account->delete();
     }
 

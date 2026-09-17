@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BudgetRequest;
+use App\Http\Resources\BudgetResource;
+use App\Models\Budget;
 use App\Services\BudgetService;
 use Illuminate\Http\Request;
 
@@ -26,4 +28,11 @@ class BudgetController extends Controller
     
         return $account;
 	}
+
+    public function show(Budget $budget)
+    {
+        return new BudgetResource($budget);
+    }
+
+    
 }

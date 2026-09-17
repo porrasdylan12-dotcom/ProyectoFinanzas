@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAccountRequest;
+use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Services\AccountService;
 
@@ -36,7 +37,7 @@ public function __construct(public AccountService $accountService)
 
     public function show(Account $account)
     {
-        return view('accounts.show', compact('account'));
+        return AccountResource::collection([$account]);
     }
 
     public function edit(Account $account)

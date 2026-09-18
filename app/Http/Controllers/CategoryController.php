@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\CategoryService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
@@ -13,55 +17,46 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $categories = Category::all();
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
 
-        return view('categories.index', compact('categories'));
+        return CategoryResource::collection($this->categoryService->list($filters));
     }
 
-    public function create()
+    public function store(CategoryRequest $request): JsonResponse
     {
-        return view('categories.create');
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+
+        $category = $this->categoryService->create($data);
+
+        return (new CategoryResource($category))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.categories.show', $category));
     }
 
-    public function store(CategoryRequest $request)
+    public function show(Request $request, Category $category): CategoryResource
     {
-        $validatedData = $request->validated();
-        $validatedData['user_id'] = $request->user()->id;
+        $category = $this->categoryService->findForUser($category->id, $request->user()->id);
 
-        $this->categoryService->create($validatedData);
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Categoría creada correctamente.');
+        return new CategoryResource($category);
     }
 
-    public function show(Category $category)
+    public function update(CategoryRequest $request, Category $category): CategoryResource
     {
-        return view('categories.show', compact('category'));
+        $category = $this->categoryService->update($category, $request->validated());
+
+        return new CategoryResource($category);
     }
 
-    public function edit(Category $category)
+    public function destroy(Request $request, Category $category): JsonResponse
     {
-        return view('categories.edit', compact('category'));
-    }
+        $category = $this->categoryService->findForUser($category->id, $request->user()->id);
+        $this->categoryService->delete($category);
 
-    public function update(CategoryRequest $request, Category $category)
-    {
-        $this->categoryService->update($category, $request->validated());
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Categoría actualizada correctamente.');
-    }
-
-    public function destroy(Category $category)
-    {
-        $category->delete();
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Categoría eliminada correctamente.');
+        return response()->json(null, 204);
     }
 }

@@ -4,57 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
+use App\Http\Resources\BudgetResource;
 use App\Models\Budget;
 use App\Services\BudgetService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BudgetController extends Controller
 {
-    public function __construct(private BudgetService $budgetService) {}
-
-    public function index(Request $request)
+    public function __construct(public BudgetService $budgetService)
     {
-        $budgets = $this->budgetService->list($request->all());
-
-        return view('budgets.index', compact('budgets'));
+        $this->budgetService = $budgetService;
     }
 
-    public function create()
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return view('budgets.create');
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
+
+        return BudgetResource::collection($this->budgetService->list($filters));
     }
 
-    public function store(StoreBudgetRequest $request)
+    public function store(StoreBudgetRequest $request): JsonResponse
     {
-        $this->budgetService->create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
 
-        return redirect()->route('budgets.index')
-            ->with('success', 'Presupuesto creado correctamente.');
+        $budget = $this->budgetService->create($data);
+
+        return (new BudgetResource($budget))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.budgets.show', $budget));
     }
 
-    public function show(Budget $budget)
+    public function show(Request $request, Budget $budget): BudgetResource
     {
-        return view('budgets.show', compact('budget'));
+        $budget = $this->budgetService->findForUser($budget->id, $request->user()->id);
+
+        return new BudgetResource($budget);
     }
 
-    public function edit(Budget $budget)
+    public function update(UpdateBudgetRequest $request, Budget $budget): BudgetResource
     {
-        return view('budgets.edit', compact('budget'));
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+
+        $budget = $this->budgetService->update($budget, $data);
+
+        return new BudgetResource($budget);
     }
 
-    public function update(UpdateBudgetRequest $request, Budget $budget)
+    public function destroy(Request $request, Budget $budget): JsonResponse
     {
-        $this->budgetService->update($budget, $request->validated());
-
-        return redirect()->route('budgets.show', $budget)
-            ->with('success', 'Presupuesto actualizado correctamente.');
-    }
-
-    public function destroy(Budget $budget)
-    {
+        $budget = $this->budgetService->findForUser($budget->id, $request->user()->id);
         $this->budgetService->delete($budget);
 
-        return redirect()->route('budgets.index')
-            ->with('success', 'Presupuesto eliminado correctamente.');
+        return response()->json(null, 204);
     }
 }

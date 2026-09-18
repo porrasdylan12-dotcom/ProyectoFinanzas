@@ -23,14 +23,16 @@ class StoreAccountRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->user()->id;
+
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'user_id' => ['sometimes', 'integer', 'exists:users,id'],
             'name' => [
                 'required',
                 'string',
                 'min:3',
                 'max:50',
-                Rule::unique('accounts', 'name')->where('user_id', $this->input('user_id')),
+                Rule::unique('accounts', 'name')->where('user_id', $userId),
             ],
             'type' => ['required', 'string', Rule::in(['ahorros', 'corriente', 'efectivo'])],
             'balance' => ['required', 'numeric', 'min:0', 'max:999999999999.99'],
@@ -45,10 +47,6 @@ class StoreAccountRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'El usuario es obligatorio.',
-            'user_id.integer' => 'El identificador del usuario debe ser un número entero.',
-            'user_id.exists' => 'El usuario seleccionado no existe en el sistema.',
-
             'name.required' => 'El nombre de la cuenta es obligatorio.',
             'name.string' => 'El nombre de la cuenta debe ser un texto válido.',
             'name.min' => 'El nombre de la cuenta debe tener al menos 3 caracteres.',

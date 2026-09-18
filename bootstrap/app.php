@@ -1,12 +1,18 @@
 <?php
 
+use App\Exceptions\BusinessRuleException;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,4 +34,64 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(
+            fn (BusinessRuleException $e, Request $request): ?Response => ($request->is('api/*') || $request->expectsJson())
+                ? response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getBusinessCode(),
+                ], $e->getStatusCode())
+                : null,
+        );
+
+        $exceptions->render(
+            fn (NotFoundHttpException $e, Request $request): ?Response => ($request->is('api/*') || $request->expectsJson())
+                ? response()->json([
+                    'message' => 'El recurso solicitado no existe.',
+                    'code' => 'RECURSO_NO_ENCONTRADO',
+                ], 404)
+                : null,
+        );
+
+        $exceptions->render(
+            fn (AuthenticationException $e, Request $request): ?Response => ($request->is('api/*') || $request->expectsJson())
+                ? response()->json([
+                    'message' => 'No se encontró un token de autenticación válido.',
+                    'code' => 'NO_AUTENTICADO',
+                ], 401)
+                : null,
+        );
+
+        $exceptions->render(
+            fn (AccessDeniedHttpException $e, Request $request): ?Response => ($request->is('api/*') || $request->expectsJson())
+                ? response()->json([
+                    'message' => 'No tienes permisos para realizar esta acción.',
+                    'code' => 'ACCESO_DENEGADO',
+                ], 403)
+                : null,
+        );
+
+        $exceptions->render(
+            fn (ValidationException $e, Request $request): ?Response => ($request->is('api/*') || $request->expectsJson())
+                ? response()->json([
+                    'message' => 'Los datos enviados no son válidos.',
+                    'code' => 'DATOS_INVALIDOS',
+                    'errors' => $e->errors(),
+                ], 422)
+                : null,
+        );
+
+        $exceptions->respond(function (Response $response, Throwable $e, Request $request): Response {
+            if (
+                $response->getStatusCode() === 500
+                && ($request->is('api/*') || $request->expectsJson())
+            ) {
+                return response()->json([
+                    'message' => 'Ocurrió un error interno en el servidor.',
+                    'code' => 'ERROR_INTERNO',
+                ], 500);
+            }
+
+            return $response;
+        });
     })->create();

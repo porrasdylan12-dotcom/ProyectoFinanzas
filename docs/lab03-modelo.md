@@ -98,8 +98,8 @@ Se implementaron factories para todas las entidades, generando un ecosistema coh
 * 20 usuarios (cumpliendo el mínimo requerido para la entidad principal).
 * 40 cuentas, categorías y presupuestos vinculados.
 * 200 transacciones.
-* 4 grupos con 20 relaciones usuario-grupo.
-* 12 gastos compartidos con 12 deudas derivadas.
+* 20 grupos con 100 relaciones usuario-grupo.
+* 60 gastos compartidos con 60 deudas derivadas.
 
 
 #12. Consultas Eloquent realizadas

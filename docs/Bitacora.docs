@@ -5,33 +5,42 @@ Registro cronológico de los cambios realizados mediante commits en el proyecto.
 
 ---Historial de commits
 
-| Fecha | Commit | Descripción | Responsable | IA utilizada
+| Fecha | Commit | Descripción | Responsable | IA utilizada |
 
-| 2026-09-08 | 70083cc | Iniciallización de proyecto | porrasdylan12-dotcom |
-| 2026-09-09 | 2364aaf | Create Models | ErickSerrano19 | Github Copilot
-| 2026-09-10 | 1365636 | Create Controllers | ErickSerrano19 | Github Copilot
-| 2026-09-10 | 62f667f | Merge pull request #1 from porrasdylan12-dotcom/Erick | ErickSerrano19 |
-| 2026-09-10 | 93b9e3a | Creación de migraciones | eddy_mora |
-| 2026-09-10 | 4043dea | Lab10-09 | ErickSerrano19 | Github Copilot
-| 2026-09-10 | 43d2bda | Merge pull request #2 from porrasdylan12-dotcom/Erick | ErickSerrano19 |
-| 2026-09-10 | 83fe429 | seeder | porrasdylan12-dotcom |
-| 2026-09-10 | b86b6ed | Merge branch 'main' of https://github.com/porrasdylan12-dotcom/ProyectoFinanzas | porrasdylan12-dotcom |
-| 2026-09-10 | 5ee73b3 | Delete opencode.json | ErickSerrano19 |
-| 2026-09-10 | f0fdd9a | Delete AGENTS.md | ErickSerrano19 |
-| 2026-09-10 | 795cf43 | seeders | porrasdylan12-dotcom |
-| 2026-09-10 | d3a2514 | Merge branch 'main' of https://github.com/porrasdylan12-dotcom/ProyectoFinanzas | porrasdylan12-dotcom |
-| 2026-09-10 | e89799b | Seeders by dylanporras | ErickSerrano19 |
-| 2026-09-10 | 177437d | Merge pull request #3 from porrasdylan12-dotcom/Erick | ErickSerrano19 |
-| 2026-09-10 | e2edf9e | Revert "Erick" | ErickSerrano19 |
-| 2026-09-10 | d30bb84 | Merge pull request #4 from porrasdylan12-dotcom/revert-3-Erick | ErickSerrano19 |
-| 2026-09-10 | 00d27b2 | feat: agregacion de modelos y relaciones Eloquent | eddy_mora |
-| 2026-09-11 | 7af9492 | feat: agregacionde factories para datos de prueba | eddy_mora |
-| 2026-09-11 | 5a81e28 | feat: agregacion de los seeder con datos de prueba | eddy_mora |
-| 2026-09-11 | 8444955 | docs: agregacion de documentacion del laboratorio 3 | eddy_mora |
-| 2026-09-11 | 1344e2c | feat: agregacion de migraciones de la capa de datos | eddy_mora |
-| 2026-09-11 | d15a5c3 | Create Services, request | ErickSerrano19 | Github Copilot
-| 2026-09-11 | fa97702 | merge: integrar cambios remotos con laboratorio 3 | eddy_mora |
-| 2026-09-11 | a6dae92 | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 |
+| 2026-09-08 | 70083cc | Iniciallización de proyecto | porrasdylan12-dotcom | |
+| 2026-09-09 | 2364aaf | Create Models | ErickSerrano19 | Github Copilot |
+| 2026-09-10 | 1365636 | Create Controllers | ErickSerrano19 | Github Copilot |
+| 2026-09-10 | 62f667f | Merge pull request #1 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-10 | 93b9e3a | Creación de migraciones | eddy_mora | |
+| 2026-09-10 | 4043dea | Lab10-09 | ErickSerrano19 | Github Copilot |
+| 2026-09-10 | 43d2bda | Merge pull request #2 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-10 | 83fe429 | seeder | porrasdylan12-dotcom | |
+| 2026-09-10 | b86b6ed | Merge branch 'main' of https://github.com/porrasdylan12-dotcom/ProyectoFinanzas | porrasdylan12-dotcom | |
+| 2026-09-10 | 5ee73b3 | Delete opencode.json | ErickSerrano19 | |
+| 2026-09-10 | f0fdd9a | Delete AGENTS.md | ErickSerrano19 | |
+| 2026-09-10 | 795cf43 | seeders | porrasdylan12-dotcom | |
+| 2026-09-10 | d3a2514 | Merge branch 'main' of https://github.com/porrasdylan12-dotcom/ProyectoFinanzas | porrasdylan12-dotcom | |
+| 2026-09-10 | e89799b | Seeders by dylanporras | ErickSerrano19 | |
+| 2026-09-10 | 177437d | Merge pull request #3 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-10 | e2edf9e | Revert "Erick" | ErickSerrano19 | |
+| 2026-09-10 | d30bb84 | Merge pull request #4 from porrasdylan12-dotcom/revert-3-Erick | ErickSerrano19 | |
+| 2026-09-10 | 00d27b2 | feat: agregacion de modelos y relaciones Eloquent | eddy_mora | |
+| 2026-09-11 | 7af9492 | feat: agregacionde factories para datos de prueba | eddy_mora | |
+| 2026-09-11 | 5a81e28 | feat: agregacion de los seeder con datos de prueba | eddy_mora | |
+| 2026-09-11 | 8444955 | docs: agregacion de documentacion del laboratorio 3 | eddy_mora | |
+| 2026-09-11 | 1344e2c | feat: agregacion de migraciones de la capa de datos | eddy_mora | |
+| 2026-09-11 | d15a5c3 | Create Services, request | ErickSerrano19 | Github Copilot |
+| 2026-09-11 | fa97702 | merge: integrar cambios remotos con laboratorio 3 | eddy_mora | |
+| 2026-09-11 | a6dae92 | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 | |
+| 2026-09-11 | e54c106 | Merge pull request #5 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-12 | 47ae497 | Create binnacle | ErickSerrano19 | GPT-5.6 Luna |
+| 2026-09-12 | 2e1c55b | Create and update Controllers, Requests and Services | ErickSerrano19 | Opencode |
+| 2026-09-12 | fdee323 | Create and update Controllers, Requests and Services | ErickSerrano19 | Opencode |
+| 2026-09-12 | 9a4eede | Merge pull request #6 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-17 | 784aa5d | Lab17-09 | ErickSerrano19 | |
+| 2026-09-17 | 54627df | dylan porras | porrasdylan12-dotcom | |
+| 2026-09-17 | fcd759c | Merge pull request #7 from porrasdylan12-dotcom/dylan | porrasdylan12-dotcom | |
+| 2026-09-17 | 1dceccb | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 | |
 
 ---Observaciones
 

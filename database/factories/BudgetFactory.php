@@ -20,7 +20,7 @@ class BudgetFactory extends Factory
     public function definition(): array
     {
         return [
-           'user_id' => User::factory(),
+            'user_id' => User::factory(),
             'category_id' => Category::factory(),
             'name' => fake()->randomElement([
                 'Presupuesto de alimentación',

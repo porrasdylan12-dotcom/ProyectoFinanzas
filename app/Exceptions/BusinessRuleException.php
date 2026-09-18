@@ -6,10 +6,10 @@ use RuntimeException;
 
 class BusinessRuleException extends RuntimeException
 {
-  
     protected string $businessCode;
+
     protected int $statusCode;
- 
+
     public function __construct(
         string $message,
         string $businessCode,

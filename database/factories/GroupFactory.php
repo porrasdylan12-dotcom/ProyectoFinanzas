@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GroupFactory extends Factory
 {
-   protected $model = Group::class;
+    protected $model = Group::class;
 
     public function definition(): array
     {

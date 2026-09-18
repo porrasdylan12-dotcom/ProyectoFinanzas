@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
+use App\Http\Resources\TransactionResource;
+use App\Models\Account;
 use App\Models\Transaction;
 use App\Services\TransactionService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TransactionController extends Controller
 {
@@ -13,52 +18,76 @@ class TransactionController extends Controller
         $this->transactionService = $transactionService;
     }
 
-    public function index()
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $transactions = Transaction::latest()->get();
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
 
-        return view('transactions.index', compact('transactions'));
+        return TransactionResource::collection($this->transactionService->list($filters));
     }
 
-    public function create()
+    public function store(TransactionRequest $request): JsonResponse
     {
-        return view('transactions.create');
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+
+        $transaction = $this->transactionService->create($data);
+
+        return (new TransactionResource($transaction))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.transactions.show', $transaction));
     }
 
-    public function store(TransactionRequest $request)
+    public function forAccount(Request $request, Account $account): AnonymousResourceCollection
     {
-        $transaction = $this->transactionService->create($request->validated());
+        $this->transactionService->findAccountForUser($account->id, $request->user()->id);
 
-        return redirect()
-            ->route('transactions.show', $transaction)
-            ->with('success', 'Transacción creada correctamente.');
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
+        $filters['account_id'] = $account->id;
+
+        return TransactionResource::collection($this->transactionService->list($filters));
     }
 
-    public function show(Transaction $transaction)
+    public function storeInAccount(TransactionRequest $request, Account $account): JsonResponse
     {
-        return view('transactions.show', compact('transaction'));
+        $this->transactionService->findAccountForUser($account->id, $request->user()->id);
+
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+        $data['account_id'] = $account->id;
+
+        $transaction = $this->transactionService->create($data);
+
+        return (new TransactionResource($transaction))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.transactions.show', $transaction));
     }
 
-    public function edit(Transaction $transaction)
+    public function show(Request $request, Transaction $transaction): TransactionResource
     {
-        return view('transactions.edit', compact('transaction'));
+        $transaction = $this->transactionService->findForUser($transaction->id, $request->user()->id);
+
+        return new TransactionResource($transaction);
     }
 
-    public function update(TransactionRequest $request, Transaction $transaction)
+    public function update(TransactionRequest $request, Transaction $transaction): TransactionResource
     {
-        $this->transactionService->update($transaction, $request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
 
-        return redirect()
-            ->route('transactions.show', $transaction)
-            ->with('success', 'Transacción actualizada correctamente.');
+        $transaction = $this->transactionService->update($transaction, $data);
+
+        return new TransactionResource($transaction);
     }
 
-    public function destroy(Transaction $transaction)
+    public function destroy(Request $request, Transaction $transaction): JsonResponse
     {
-        $transaction->delete();
+        $transaction = $this->transactionService->findForUser($transaction->id, $request->user()->id);
+        $this->transactionService->delete($transaction);
 
-        return redirect()
-            ->route('transactions.index')
-            ->with('success', 'Transacción eliminada correctamente.');
+        return response()->json(null, 204);
     }
 }

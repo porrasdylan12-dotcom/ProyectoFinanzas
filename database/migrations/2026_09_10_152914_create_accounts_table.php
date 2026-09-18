@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('accounts', function (Blueprint $table) {
-           $table->id();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->string('name', 50);
-        $table->string('type', 30)->nullable();
-        $table->decimal('balance', 12, 2)->default(0);
-        $table->timestamps();
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('name', 50);
+            $table->string('type', 30)->nullable();
+            $table->decimal('balance', 12, 2)->default(0);
+            $table->timestamps();
         });
     }
 

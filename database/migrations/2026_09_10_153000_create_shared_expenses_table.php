@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shared_expenses', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('group_id')->constrained()->cascadeOnDelete();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // Quien pagó
-        $table->decimal('amount', 12, 2);
-        $table->text('description')->nullable();
-        $table->date('date')->index();
-        $table->json('participants')->nullable(); // Guardamos el array de participantes
-        $table->timestamps();
+            $table->id();
+            $table->foreignId('group_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // Quien pagó
+            $table->decimal('amount', 12, 2);
+            $table->text('description')->nullable();
+            $table->date('date')->index();
+            $table->json('participants')->nullable(); // Guardamos el array de participantes
+            $table->timestamps();
         });
     }
 

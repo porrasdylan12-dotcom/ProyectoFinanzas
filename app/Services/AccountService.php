@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class AccountService
 {
-
     private const MAX_PAGE_SIZE = 50;
 
-    private const SORTABLE_FIELDS = ['name', 'balance', 'created_at'];
+    private const SORTABLE_FIELDS = ['name', 'balance', 'type', 'created_at'];
 
     public function list(array $filters = []): LengthAwarePaginator
     {
@@ -28,14 +27,6 @@ class AccountService
 
         if (! empty($filters['name'])) {
             $query->where('name', 'like', '%'.$filters['name'].'%');
-        }
-
-        if (isset($filters['balance_min'])) {
-            $query->where('balance', '>=', $filters['balance_min']);
-        }
-
-        if (isset($filters['balance_max'])) {
-            $query->where('balance', '<=', $filters['balance_max']);
         }
 
         $sortBy = $filters['sort_by'] ?? 'name';
@@ -56,6 +47,13 @@ class AccountService
         return $query->paginate($perPage);
     }
 
+    public function findForUser(int $id, int $userId): Account
+    {
+        return Account::where('id', $id)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+    }
+
     public function create(array $data): Account
     {
         $this->validateNoDuplicateCashAccount($data);
@@ -65,6 +63,8 @@ class AccountService
 
     public function update(Account $account, array $data): Account
     {
+        unset($data['user_id']);
+
         $account->update($data);
 
         return $account;
@@ -99,7 +99,7 @@ class AccountService
                 throw new BusinessRuleException(
                     'El usuario ya tiene una cuenta de efectivo. No se puede crear otra con saldo mayor a 0.',
                     'CUENTA_EFECTIVO_DUPLICADA',
-                    422
+                    409
                 );
             }
         }

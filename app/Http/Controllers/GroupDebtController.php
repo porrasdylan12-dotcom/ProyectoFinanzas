@@ -3,65 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GroupDebtRequest;
+use App\Http\Resources\GroupDebtResource;
 use App\Models\GroupDebt;
+use App\Models\SharedExpenses;
 use App\Services\GroupDebtService;
+use App\Services\SharedExpensesService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GroupDebtController extends Controller
 {
-    public function __construct(public GroupDebtService $groupDebtService)
-    {
+    public function __construct(
+        public GroupDebtService $groupDebtService,
+        public SharedExpensesService $sharedExpensesService,
+    ) {
         $this->groupDebtService = $groupDebtService;
+        $this->sharedExpensesService = $sharedExpensesService;
     }
 
-    public function index()
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $groupDebts = GroupDebt::all();
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
 
-        return view('group_debts.index', compact('groupDebts'));
+        return GroupDebtResource::collection($this->groupDebtService->list($filters));
     }
 
-    public function create()
+    public function store(GroupDebtRequest $request): JsonResponse
     {
-        return view('group_debts.create');
+        $groupDebt = $this->groupDebtService->create($request->validated());
+
+        return (new GroupDebtResource($groupDebt))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.group-debts.show', $groupDebt));
     }
 
-    public function store(GroupDebtRequest $request)
+    public function forSharedExpense(Request $request, SharedExpenses $sharedExpense): AnonymousResourceCollection
     {
+        $this->sharedExpensesService->findForUser($sharedExpense->id, $request->user()->id);
+
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
+        $filters['shared_expense_id'] = $sharedExpense->id;
+
+        return GroupDebtResource::collection($this->groupDebtService->list($filters));
+    }
+
+    public function storeInSharedExpense(GroupDebtRequest $request, SharedExpenses $sharedExpense): JsonResponse
+    {
+        $this->sharedExpensesService->findForUser($sharedExpense->id, $request->user()->id);
+
         $data = $request->validated();
-        $data['debtor_id'] = $request->user()->id;
+        $data['shared_expense_id'] = $sharedExpense->id;
 
         $groupDebt = $this->groupDebtService->create($data);
 
-        return redirect()
-            ->route('group-debts.show', $groupDebt)
-            ->with('success', 'Deuda creada correctamente.');
+        return (new GroupDebtResource($groupDebt))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.group-debts.show', $groupDebt));
     }
 
-    public function show(GroupDebt $groupDebt)
+    public function show(Request $request, GroupDebt $groupDebt): GroupDebtResource
     {
-        return view('group_debts.show', compact('groupDebt'));
+        $groupDebt = $this->groupDebtService->findForUser($groupDebt->id, $request->user()->id);
+
+        return new GroupDebtResource($groupDebt);
     }
 
-    public function edit(GroupDebt $groupDebt)
+    public function update(GroupDebtRequest $request, GroupDebt $groupDebt): GroupDebtResource
     {
-        return view('group_debts.edit', compact('groupDebt'));
+        $groupDebt = $this->groupDebtService->update($groupDebt, $request->validated());
+
+        return new GroupDebtResource($groupDebt);
     }
 
-    public function update(GroupDebtRequest $request, GroupDebt $groupDebt)
+    public function destroy(Request $request, GroupDebt $groupDebt): JsonResponse
     {
-        $this->groupDebtService->update($groupDebt, $request->validated());
+        $groupDebt = $this->groupDebtService->findForUser($groupDebt->id, $request->user()->id);
+        $this->groupDebtService->delete($groupDebt);
 
-        return redirect()
-            ->route('group-debts.show', $groupDebt)
-            ->with('success', 'Deuda actualizada correctamente.');
-    }
-
-    public function destroy(GroupDebt $groupDebt)
-    {
-        $groupDebt->delete();
-
-        return redirect()
-            ->route('group-debts.index')
-            ->with('success', 'Deuda eliminada correctamente.');
+        return response()->json(null, 204);
     }
 }

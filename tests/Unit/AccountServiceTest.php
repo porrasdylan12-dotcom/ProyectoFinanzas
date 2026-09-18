@@ -6,8 +6,9 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Services\AccountService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class, RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 test('no permite eliminar cuenta con transacciones activas', function () {
     $service = app(AccountService::class);

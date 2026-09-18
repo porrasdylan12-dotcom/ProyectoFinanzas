@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateBudgetRequest extends FormRequest
 {
@@ -19,7 +18,7 @@ class UpdateBudgetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'user_id' => ['sometimes', 'integer', 'exists:users,id'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
             'name' => ['required', 'string', 'min:3', 'max:100'],
             'maxAmount' => ['required', 'numeric', 'min:0.01', 'max:999999999999.99'],
@@ -34,10 +33,6 @@ class UpdateBudgetRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'El usuario es obligatorio.',
-            'user_id.integer' => 'El identificador del usuario debe ser un número entero.',
-            'user_id.exists' => 'El usuario seleccionado no existe en el sistema.',
-
             'category_id.required' => 'La categoría es obligatoria.',
             'category_id.integer' => 'El identificador de la categoría debe ser un número entero.',
             'category_id.exists' => 'La categoría seleccionada no existe en el sistema.',

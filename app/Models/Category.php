@@ -24,9 +24,6 @@ class Category extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Una categoría pertenece a un usuario.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class GroupRequest extends FormRequest
 {
@@ -23,7 +24,7 @@ class GroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:100', Rule::unique('groups', 'name')],
         ];
     }
 
@@ -37,7 +38,8 @@ class GroupRequest extends FormRequest
         return [
             'name.required' => 'El nombre del grupo es obligatorio.',
             'name.string' => 'El nombre del grupo debe ser un texto válido.',
-            'name.max' => 'El nombre del grupo no puede superar los 255 caracteres.',
+            'name.max' => 'El nombre del grupo no puede superar los 100 caracteres.',
+            'name.unique' => 'Ya existe un grupo con este nombre.',
         ];
     }
 }

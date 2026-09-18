@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             ->count(20)
             ->create();
 
-
         foreach ($users as $user) {
 
             $accounts = Account::factory()
@@ -29,54 +28,69 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $user->id,
                 ]);
 
-            $categories = Category::factory()
-                ->count(5)
-                ->create([
-                    'user_id' => $user->id,
-                ]);
+            $expenseCategory = Category::factory()->create([
+                'user_id' => $user->id,
+                'name' => fake()->randomElement([
+                    'Alimentación',
+                    'Transporte',
+                    'Universidad',
+                    'Entretenimiento',
+                    'Salud',
+                    'Servicios',
+                ]),
+                'type' => 'gasto',
+            ]);
 
-            $expenseCategories = $categories
-                ->where('type', 'gasto');
+            $incomeCategory = Category::factory()->create([
+                'user_id' => $user->id,
+                'name' => fake()->randomElement([
+                    'Salario',
+                    'Freelance',
+                    'Inversiones',
+                    'Regalo',
+                    'Otros ingresos',
+                ]),
+                'type' => 'ingreso',
+            ]);
 
-            if ($expenseCategories->isEmpty()) {
-                $expenseCategories = collect([
-                    Category::factory()->create([
-                        'user_id' => $user->id,
-                        'name' => 'Gastos generales',
-                        'type' => 'gasto',
-                    ]),
-                ]);
-            }
+            Budget::factory()->create([
+                'user_id' => $user->id,
+                'category_id' => $expenseCategory->id,
+                'month' => fake()->numberBetween(1, 12),
+                'year' => fake()->numberBetween(2026, 2027),
+            ]);
 
-            foreach ($expenseCategories->take(3) as $category) {
-                Budget::factory()->create([
-                    'user_id' => $user->id,
-                    'category_id' => $category->id,
-                ]);
-            }
+            Budget::factory()->create([
+                'user_id' => $user->id,
+                'category_id' => $incomeCategory->id,
+                'month' => fake()->numberBetween(1, 12),
+                'year' => fake()->numberBetween(2026, 2027),
+            ]);
+
+            $categories = collect([$expenseCategory, $incomeCategory]);
 
             foreach ($accounts as $account) {
 
-                $userCategory = $categories->random();
+                foreach (range(1, 5) as $i) {
 
-                Transaction::factory()
-                    ->count(5)
-                    ->create([
+                    $category = $categories->random();
+
+                    Transaction::factory()->create([
                         'account_id' => $account->id,
-                        'category_id' => $userCategory->id,
-                        'type' => $userCategory->type ?? 'gasto',
+                        'category_id' => $category->id,
+                        'type' => $category->type,
                     ]);
+                }
             }
         }
 
         $groups = Group::factory()
-            ->count(4)
+            ->count(20)
             ->create();
 
         foreach ($groups as $index => $group) {
 
-            $groupUsers = $users
-                ->slice($index * 5, 5);
+            $groupUsers = $users->slice(($index % 4) * 5, 5);
 
             foreach ($groupUsers as $userIndex => $user) {
 
@@ -87,11 +101,6 @@ class DatabaseSeeder extends Seeder
                     ),
                 ]);
             }
-        }
-
-        foreach ($groups as $group) {
-
-            $groupUsers = $group->users()->get();
 
             foreach (range(1, 3) as $i) {
 
@@ -102,8 +111,8 @@ class DatabaseSeeder extends Seeder
                     ->pluck('id')
                     ->values()
                     ->toArray();
-                    
-                if (!in_array($payer->id, $participants)) {
+
+                if (! in_array($payer->id, $participants)) {
                     $participants[array_rand($participants)] = $payer->id;
                 }
 

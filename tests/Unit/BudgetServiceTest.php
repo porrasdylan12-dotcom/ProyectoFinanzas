@@ -7,8 +7,9 @@ use App\Models\User;
 use App\Services\BudgetService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class, RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 test('aplica descuento del 10% cuando maxAmount supera los 500000', function () {
     $service = app(BudgetService::class);

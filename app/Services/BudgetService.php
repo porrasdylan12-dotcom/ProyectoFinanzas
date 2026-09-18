@@ -10,19 +10,18 @@ use Illuminate\Support\Facades\DB;
 
 class BudgetService
 {
-
     private const MAX_PAGE_SIZE = 50;
 
     private const SORTABLE_FIELDS = ['name', 'maxAmount', 'month', 'year', 'created_at'];
-   
+
     private const DISCOUNT_THRESHOLD = 500000;
-   
+
     private const DISCOUNT_PERCENTAGE = 10;
-   
+
     public function list(array $filters = []): LengthAwarePaginator
     {
-        $query = Budget::query();
-   
+        $query = Budget::query()->with('category');
+
         if (! empty($filters['user_id'])) {
             $query->where('user_id', $filters['user_id']);
         }
@@ -52,16 +51,22 @@ class BudgetService
 
         $sortDir = strtolower($sortDir) === 'desc' ? 'desc' : 'asc';
         $query->orderBy($sortBy, $sortDir);
-   
+
         $secondSort = $sortBy === 'name' ? 'maxAmount' : 'name';
         $query->orderBy($secondSort, 'asc');
-   
+
         $perPage = min((int) ($filters['per_page'] ?? 15), self::MAX_PAGE_SIZE);
 
         return $query->paginate($perPage);
     }
 
-   
+    public function findForUser(int $id, int $userId): Budget
+    {
+        return Budget::where('id', $id)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+    }
+
     public function create(array $data): Budget
     {
         $this->validateNotRetroactive($data);
@@ -71,7 +76,7 @@ class BudgetService
             return Budget::create($data);
         });
     }
-   
+
     public function update(Budget $budget, array $data): Budget
     {
         $data = $this->applyDiscountIfApplicable($data);
@@ -80,12 +85,12 @@ class BudgetService
 
         return $budget;
     }
-   
+
     public function delete(Budget $budget): bool
     {
         return $budget->delete();
     }
-   
+
     private function validateNotRetroactive(array $data): void
     {
         $now = Carbon::now();
@@ -103,7 +108,7 @@ class BudgetService
             );
         }
     }
-   
+
     private function applyDiscountIfApplicable(array $data): array
     {
         $maxAmount = (float) ($data['maxAmount'] ?? 0);

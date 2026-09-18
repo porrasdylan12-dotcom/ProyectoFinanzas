@@ -17,6 +17,9 @@ class Group extends Model
         'name',
     ];
 
+    /**
+     * @return BelongsToMany<User, $this>
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -25,8 +28,8 @@ class Group extends Model
             'group_id',
             'user_id'
         )
-        ->withPivot('role', 'joined_at')
-        ->withTimestamps();
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
     }
 
     public function sharedExpenses(): HasMany

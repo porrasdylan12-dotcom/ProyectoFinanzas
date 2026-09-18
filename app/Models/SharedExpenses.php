@@ -43,6 +43,6 @@ class SharedExpenses extends Model
         return $this->hasMany(
             GroupDebt::class,
             'shared_expense_id'
-            );
+        );
     }
 }

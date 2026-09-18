@@ -7,57 +7,61 @@ use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Services\AccountService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AccountController extends Controller
 {
-    public function __construct(private AccountService $accountService) {
-        
+    public function __construct(public AccountService $accountService)
+    {
+        $this->accountService = $accountService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $accounts = $this->accountService->list($request->all());
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
 
-        return view('accounts.index', compact('accounts'));
+        return AccountResource::collection($this->accountService->list($filters));
     }
 
-    public function create()
+    public function store(StoreAccountRequest $request): JsonResponse
     {
-        return view('accounts.create');
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+
+        $account = $this->accountService->create($data);
+
+        return (new AccountResource($account))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.accounts.show', $account));
     }
 
-    public function store(StoreAccountRequest $request)
+    public function show(Request $request, Account $account): AccountResource
     {
-        $this->accountService->create($request->validated());
+        $account = $this->accountService->findForUser($account->id, $request->user()->id);
 
-        return redirect()->route('accounts.index')
-            ->with('success', 'Cuenta creada correctamente.');
+        return new AccountResource($account);
     }
 
-    public function show(Account $account)
+    public function update(UpdateAccountRequest $request, Account $account): AccountResource
     {
-        return AccountResource::collection([$account]);
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+
+        $account = $this->accountService->findForUser($account->id, $request->user()->id);
+        $account = $this->accountService->update($account, $data);
+
+        return new AccountResource($account);
     }
 
-    public function edit(Account $account)
+    public function destroy(Request $request, Account $account): JsonResponse
     {
-        return view('accounts.edit', compact('account'));
-    }
-
-    public function update(UpdateAccountRequest $request, Account $account)
-    {
-        $this->accountService->update($account, $request->validated());
-
-        return redirect()->route('accounts.show', $account)
-            ->with('success', 'Cuenta actualizada correctamente.');
-    }
-
-    public function destroy(Account $account)
-    {
+        $account = $this->accountService->findForUser($account->id, $request->user()->id);
         $this->accountService->delete($account);
 
-        return redirect()->route('accounts.index')
-            ->with('success', 'Cuenta eliminada correctamente.');
+        return response()->json(null, 204);
     }
 }

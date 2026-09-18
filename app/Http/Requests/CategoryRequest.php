@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -22,9 +23,18 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $categoryId = $this->route('category')?->id;
+
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'string', 'max:20'],
+            'name' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('categories', 'name')
+                    ->where('user_id', $this->user()?->id)
+                    ->ignore($categoryId),
+            ],
+            'type' => ['required', 'string', Rule::in(['ingreso', 'gasto'])],
         ];
     }
 
@@ -38,10 +48,12 @@ class CategoryRequest extends FormRequest
         return [
             'name.required' => 'El nombre de la categoría es obligatorio.',
             'name.string' => 'El nombre de la categoría debe ser un texto válido.',
-            'name.max' => 'El nombre de la categoría no puede superar los 255 caracteres.',
+            'name.max' => 'El nombre de la categoría no puede superar los 50 caracteres.',
+            'name.unique' => 'Ya existe una categoría con este nombre para el usuario.',
+
             'type.required' => 'El tipo de categoría es obligatorio.',
             'type.string' => 'El tipo de categoría debe ser un texto válido.',
-            'type.max' => 'El tipo de categoría no puede superar los 20 caracteres.',
+            'type.in' => 'El tipo de categoría debe ser "ingreso" o "gasto".',
         ];
     }
 }

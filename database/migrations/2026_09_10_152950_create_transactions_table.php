@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('account_id')->constrained()->cascadeOnDelete();
-        $table->foreignId('category_id')->constrained()->restrictOnDelete();
-        $table->string('type', 20)->index();
-        $table->decimal('amount', 12, 2);
-        $table->text('description')->nullable();
-        $table->date('transaction_date')->index();
-        $table->timestamps();
+            $table->id();
+            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained()->restrictOnDelete();
+            $table->string('type', 20)->index();
+            $table->decimal('amount', 12, 2);
+            $table->text('description')->nullable();
+            $table->date('transaction_date')->index();
+            $table->timestamps();
         });
     }
 

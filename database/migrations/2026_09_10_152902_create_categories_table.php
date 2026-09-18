@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->string('name', 50);
-        $table->string('type', 20)->nullable(); // ej. 'ingreso' o 'gasto'
-        $table->timestamps();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('name', 50);
+            $table->string('type', 20)->nullable(); // ej. 'ingreso' o 'gasto'
+            $table->timestamps();
         });
     }
 
@@ -28,7 +28,3 @@ return new class extends Migration
         Schema::dropIfExists('categories');
     }
 };
-
-
-
-

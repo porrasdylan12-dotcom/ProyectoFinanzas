@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BusinessRuleException;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 
 class LoginController extends Controller
@@ -16,9 +16,11 @@ class LoginController extends Controller
 
         // Mensaje idéntico exista o no la cuenta
         if (! $usuario || ! Hash::check($request->password, $usuario->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Las credenciales proporcionadas son incorrectas.'],
-            ]);
+            throw new BusinessRuleException(
+                'Las credenciales proporcionadas son incorrectas.',
+                'CREDENCIALES_INVALIDAS',
+                401
+            );
         }
 
         $token = $usuario->createToken(

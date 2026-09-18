@@ -3,65 +3,98 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SharedExpensesRequest;
+use App\Http\Resources\SharedExpensesResource;
+use App\Models\Group;
 use App\Models\SharedExpenses;
+use App\Services\GroupService;
 use App\Services\SharedExpensesService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class SharedExpensesController extends Controller
 {
-    public function __construct(public SharedExpensesService $sharedExpensesService)
-    {
+    public function __construct(
+        public SharedExpensesService $sharedExpensesService,
+        public GroupService $groupService,
+    ) {
         $this->sharedExpensesService = $sharedExpensesService;
+        $this->groupService = $groupService;
     }
 
-    public function index()
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $sharedExpenses = SharedExpenses::latest()->paginate(15);
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
 
-        return view('shared_expenses.index', compact('sharedExpenses'));
+        return SharedExpensesResource::collection($this->sharedExpensesService->list($filters));
     }
 
-    public function create()
-    {
-        return view('shared_expenses.create');
-    }
-
-    public function store(SharedExpensesRequest $request)
+    public function store(SharedExpensesRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        $sharedExpense = $this->sharedExpensesService->create($data);
+        $sharedExpense = $this->sharedExpensesService->create($data)->load('debts');
 
-        return redirect()
-            ->route('shared-expenses.show', $sharedExpense)
-            ->with('success', 'Gasto compartido creado correctamente.');
+        return (new SharedExpensesResource($sharedExpense))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.shared-expenses.show', $sharedExpense));
     }
 
-    public function show(SharedExpenses $sharedExpense)
+    public function forGroup(Request $request, Group $group): AnonymousResourceCollection
     {
-        return view('shared_expenses.show', compact('sharedExpense'));
+        $this->groupService->findForUser($group->id, $request->user()->id);
+
+        $filters = $request->all();
+        $filters['user_id'] = $request->user()->id;
+        $filters['group_id'] = $group->id;
+
+        return SharedExpensesResource::collection($this->sharedExpensesService->list($filters));
     }
 
-    public function edit(SharedExpenses $sharedExpense)
+    public function storeInGroup(SharedExpensesRequest $request, Group $group): JsonResponse
     {
-        return view('shared_expenses.edit', compact('sharedExpense'));
+        $this->groupService->findForUser($group->id, $request->user()->id);
+
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+        $data['group_id'] = $group->id;
+
+        $sharedExpense = $this->sharedExpensesService->create($data)->load('debts');
+
+        return (new SharedExpensesResource($sharedExpense))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('api.shared-expenses.show', $sharedExpense));
     }
 
-    public function update(SharedExpensesRequest $request, SharedExpenses $sharedExpense)
+    public function show(Request $request, SharedExpenses $sharedExpense): SharedExpensesResource
     {
-        $this->sharedExpensesService->update($sharedExpense, $request->validated());
+        $sharedExpense = $this->sharedExpensesService
+            ->findForUser($sharedExpense->id, $request->user()->id)
+            ->load('debts');
 
-        return redirect()
-            ->route('shared-expenses.show', $sharedExpense)
-            ->with('success', 'Gasto compartido actualizado correctamente.');
+        return new SharedExpensesResource($sharedExpense);
     }
 
-    public function destroy(SharedExpenses $sharedExpense)
+    public function update(SharedExpensesRequest $request, SharedExpenses $sharedExpense): SharedExpensesResource
     {
-        $sharedExpense->delete();
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
 
-        return redirect()
-            ->route('shared-expenses.index')
-            ->with('success', 'Gasto compartido eliminado correctamente.');
+        $sharedExpense = $this->sharedExpensesService->update($sharedExpense, $data);
+
+        return new SharedExpensesResource($sharedExpense);
+    }
+
+    public function destroy(Request $request, SharedExpenses $sharedExpense): JsonResponse
+    {
+        $sharedExpense = $this->sharedExpensesService
+            ->findForUser($sharedExpense->id, $request->user()->id);
+        $this->sharedExpensesService->delete($sharedExpense);
+
+        return response()->json(null, 204);
     }
 }

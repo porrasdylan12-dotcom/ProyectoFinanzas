@@ -23,7 +23,7 @@ class StoreAccountRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->user()?->id ?? $this->input('user_id');
+        $userId = $this->user()->id;
 
         return [
             'user_id' => ['sometimes', 'integer', 'exists:users,id'],

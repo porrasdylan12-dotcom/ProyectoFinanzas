@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Account;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -18,8 +19,9 @@ class UpdateAccountRequest extends FormRequest
      */
     public function rules(): array
     {
-        $accountId = $this->route('account')?->id ?? $this->input('id');
-        $userId = $this->user()?->id ?? $this->input('user_id');
+        $account = $this->route('account');
+        $accountId = $account instanceof Account ? $account->id : $this->input('id');
+        $userId = $this->user()->id;
 
         return [
             'user_id' => ['sometimes', 'integer', 'exists:users,id'],

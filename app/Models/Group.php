@@ -18,7 +18,7 @@ class Group extends Model
     ];
 
     /**
-     * @return BelongsToMany<User, $this>
+     * @return BelongsToMany<User, $this, GroupUser>
      */
     public function users(): BelongsToMany
     {
@@ -28,6 +28,7 @@ class Group extends Model
             'group_id',
             'user_id'
         )
+            ->using(GroupUser::class)
             ->withPivot('role', 'joined_at')
             ->withTimestamps();
     }

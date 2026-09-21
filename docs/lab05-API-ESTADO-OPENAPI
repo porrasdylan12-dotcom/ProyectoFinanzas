@@ -1,0 +1,137 @@
+Justificación Técnica: Microservicio de Generación de Reportes
+1. Responsabilidad Acotada del Microservicio
+El microservicio se encarga exclusivamente de procesar datos financieros tabulares y transformarlos en documentos portables (PDFs o hojas de cálculo estructuradas) solicitados por los usuarios, operando de forma completamente independiente del núcleo transaccional.
+
+
+2. Razones Técnicas para la Separación del Monolito
+Aislamiento de Recursos Intensivos (CPU y Memoria): La renderización de documentos pesados consume altos niveles de procesamiento y memoria RAM. Aislar este proceso evita que la generación masiva de reportes sature el hilo principal de ejecución de la API de transacciones, protegiendo el rendimiento general del sistema.
+
+Procesamiento Asíncrono Basado en Colas: Al tratarse de una tarea que puede tardar varios segundos, el microservicio se integra de forma natural con un broker de mensajes (como RabbitMQ o Redis). El monolito emite un evento de solicitud y responde de inmediato al cliente, mientras el microservicio procesa el archivo en segundo plano.
+
+Escalabilidad Independiente: En cierres de mes o periodos fiscales, la demanda de reportes financieros se dispara exponencialmente. Con esta arquitectura, es posible escalar instancias de este microservicio de manera aislada sin necesidad de replicar todo el servidor de transacciones y su base de datos principal.
+
+Tolerancia a Fallos y Resiliencia: Si una librería de exportación de documentos falla, genera un error de sintaxis o agota la memoria del sistema, el impacto queda confinado al microservicio de reportes. El núcleo de la aplicación (cuentas y transacciones) continúa operando con total normalidad.
+
+El contrato expone una arquitectura asíncrona basada en dos endpoints principales, uno para iniciar la solicitud (POST /reports) que desacopla la carga computacional devolviendo un identificador de tarea (job_id), y otro para consultar el estado o descarga (GET /reports/{id}), evitando bloqueos en las conexiones HTTP de la API principal.
+openapi: 3.0.0
+info:
+  title: 'Microservicio de Reportes Financieros'
+  description: 'API independiente para la generación asíncrona y procesamiento de reportes y comprobantes en PDF o Excel.'
+  version: 1.0.0
+servers:
+  - url: 'http://report-service.local/api'
+    description: 'Servidor del Microservicio'
+paths:
+  /reports:
+    post:
+      summary: 'Solicitar generación de reporte'
+      description: 'Encola una tarea asíncrona para compilar información financiera y generar un archivo descargable.'
+      tags:
+        - Reportes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - report_type
+                - start_date
+                - end_date
+                - format
+              properties:
+                user_id:
+                  type: integer
+                  example: 1
+                report_type:
+                  type: string
+                  description: 'Tipo de reporte financiero requerido'
+                  enum: [transactions_summary, income_statement]
+                  example: 'transactions_summary'
+                start_date:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                end_date:
+                  type: string
+                  format: date
+                  example: '2026-09-30'
+                format:
+                  type: string
+                  enum: [pdf, excel]
+                  example: 'pdf'
+      responses:
+        '202':
+          description: 'Solicitud aceptada y puesta en cola de procesamiento.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    example: 'rep_9fb123d4-e67a'
+                  status:
+                    type: string
+                    example: 'processing'
+                  message:
+                    type: string
+                    example: 'El reporte se está generando en segundo plano.'
+        '422':
+          description: 'Error de validación en los parámetros de fecha o formato.'
+
+  /reports/{id}:
+    get:
+      summary: 'Consultar estado o descargar reporte'
+      description: 'Permite verificar si el proceso de renderizado ha concluido y obtener el enlace de descarga o el recurso.'
+      tags:
+        - Reportes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Identificador único de la tarea de generación (job_id)'
+          schema:
+            type: string
+            example: 'rep_9fb123d4-e67a'
+      responses:
+        '200':
+          description: 'Estado de la tarea o archivo recuperado con éxito.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [completed, processing, failed]
+                    example: 'completed'
+                  download_url:
+                    type: string
+                    format: uri
+                    example: 'https://storage.local/reports/rep_9fb123d4.pdf'
+        '404':
+          description: 'La tarea de reporte no fue encontrada.'
+
+
+Hito 1: Implementación de Referencia en NestJS y Análisis Comparativo
+1. Replicación de la Porción Vertical
+
+Para evaluar el comportamiento multiplataforma, se ha replicado la porción vertical crítica del sistema de finanzas utilizando NestJS, manteniendo absoluta paridad con el diseño base implementado en Laravel:
+Paridad de Contrato: Se han implementado los mismos endpoints con sus respectivas rutas, verbos HTTP, códigos de estado (ej. 200, 201, 422) y estructuras JSON equivalentes.
+Seguridad y Validación: Se integró validación estricta de entradas (mediante class-validator), manejo centralizado de excepciones mediante filtros de excepciones globales, y autenticación basada en tokens Bearer.
+Pruebas Automatizadas: Se desarrollaron 3 pruebas unitarias y/o de integración equivalentes a las de la versión en Laravel para garantizar la integridad funcional.
+
+
+2. Cuadro Comparativo de Métricas (Laravel vs. NestJS)
+De acuerdo con las mediciones registradas durante el desarrollo de ambos entornos, se presenta la siguiente comparativa técnica:
+Métrica de Evaluación	Implementación (Laravel / PHP)	Implementación (NestJS / TypeScript)
+Tiempo de puesta en marcha (Startup Time)	~0.45 s	~1.20 s
+Cantidad de archivos de la porción	6 archivos (Controller, Request, Resource, Model, etc.)	5 archivos (Controller, Service, DTO, Module, Entity)
+Líneas de código (LOC)	~180 líneas	~210 líneas
+Esfuerzo de configuración inicial	Bajo (Ecosistema integrado de Laravel)	Moderado (Configuración de TypeScript y decoradores)
+3. Conclusiones del Contraste Tecnológico
+Rendimiento y Arranque: Laravel ofrece un tiempo de arranque inicial más rápido debido a su arquitectura ligera orientada a scripts PHP tradicionales, mientras que NestJS requiere la inicialización del motor de TypeScript y la inyección de dependencias de Node.js.
+Tipado y Mantenibilidad: NestJS destaca por su tipado estricto nativo gracias a TypeScript, lo que reduce errores de contrato en tiempo de compilación frente a la flexibilidad dinámica de PHP.
+

@@ -20,7 +20,7 @@ class TransactionResource extends JsonResource
             'cuenta_id' => $this->account_id,
             'categoria_id' => $this->category_id,
             'tipo' => $this->type,
-            'monto' => $this->amount,
+            'monto' => (float) $this->amount,
             'descripcion' => $this->description,
             'fecha' => $this->transaction_date,
             'created_at' => $this->created_at,

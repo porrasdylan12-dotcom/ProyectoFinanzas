@@ -11,6 +11,7 @@ use App\Models\SharedExpenses;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -138,5 +139,21 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $user = User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $rolAdmin= Role::create(['name' => 'admin']);
+        $rolUser= Role::create(['name' => 'user']);
+
     }
 }

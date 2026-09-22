@@ -41,6 +41,8 @@ Registro cronológico de los cambios realizados mediante commits en el proyecto.
 | 2026-09-17 | 54627df | dylan porras | porrasdylan12-dotcom | |
 | 2026-09-17 | fcd759c | Merge pull request #7 from porrasdylan12-dotcom/dylan | porrasdylan12-dotcom | |
 | 2026-09-17 | 1dceccb | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 | |
+| 2026-09-17 | b85f302 | Create Resources, API, Token, exceptions, test, modify controllers, services, requests, validations and database | ErickSerrano19 | Opencode |
+| 2026-09-18 | 7a8c27c | Modify Requests, verify test, api and openapi | ErickSerrano19 | Opencode |
 
 ---Observaciones
 

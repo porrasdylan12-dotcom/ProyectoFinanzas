@@ -10,6 +10,7 @@ use App\Services\TransactionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use OpenApi\Attributes as OA;
 
 class TransactionController extends Controller
 {
@@ -17,6 +18,18 @@ class TransactionController extends Controller
     {
         $this->transactionService = $transactionService;
     }
+
+#[OA\Get(
+        path: '/api/transactions',
+        summary: 'Listar transacciones',
+        description: 'Devuelve una lista paginada de las transacciones del usuario autenticado.',
+        security: [['sanctum' => []]],
+        tags: ['Transacciones']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Listado obtenido correctamente.'
+    )]
 
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -26,6 +39,29 @@ class TransactionController extends Controller
         return TransactionResource::collection($this->transactionService->list($filters));
     }
 
+#[OA\Post(
+        path: '/api/transactions',
+        summary: 'Crear nueva transacción',
+        description: 'Registra una nueva transacción.',
+        security: [['sanctum' => []]],
+        tags: ['Transacciones']
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['account_id', 'category_id', 'amount', 'transaction_date'],
+            properties: [
+                new OA\Property(property: 'account_id', type: 'integer', example: 1),
+                new OA\Property(property: 'category_id', type: 'integer', example: 3),
+                new OA\Property(property: 'amount', type: 'number', format: 'float', example: 150.50),
+                new OA\Property(property: 'transaction_date', type: 'string', format: 'date', example: '2026-09-15'),
+                new OA\Property(property: 'description', type: 'string', example: 'Compra de supermercado')
+            ]
+        )
+    )]
+    #[OA\Response(response: 201, description: 'Transacción creada exitosamente')]
+    #[OA\Response(response: 422, description: 'Error de validación')]
+    
     public function store(TransactionRequest $request): JsonResponse
     {
         $data = $request->validated();

@@ -11,6 +11,7 @@ use App\Models\SharedExpenses;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -154,6 +155,12 @@ class DatabaseSeeder extends Seeder
 
         $rolAdmin= Role::create(['name' => 'admin']);
         $rolUser= Role::create(['name' => 'user']);
+
+        $admin->assignRole($rolAdmin);
+        $user->assignRole($rolUser);
+
+        $permission=Permission::create(['name' => 'create accounts']);
+        $rolAdmin->givePermissionTo($permission);
 
     }
 }

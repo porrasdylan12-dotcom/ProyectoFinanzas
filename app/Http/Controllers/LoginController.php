@@ -26,6 +26,7 @@ class LoginController extends Controller
         $token = $usuario->createToken(
             name: 'user_token',
             expiresAt: now()->addMinutes(30)
+            
         );
 
         return response()->json(['token' => $token->plainTextToken], 200);

@@ -42,6 +42,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Guard de la API REST. Sanctum lo resuelve a partir de esta entrada, y
+        // spatie/laravel-permission la usa para determinar los guards validos
+        // de un modelo: sin el, hasRole() falla cuando la peticion corre bajo
+        // el guard 'sanctum' con un rol creado para 'web'.
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
     ],
 
     /*

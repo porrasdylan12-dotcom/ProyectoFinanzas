@@ -125,6 +125,25 @@ class TransactionService
         });
     }
 
+    /**
+     * Capa 2 de autorizacion: resuelve la transacción exigiendo que la cuenta que
+     * la respalda pertenezca a la persona usuaria antes de modificarla.
+     * findForUser() responde 404, de modo que una transacción inexistente y una
+     * ajena resultan indistinguibles.
+     *
+     * Esta resolucion es obligatoria y no un adorno: update() no conoce a quien
+     * llama, y assertRelationsBelongToUser() valida las cuentas y categorías que
+     * llegan en el payload, no la procedencia de la transacción. Sin este filtro,
+     * un cuerpo con account_id y category_id propios desplazaría una transacción
+     * ajena a la cuenta de quien la llama.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateForUser(int $id, int $userId, array $data): Transaction
+    {
+        return $this->update($this->findForUser($id, $userId), $data);
+    }
+
     public function delete(Transaction $transaction): bool
     {
         $delta = $transaction->type === 'ingreso'

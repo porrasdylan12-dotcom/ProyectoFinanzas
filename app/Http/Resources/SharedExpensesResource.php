@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\SharedExpenses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\SharedExpenses */
+/** @mixin SharedExpenses */
 class SharedExpensesResource extends JsonResource
 {
     /**
@@ -26,8 +27,8 @@ class SharedExpensesResource extends JsonResource
             'deudas' => GroupDebtResource::collection(
                 $this->whenLoaded('debts')
             ),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

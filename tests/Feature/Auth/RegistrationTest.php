@@ -6,13 +6,13 @@ beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::registration());
 });
 
-test('registration screen can be rendered', function () {
+test('muestra la pantalla de registro', function () {
     $response = $this->get(route('register'));
 
     $response->assertOk();
 });
 
-test('new users can register', function () {
+test('permite registrar una cuenta nueva', function () {
     $response = $this->post(route('register.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',

@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Account */
+/** @mixin Account */
 class AccountResource extends JsonResource
 {
     /**
@@ -21,8 +22,8 @@ class AccountResource extends JsonResource
             'nombre' => $this->name,
             'saldo' => $this->balance,
             'tipo' => $this->type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

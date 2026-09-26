@@ -34,7 +34,7 @@ test('lista presupuestos del usuario autenticado con paginación', function () {
         ->assertJsonCount(2, 'data')
         ->assertJsonPath('meta.total', 2)
         ->assertJsonStructure([
-            'data' => [['id', 'user_id', 'categoria_id', 'nombre', 'monto_maximo', 'mes', 'anio']],
+            'data' => [['id', 'user_id', 'categoria_id', 'nombre', 'monto_maximo', 'mes', 'año', 'creada', 'actualizada']],
             'meta' => ['current_page', 'last_page', 'per_page', 'total'],
         ]);
 });
@@ -99,6 +99,22 @@ test('no permite acceder a presupuestos de otro usuario (404)', function () {
 
     $this->getJson("/api/budgets/{$budget->id}")
         ->assertStatus(404);
+});
+
+test('no permite actualizar un presupuesto de otro usuario (404)', function () {
+    $other = User::factory()->create();
+    $budget = Budget::factory()->create([
+        'user_id' => $other->id,
+        'category_id' => Category::factory()->create(['user_id' => $other->id, 'type' => 'gasto'])->id,
+        'name' => 'Presupuesto ajeno',
+    ]);
+
+    $this->putJson("/api/budgets/{$budget->id}", datosPresupuestoValidos([
+        'category_id' => $this->category->id,
+        'name' => 'Presupuesto robado',
+    ]))->assertStatus(404);
+
+    expect(Budget::find($budget->id)->name)->toBe('Presupuesto ajeno');
 });
 
 test('elimina un presupuesto propio (204)', function () {

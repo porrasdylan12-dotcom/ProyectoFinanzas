@@ -141,26 +141,32 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        $rolAdmin = Role::findOrCreate('admin', 'web');
+        $rolUser = Role::findOrCreate('user', 'web');
+        $rolViewer = Role::findOrCreate('viewer', 'web');
+
+        $permission = Permission::findOrCreate('accounts.create', 'web');
+        $rolAdmin->givePermissionTo($permission);
+
         $admin = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
         ]);
+        $admin->syncRoles([$rolAdmin]);
 
         $user = User::factory()->create([
             'name' => 'User',
             'email' => 'user@example.com',
             'password' => bcrypt('password'),
         ]);
+        $user->syncRoles([$rolUser]);
 
-        $rolAdmin= Role::create(['name' => 'admin']);
-        $rolUser= Role::create(['name' => 'user']);
-
-        $admin->assignRole($rolAdmin);
-        $user->assignRole($rolUser);
-
-        $permission=Permission::create(['name' => 'create accounts']);
-        $rolAdmin->givePermissionTo($permission);
-
+        $viewer = User::factory()->create([
+            'name' => 'Viewer',
+            'email' => 'viewer@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $viewer->syncRoles([$rolViewer]);
     }
 }

@@ -11,6 +11,7 @@ use App\Services\SharedExpensesService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class GroupDebtController extends Controller
 {
@@ -30,6 +31,7 @@ class GroupDebtController extends Controller
         return GroupDebtResource::collection($this->groupDebtService->list($filters));
     }
 
+    #[Authorize('create', GroupDebt::class)]
     public function store(GroupDebtRequest $request): JsonResponse
     {
         $groupDebt = $this->groupDebtService->create($request->validated());
@@ -40,6 +42,7 @@ class GroupDebtController extends Controller
             ->header('Location', route('api.group-debts.show', $groupDebt));
     }
 
+    #[Authorize('view', 'sharedExpense')]
     public function forSharedExpense(Request $request, SharedExpenses $sharedExpense): AnonymousResourceCollection
     {
         $this->sharedExpensesService->findForUser($sharedExpense->id, $request->user()->id);
@@ -51,6 +54,7 @@ class GroupDebtController extends Controller
         return GroupDebtResource::collection($this->groupDebtService->list($filters));
     }
 
+    #[Authorize('create', GroupDebt::class)]
     public function storeInSharedExpense(GroupDebtRequest $request, SharedExpenses $sharedExpense): JsonResponse
     {
         $this->sharedExpensesService->findForUser($sharedExpense->id, $request->user()->id);
@@ -66,6 +70,7 @@ class GroupDebtController extends Controller
             ->header('Location', route('api.group-debts.show', $groupDebt));
     }
 
+    #[Authorize('view', 'group_debt')]
     public function show(Request $request, GroupDebt $groupDebt): GroupDebtResource
     {
         $groupDebt = $this->groupDebtService->findForUser($groupDebt->id, $request->user()->id);
@@ -73,13 +78,15 @@ class GroupDebtController extends Controller
         return new GroupDebtResource($groupDebt);
     }
 
+    #[Authorize('update', 'group_debt')]
     public function update(GroupDebtRequest $request, GroupDebt $groupDebt): GroupDebtResource
     {
-        $groupDebt = $this->groupDebtService->update($groupDebt, $request->validated());
+        $groupDebt = $this->groupDebtService->updateForUser($groupDebt->id, $request->user()->id, $request->validated());
 
         return new GroupDebtResource($groupDebt);
     }
 
+    #[Authorize('delete', 'group_debt')]
     public function destroy(Request $request, GroupDebt $groupDebt): JsonResponse
     {
         $groupDebt = $this->groupDebtService->findForUser($groupDebt->id, $request->user()->id);

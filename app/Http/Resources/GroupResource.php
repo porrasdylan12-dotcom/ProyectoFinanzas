@@ -2,11 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Group */
+/** @mixin Group */
 class GroupResource extends JsonResource
 {
     /**
@@ -19,8 +20,8 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->name,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
             'miembros' => $this->whenLoaded('users', fn () => $this->users->map(
                 function (User $user): array {
                     $pivot = $user->pivot;

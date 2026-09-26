@@ -83,6 +83,20 @@ test('no permite acceder a categorías de otro usuario (404)', function () {
         ->assertStatus(404);
 });
 
+test('no permite actualizar una categoría de otro usuario (404)', function () {
+    $category = Category::factory()->create([
+        'user_id' => User::factory()->create()->id,
+        'name' => 'Categoría ajena',
+    ]);
+
+    $this->putJson("/api/categories/{$category->id}", [
+        'name' => 'Categoría robada',
+        'type' => 'gasto',
+    ])->assertStatus(404);
+
+    expect(Category::find($category->id)->name)->toBe('Categoría ajena');
+});
+
 test('no permite eliminar categoría con transacciones (409)', function () {
     $category = Category::factory()->create(['user_id' => $this->user->id]);
     $account = Account::factory()->create(['user_id' => $this->user->id]);

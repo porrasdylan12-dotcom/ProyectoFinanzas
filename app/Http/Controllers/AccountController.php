@@ -27,7 +27,7 @@ class AccountController extends Controller
         return AccountResource::collection($this->accountService->list($filters));
     }
 
-    #[Authorize('create', 'account')]
+    #[Authorize('create', Account::class)]
     public function store(StoreAccountRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -40,7 +40,7 @@ class AccountController extends Controller
             ->setStatusCode(201)
             ->header('Location', route('api.accounts.show', $account));
     }
-    #[Authorize('view', 'account')]
+    #[Authorize('view', Account::class)]
     public function show(Request $request, Account $account): AccountResource
     {
         $account = $this->accountService->findForUser($account->id, $request->user()->id);
@@ -48,7 +48,7 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
-    #[Authorize('update', 'account')]
+    #[Authorize('update', Account::class)]
     public function update(UpdateAccountRequest $request, Account $account): AccountResource
     {
         $data = $request->validated();
@@ -60,7 +60,7 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
-    #[Authorize('delete', 'account')]
+    #[Authorize('delete', Account::class)]
     public function destroy(Request $request, Account $account): JsonResponse
     {
         $account = $this->accountService->findForUser($account->id, $request->user()->id);

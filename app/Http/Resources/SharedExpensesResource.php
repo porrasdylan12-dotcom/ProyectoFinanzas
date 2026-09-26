@@ -26,8 +26,8 @@ class SharedExpensesResource extends JsonResource
             'deudas' => GroupDebtResource::collection(
                 $this->whenLoaded('debts')
             ),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

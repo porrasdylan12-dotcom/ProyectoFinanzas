@@ -21,8 +21,8 @@ class AccountResource extends JsonResource
             'nombre' => $this->name,
             'saldo' => $this->balance,
             'tipo' => $this->type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

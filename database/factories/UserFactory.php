@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -34,6 +35,18 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ];
+    }
+
+    /**
+     * Toda persona usuaria creada por la factory recibe el rol 'user'.
+     * Las policies exigen un rol explícito para escribir, de modo que los tests
+     * que necesiten otro rol deben usar syncRoles() en lugar de assignRole().
+     */
+    public function configure(): static
+    {
+        return $this->afterMaking(function (User $user): void {
+            $user->assignRole(Role::findOrCreate('user'));
+        });
     }
 
     /**

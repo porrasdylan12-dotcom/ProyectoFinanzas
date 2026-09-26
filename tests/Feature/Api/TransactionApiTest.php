@@ -65,7 +65,7 @@ test('crea una transacción y actualiza el saldo de la cuenta', function () {
     ]));
 
     $response->assertStatus(201)
-        ->assertJsonPath('data.monto', '5000.00')
+        ->assertJsonPath('data.monto', 5000)
         ->assertJsonPath('data.tipo', 'gasto')
         ->assertHeader('Location', route('api.transactions.show', $response->json('data.id')));
 

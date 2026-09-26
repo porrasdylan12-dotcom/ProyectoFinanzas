@@ -22,9 +22,9 @@ class BudgetResource extends JsonResource
             'nombre' => $this->name,
             'monto_maximo' => $this->maxAmount,
             'mes' => $this->month,
-            'anio' => $this->year,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'año' => $this->year,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

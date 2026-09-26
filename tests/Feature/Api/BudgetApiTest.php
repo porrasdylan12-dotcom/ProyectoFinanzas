@@ -34,7 +34,7 @@ test('lista presupuestos del usuario autenticado con paginación', function () {
         ->assertJsonCount(2, 'data')
         ->assertJsonPath('meta.total', 2)
         ->assertJsonStructure([
-            'data' => [['id', 'user_id', 'categoria_id', 'nombre', 'monto_maximo', 'mes', 'anio']],
+            'data' => [['id', 'user_id', 'categoria_id', 'nombre', 'monto_maximo', 'mes', 'año', 'creada', 'actualizada']],
             'meta' => ['current_page', 'last_page', 'per_page', 'total'],
         ]);
 });

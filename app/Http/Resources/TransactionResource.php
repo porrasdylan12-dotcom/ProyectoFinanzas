@@ -23,8 +23,8 @@ class TransactionResource extends JsonResource
             'monto' => (float) $this->amount,
             'descripcion' => $this->description,
             'fecha' => $this->transaction_date,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

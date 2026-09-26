@@ -51,10 +51,9 @@ class GroupController extends Controller
     #[Authorize('update', 'group')]
     public function update(GroupRequest $request, Group $group): GroupResource
     {
-        $group->load('users');
-        $group = $this->groupService->update($group, $request->validated());
+        $group = $this->groupService->updateForUser($group->id, $request->user()->id, $request->validated());
 
-        return new GroupResource($group);
+        return new GroupResource($group->load('users'));
     }
 
     #[Authorize('delete', 'group')]

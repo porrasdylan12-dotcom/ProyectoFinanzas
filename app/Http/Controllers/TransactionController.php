@@ -119,7 +119,7 @@ class TransactionController extends Controller
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        $transaction = $this->transactionService->update($transaction, $data);
+        $transaction = $this->transactionService->updateForUser($transaction->id, $request->user()->id, $data);
 
         return new TransactionResource($transaction);
     }

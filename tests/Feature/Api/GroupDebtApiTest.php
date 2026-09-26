@@ -112,6 +112,25 @@ test('no permite acceder a deudas ajenas (404)', function () {
         ->assertStatus(404);
 });
 
+test('no permite actualizar una deuda ajena (404)', function () {
+    $outsider = User::factory()->create();
+    $debt = GroupDebt::factory()->create([
+        'shared_expense_id' => $this->expense->id,
+        'debtor_id' => $outsider->id,
+        'creditor_id' => $this->payer->id,
+        'status' => 'pending',
+    ]);
+
+    $this->putJson("/api/group-debts/{$debt->id}", datosDeudaValidos([
+        'shared_expense_id' => $this->expense->id,
+        'debtor_id' => $outsider->id,
+        'creditor_id' => $this->payer->id,
+        'status' => 'paid',
+    ]))->assertStatus(404);
+
+    expect(GroupDebt::find($debt->id)->status)->toBe('pending');
+});
+
 test('permite marcar una deuda como pagada', function () {
     $debt = GroupDebt::factory()->create([
         'shared_expense_id' => $this->expense->id,

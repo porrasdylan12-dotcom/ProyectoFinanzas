@@ -81,7 +81,7 @@ class GroupDebtController extends Controller
     #[Authorize('update', 'group_debt')]
     public function update(GroupDebtRequest $request, GroupDebt $groupDebt): GroupDebtResource
     {
-        $groupDebt = $this->groupDebtService->update($groupDebt, $request->validated());
+        $groupDebt = $this->groupDebtService->updateForUser($groupDebt->id, $request->user()->id, $request->validated());
 
         return new GroupDebtResource($groupDebt);
     }

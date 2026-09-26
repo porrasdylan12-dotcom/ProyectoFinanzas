@@ -111,6 +111,27 @@ test('no permite acceder a gastos ajenos (404)', function () {
         ->assertStatus(404);
 });
 
+test('no permite actualizar un gasto compartido ajeno (404)', function () {
+    $other = User::factory()->create();
+    $otherGroup = Group::factory()->create();
+    $otherGroup->users()->attach($other->id, ['role' => 'admin', 'joined_at' => now()]);
+
+    $expense = SharedExpenses::factory()->create([
+        'group_id' => $otherGroup->id,
+        'user_id' => $other->id,
+        'participants' => [$other->id],
+        'description' => 'Gasto ajeno',
+    ]);
+
+    $this->putJson("/api/shared-expenses/{$expense->id}", datosGastoValidos([
+        'group_id' => $otherGroup->id,
+        'participants' => [$other->id, $this->user->id],
+        'description' => 'Gasto robado',
+    ]))->assertStatus(404);
+
+    expect(SharedExpenses::find($expense->id)->description)->toBe('Gasto ajeno');
+});
+
 test('elimina un gasto compartido (204)', function () {
     $expense = SharedExpenses::factory()->create([
         'group_id' => $this->group->id,

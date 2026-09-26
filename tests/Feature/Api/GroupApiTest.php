@@ -69,6 +69,16 @@ test('no permite ver grupos ajenos (404)', function () {
         ->assertStatus(404);
 });
 
+test('no permite actualizar un grupo ajeno (404)', function () {
+    $group = Group::factory()->create(['name' => 'Grupo ajeno']);
+    $group->users()->attach(User::factory()->create()->id, ['role' => 'admin', 'joined_at' => now()]);
+
+    $this->putJson("/api/groups/{$group->id}", ['name' => 'Grupo robado'])
+        ->assertStatus(404);
+
+    expect(Group::find($group->id)->name)->toBe('Grupo ajeno');
+});
+
 test('solo el admin puede eliminar el grupo (403 y 204)', function () {
     $member = User::factory()->create();
 

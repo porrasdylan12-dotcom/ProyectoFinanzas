@@ -55,7 +55,7 @@ class BudgetController extends Controller
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        $budget = $this->budgetService->update($budget, $data);
+        $budget = $this->budgetService->updateForUser($budget->id, $request->user()->id, $data);
 
         return new BudgetResource($budget);
     }

@@ -77,6 +77,18 @@ class GroupDebtService
         return $groupDebt;
     }
 
+    /**
+     * Capa 2 de autorizacion: resuelve la deuda exigiendo que la persona usuaria
+     * sea deudora o acreedora antes de modificarla. findForUser() responde 404, de
+     * modo que una deuda inexistente y una ajena resultan indistinguibles.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateForUser(int $id, int $userId, array $data): GroupDebt
+    {
+        return $this->update($this->findForUser($id, $userId), $data);
+    }
+
     public function delete(GroupDebt $groupDebt): bool
     {
         if ($groupDebt->status === 'paid') {

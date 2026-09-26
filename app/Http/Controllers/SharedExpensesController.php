@@ -90,7 +90,7 @@ class SharedExpensesController extends Controller
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        $sharedExpense = $this->sharedExpensesService->update($sharedExpense, $data);
+        $sharedExpense = $this->sharedExpensesService->updateForUser($sharedExpense->id, $request->user()->id, $data);
 
         return new SharedExpensesResource($sharedExpense);
     }

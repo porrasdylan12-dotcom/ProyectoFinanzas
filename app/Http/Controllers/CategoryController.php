@@ -51,7 +51,7 @@ class CategoryController extends Controller
     #[Authorize('update', 'category')]
     public function update(CategoryRequest $request, Category $category): CategoryResource
     {
-        $category = $this->categoryService->update($category, $request->validated());
+        $category = $this->categoryService->updateForUser($category->id, $request->user()->id, $request->validated());
 
         return new CategoryResource($category);
     }

@@ -101,6 +101,22 @@ test('no permite acceder a presupuestos de otro usuario (404)', function () {
         ->assertStatus(404);
 });
 
+test('no permite actualizar un presupuesto de otro usuario (404)', function () {
+    $other = User::factory()->create();
+    $budget = Budget::factory()->create([
+        'user_id' => $other->id,
+        'category_id' => Category::factory()->create(['user_id' => $other->id, 'type' => 'gasto'])->id,
+        'name' => 'Presupuesto ajeno',
+    ]);
+
+    $this->putJson("/api/budgets/{$budget->id}", datosPresupuestoValidos([
+        'category_id' => $this->category->id,
+        'name' => 'Presupuesto robado',
+    ]))->assertStatus(404);
+
+    expect(Budget::find($budget->id)->name)->toBe('Presupuesto ajeno');
+});
+
 test('elimina un presupuesto propio (204)', function () {
     $budget = Budget::factory()->create(['user_id' => $this->user->id, 'category_id' => $this->category->id]);
 

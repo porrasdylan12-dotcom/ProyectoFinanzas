@@ -95,7 +95,6 @@ test('logout revoca el token actual del usuario', function () {
     $user = User::factory()->create();
     $tokenResult = $user->createToken('user_token', expiresAt: now()->addMinutes(30));
 
-    // Simular que el usuario está autenticado con ese token
     $user->withAccessToken($tokenResult->accessToken);
 
     $this->assertDatabaseCount('personal_access_tokens', 1);

@@ -8,12 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
-    /**
-     * Registra un nuevo usuario y genera un token de acceso.
-     *
-     * @param  array<string, mixed>  $data
-     * @return array{user: User, token: string}
-     */
     public function register(array $data): array
     {
         $user = User::create([
@@ -33,11 +27,6 @@ class AuthService
         ];
     }
 
-    /**
-     * Autentica al usuario y genera un token de acceso.
-     *
-     * @return array{user: User, token: string}
-     */
     public function login(string $email, string $password): array
     {
         $user = User::where('email', $email)->first();
@@ -61,9 +50,6 @@ class AuthService
         ];
     }
 
-    /**
-     * Cierra la sesión revocando el token actual del usuario.
-     */
     public function logout(User $user): void
     {
         $user->currentAccessToken()->delete();

@@ -1,23 +1,25 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupDebtController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SharedExpensesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', fn () => new UserResource(request()->user()))
-    ->middleware('auth:sanctum')
-    ->name('api.user');
-
-Route::post('/sanctum/token', LoginController::class);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', fn () => new UserResource(request()->user()))
+        ->name('api.user');
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     Route::apiResource('accounts', AccountController::class)->names('api.accounts');
     Route::apiResource('budgets', BudgetController::class)->names('api.budgets');
     Route::apiResource('categories', CategoryController::class)->names('api.categories');
@@ -41,3 +43,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/shared-expenses/{sharedExpense}/group-debts', [GroupDebtController::class, 'storeInSharedExpense'])
         ->name('api.shared-expenses.group-debts.store');
 });
+

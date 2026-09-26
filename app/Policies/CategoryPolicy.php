@@ -2,33 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Category;
-use App\Models\User;
-
-class CategoryPolicy extends BasePolicy
-{
-    public function viewAny(User $user): bool
-    {
-        return $this->canView($user);
-    }
-
-    public function view(User $user, Category $category): bool
-    {
-        return $this->canView($user) && $this->owns($user, $category->user_id);
-    }
-
-    public function create(User $user): bool
-    {
-        return $this->canWrite($user);
-    }
-
-    public function update(User $user, Category $category): bool
-    {
-        return $this->canWrite($user) && $this->owns($user, $category->user_id);
-    }
-
-    public function delete(User $user, Category $category): bool
-    {
-        return $this->canWrite($user) && $this->owns($user, $category->user_id);
-    }
-}
+/**
+ * Capa 1 (rol): hereda de BasePolicy las habilidades viewAny/view/create/update/delete.
+ *
+ * Capa 2 (propiedad): CategoryService::findForUser() exige que la categoría
+ * pertenezca a la persona usuaria y responde 404 en caso contrario.
+ */
+class CategoryPolicy extends BasePolicy {}

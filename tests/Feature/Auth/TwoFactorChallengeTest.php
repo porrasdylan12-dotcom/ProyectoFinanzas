@@ -8,13 +8,13 @@ beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
 });
 
-test('two factor challenge redirects to login when not authenticated', function () {
+test('redirige al inicio de sesión ante un reto de dos factores sin autenticar', function () {
     $response = $this->get(route('two-factor.login'));
 
     $response->assertRedirect(route('login'));
 });
 
-test('two factor challenge can be rendered', function () {
+test('muestra la pantalla del reto de dos factores', function () {
     Features::twoFactorAuthentication([
         'confirm' => true,
         'confirmPassword' => true,

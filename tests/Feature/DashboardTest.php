@@ -2,12 +2,12 @@
 
 use App\Models\User;
 
-test('guests are redirected to the login page', function () {
+test('redirige a los visitantes al inicio de sesión', function () {
     $response = $this->get(route('dashboard'));
     $response->assertRedirect(route('login'));
 });
 
-test('authenticated users can visit the dashboard', function () {
+test('permite que una persona autenticada vea el panel', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 

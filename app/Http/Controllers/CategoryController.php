@@ -9,6 +9,7 @@ use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class CategoryController extends Controller
 {
@@ -25,6 +26,7 @@ class CategoryController extends Controller
         return CategoryResource::collection($this->categoryService->list($filters));
     }
 
+    #[Authorize('create', Category::class)]
     public function store(CategoryRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -38,6 +40,7 @@ class CategoryController extends Controller
             ->header('Location', route('api.categories.show', $category));
     }
 
+    #[Authorize('view', 'category')]
     public function show(Request $request, Category $category): CategoryResource
     {
         $category = $this->categoryService->findForUser($category->id, $request->user()->id);
@@ -45,6 +48,7 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
+    #[Authorize('update', 'category')]
     public function update(CategoryRequest $request, Category $category): CategoryResource
     {
         $category = $this->categoryService->update($category, $request->validated());
@@ -52,6 +56,7 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
+    #[Authorize('delete', 'category')]
     public function destroy(Request $request, Category $category): JsonResponse
     {
         $category = $this->categoryService->findForUser($category->id, $request->user()->id);

@@ -6,10 +6,8 @@ namespace App\Http\Controllers;
 use OpenApi\Attributes as OA;
 
 #[OA\Info(
-    version: "1.0.0",
-    description: "Documentación de la API REST para el Laboratorio 5",
-    title: "API de Proyecto Finanzas"
+    version: '1.0.0',
+    description: 'Documentación de la API REST para el Laboratorio 5',
+    title: 'API de Proyecto Finanzas'
 )]
-class SwaggerDef
-{
-}
+class SwaggerDef {}

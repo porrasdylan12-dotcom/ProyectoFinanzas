@@ -40,7 +40,8 @@ class AccountController extends Controller
             ->setStatusCode(201)
             ->header('Location', route('api.accounts.show', $account));
     }
-    #[Authorize('view', Account::class)]
+
+    #[Authorize('view', 'account')]
     public function show(Request $request, Account $account): AccountResource
     {
         $account = $this->accountService->findForUser($account->id, $request->user()->id);
@@ -48,7 +49,7 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
-    #[Authorize('update', Account::class)]
+    #[Authorize('update', 'account')]
     public function update(UpdateAccountRequest $request, Account $account): AccountResource
     {
         $data = $request->validated();
@@ -60,7 +61,7 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
-    #[Authorize('delete', Account::class)]
+    #[Authorize('delete', 'account')]
     public function destroy(Request $request, Account $account): JsonResponse
     {
         $account = $this->accountService->findForUser($account->id, $request->user()->id);

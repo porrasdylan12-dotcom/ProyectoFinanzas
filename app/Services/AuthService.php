@@ -17,7 +17,7 @@ class AuthService
             'password' => $data['password'],
         ]);
 
-        $user->assignRole(Role::findOrCreate('user'));
+        $user->assignRole(Role::findOrCreate('user', 'web'));
 
         $token = $user->createToken(
             name: 'user_token',

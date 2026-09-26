@@ -141,11 +141,11 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        $rolAdmin = Role::findOrCreate('admin');
-        $rolUser = Role::findOrCreate('user');
-        $rolViewer = Role::findOrCreate('viewer');
+        $rolAdmin = Role::findOrCreate('admin', 'web');
+        $rolUser = Role::findOrCreate('user', 'web');
+        $rolViewer = Role::findOrCreate('viewer', 'web');
 
-        $permission = Permission::findOrCreate('accounts.create');
+        $permission = Permission::findOrCreate('accounts.create', 'web');
         $rolAdmin->givePermissionTo($permission);
 
         $admin = User::factory()->create([

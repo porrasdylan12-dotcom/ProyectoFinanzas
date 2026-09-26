@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\SharedExpenses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\SharedExpenses */
+/** @mixin SharedExpenses */
 class SharedExpensesResource extends JsonResource
 {
     /**

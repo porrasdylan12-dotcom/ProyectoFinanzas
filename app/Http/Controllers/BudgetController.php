@@ -10,6 +10,7 @@ use App\Services\BudgetService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class BudgetController extends Controller
 {
@@ -26,6 +27,7 @@ class BudgetController extends Controller
         return BudgetResource::collection($this->budgetService->list($filters));
     }
 
+    #[Authorize('create', Budget::class)]
     public function store(StoreBudgetRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -39,6 +41,7 @@ class BudgetController extends Controller
             ->header('Location', route('api.budgets.show', $budget));
     }
 
+    #[Authorize('view', 'budget')]
     public function show(Request $request, Budget $budget): BudgetResource
     {
         $budget = $this->budgetService->findForUser($budget->id, $request->user()->id);
@@ -46,6 +49,7 @@ class BudgetController extends Controller
         return new BudgetResource($budget);
     }
 
+    #[Authorize('update', 'budget')]
     public function update(UpdateBudgetRequest $request, Budget $budget): BudgetResource
     {
         $data = $request->validated();
@@ -56,6 +60,7 @@ class BudgetController extends Controller
         return new BudgetResource($budget);
     }
 
+    #[Authorize('delete', 'budget')]
     public function destroy(Request $request, Budget $budget): JsonResponse
     {
         $budget = $this->budgetService->findForUser($budget->id, $request->user()->id);

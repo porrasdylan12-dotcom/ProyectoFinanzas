@@ -7,7 +7,6 @@ use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 
 class AuthController extends Controller

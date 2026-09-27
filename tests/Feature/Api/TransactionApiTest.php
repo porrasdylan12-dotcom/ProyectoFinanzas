@@ -65,7 +65,7 @@ test('crea una transacción y actualiza el saldo de la cuenta', function () {
     ]));
 
     $response->assertStatus(201)
-        ->assertJsonPath('data.monto', '5000.00')
+        ->assertJsonPath('data.monto', 5000)
         ->assertJsonPath('data.tipo', 'gasto')
         ->assertHeader('Location', route('api.transactions.show', $response->json('data.id')));
 
@@ -116,6 +116,31 @@ test('no permite acceder a transacciones de otro usuario (404)', function () {
 
     $this->getJson("/api/transactions/{$transaction->id}")
         ->assertStatus(404);
+});
+
+test('no permite actualizar una transacción ajena (404)', function () {
+    $otherUser = User::factory()->create();
+    $otherAccount = Account::factory()->create(['user_id' => $otherUser->id]);
+    $transaction = Transaction::factory()->create([
+        'account_id' => $otherAccount->id,
+        'category_id' => Category::factory()->create(['user_id' => $otherUser->id, 'type' => 'gasto'])->id,
+        'description' => 'Transacción ajena',
+    ]);
+    $saldoAjeno = $otherAccount->fresh()->balance;
+
+    // El cuerpo lleva account_id y category_id propios, que es la vía por la que
+    // assertRelationsBelongToUser() daba el visto bueno: valida el payload, no la
+    // procedencia de la transacción, y desplazaría el movimiento a la cuenta de
+    // quien llama en lugar de responder 404.
+    $this->putJson("/api/transactions/{$transaction->id}", datosTransaccionValidos([
+        'account_id' => $this->account->id,
+        'category_id' => $this->category->id,
+        'description' => 'Transacción robada',
+    ]))->assertStatus(404);
+
+    expect(Transaction::find($transaction->id)->description)->toBe('Transacción ajena')
+        ->and(Transaction::find($transaction->id)->account_id)->toBe($otherAccount->id)
+        ->and($otherAccount->fresh()->balance)->toBe($saldoAjeno);
 });
 
 test('elimina una transacción y revierte su efecto sobre el saldo', function () {

@@ -76,6 +76,18 @@ class GroupService
         return $group;
     }
 
+    /**
+     * Capa 2 de autorizacion: resuelve el grupo exigiendo que la persona usuaria
+     * sea miembro antes de modificarlo. findForUser() responde 404, de modo que un
+     * grupo inexistente y uno ajeno resultan indistinguibles.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateForUser(int $id, int $userId, array $data): Group
+    {
+        return $this->update($this->findForUser($id, $userId), $data);
+    }
+
     public function delete(Group $group, int $userId): bool
     {
         $membership = $group->users()->where('user_id', $userId)->first();

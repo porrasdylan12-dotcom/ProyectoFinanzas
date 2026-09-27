@@ -3,6 +3,7 @@
 use App\Exceptions\BusinessRuleException;
 use App\Models\User;
 use App\Services\AuthService;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -41,7 +42,7 @@ test('registro con email duplicado lanza excepción', function () {
         'name' => 'Otro Usuario',
         'email' => 'duplicado@example.com',
         'password' => 'password123',
-    ]))->toThrow(\Illuminate\Database\QueryException::class);
+    ]))->toThrow(QueryException::class);
 });
 
 test('login con credenciales válidas devuelve usuario y token', function () {

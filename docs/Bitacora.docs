@@ -41,6 +41,17 @@ Registro cronológico de los cambios realizados mediante commits en el proyecto.
 | 2026-09-17 | 54627df | dylan porras | porrasdylan12-dotcom | |
 | 2026-09-17 | fcd759c | Merge pull request #7 from porrasdylan12-dotcom/dylan | porrasdylan12-dotcom | |
 | 2026-09-17 | 1dceccb | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 | |
+| 2026-09-17 | b85f302 | Create Resources, API, Token, exceptions, test, modify controllers, services, requests, validations and database | ErickSerrano19 | Opencode |
+| 2026-09-18 | 7a8c27c | Modify Requests, verify test, api and openapi | ErickSerrano19 | Opencode |
+| 2026-09-18 | 8c4b5eb | Merge pull request #8 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-20 | 1cbafd8 | feat: implementacion controladores, recursos de transacciones y dependencias del backend | eddy_mora | |
+| 2026-09-20 | 5e9cfb2 | docs: integracion de L5-Swagger y especificacion OpenAPI del proyecto | eddy_mora | |
+| 2026-09-20 | e087c50 | chore: agregacion de colección del cliente HTTP de Postman | eddy_mora | |
+| 2026-09-20 | 547038f | chore: actualizacion de archivos de entorno y agentes de desarrollo | eddy_mora | |
+| 2026-09-22 | 7bbf4ab | Lab 22-09 | ErickSerrano19 | |
+| 2026-09-22 | 89530d8 | Lab 22-09 | ErickSerrano19 | |
+| 2026-09-22 | f11e17b | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 | |
+| 2026-09-22 | 54dbd29 | Merge origin/main into Erick | ErickSerrano19 | |
 
 ---Observaciones
 

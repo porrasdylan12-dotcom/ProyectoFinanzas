@@ -9,7 +9,7 @@ beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::emailVerification());
 });
 
-test('sends verification notification', function () {
+test('envía la notificación de verificación', function () {
     Notification::fake();
 
     $user = User::factory()->unverified()->create();
@@ -21,7 +21,7 @@ test('sends verification notification', function () {
     Notification::assertSentTo($user, VerifyEmail::class);
 });
 
-test('does not send verification notification if email is verified', function () {
+test('no envía la notificación de verificación si el correo ya está verificado', function () {
     Notification::fake();
 
     $user = User::factory()->create();

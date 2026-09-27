@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Transaction */
+/** @mixin Transaction */
 class TransactionResource extends JsonResource
 {
     /**
@@ -23,8 +24,8 @@ class TransactionResource extends JsonResource
             'monto' => (float) $this->amount,
             'descripcion' => $this->description,
             'fecha' => $this->transaction_date,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

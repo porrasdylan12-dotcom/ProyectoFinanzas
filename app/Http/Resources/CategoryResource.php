@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Category */
+/** @mixin Category */
 class CategoryResource extends JsonResource
 {
     /**
@@ -20,8 +21,8 @@ class CategoryResource extends JsonResource
             'user_id' => $this->user_id,
             'nombre' => $this->name,
             'tipo' => $this->type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

@@ -10,6 +10,7 @@ use App\Services\AccountService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class AccountController extends Controller
 {
@@ -26,6 +27,7 @@ class AccountController extends Controller
         return AccountResource::collection($this->accountService->list($filters));
     }
 
+    #[Authorize('create', Account::class)]
     public function store(StoreAccountRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -39,6 +41,7 @@ class AccountController extends Controller
             ->header('Location', route('api.accounts.show', $account));
     }
 
+    #[Authorize('view', 'account')]
     public function show(Request $request, Account $account): AccountResource
     {
         $account = $this->accountService->findForUser($account->id, $request->user()->id);
@@ -46,6 +49,7 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
+    #[Authorize('update', 'account')]
     public function update(UpdateAccountRequest $request, Account $account): AccountResource
     {
         $data = $request->validated();
@@ -57,6 +61,7 @@ class AccountController extends Controller
         return new AccountResource($account);
     }
 
+    #[Authorize('delete', 'account')]
     public function destroy(Request $request, Account $account): JsonResponse
     {
         $account = $this->accountService->findForUser($account->id, $request->user()->id);

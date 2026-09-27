@@ -11,6 +11,8 @@ use App\Models\SharedExpenses;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -138,5 +140,33 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $rolAdmin = Role::findOrCreate('admin', 'web');
+        $rolUser = Role::findOrCreate('user', 'web');
+        $rolViewer = Role::findOrCreate('viewer', 'web');
+
+        $permission = Permission::findOrCreate('accounts.create', 'web');
+        $rolAdmin->givePermissionTo($permission);
+
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $admin->syncRoles([$rolAdmin]);
+
+        $user = User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $user->syncRoles([$rolUser]);
+
+        $viewer = User::factory()->create([
+            'name' => 'Viewer',
+            'email' => 'viewer@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $viewer->syncRoles([$rolViewer]);
     }
 }

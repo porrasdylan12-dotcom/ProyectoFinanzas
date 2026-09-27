@@ -11,6 +11,7 @@ use App\Services\SharedExpensesService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class SharedExpensesController extends Controller
 {
@@ -30,6 +31,7 @@ class SharedExpensesController extends Controller
         return SharedExpensesResource::collection($this->sharedExpensesService->list($filters));
     }
 
+    #[Authorize('create', SharedExpenses::class)]
     public function store(SharedExpensesRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -43,6 +45,7 @@ class SharedExpensesController extends Controller
             ->header('Location', route('api.shared-expenses.show', $sharedExpense));
     }
 
+    #[Authorize('view', 'group')]
     public function forGroup(Request $request, Group $group): AnonymousResourceCollection
     {
         $this->groupService->findForUser($group->id, $request->user()->id);
@@ -54,6 +57,7 @@ class SharedExpensesController extends Controller
         return SharedExpensesResource::collection($this->sharedExpensesService->list($filters));
     }
 
+    #[Authorize('create', SharedExpenses::class)]
     public function storeInGroup(SharedExpensesRequest $request, Group $group): JsonResponse
     {
         $this->groupService->findForUser($group->id, $request->user()->id);
@@ -70,6 +74,7 @@ class SharedExpensesController extends Controller
             ->header('Location', route('api.shared-expenses.show', $sharedExpense));
     }
 
+    #[Authorize('view', 'shared_expense')]
     public function show(Request $request, SharedExpenses $sharedExpense): SharedExpensesResource
     {
         $sharedExpense = $this->sharedExpensesService
@@ -79,16 +84,18 @@ class SharedExpensesController extends Controller
         return new SharedExpensesResource($sharedExpense);
     }
 
+    #[Authorize('update', 'shared_expense')]
     public function update(SharedExpensesRequest $request, SharedExpenses $sharedExpense): SharedExpensesResource
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        $sharedExpense = $this->sharedExpensesService->update($sharedExpense, $data);
+        $sharedExpense = $this->sharedExpensesService->updateForUser($sharedExpense->id, $request->user()->id, $data);
 
         return new SharedExpensesResource($sharedExpense);
     }
 
+    #[Authorize('delete', 'shared_expense')]
     public function destroy(Request $request, SharedExpenses $sharedExpense): JsonResponse
     {
         $sharedExpense = $this->sharedExpensesService

@@ -37,10 +37,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(
             fn (BusinessRuleException $e, Request $request): ?Response => ($request->is('api/*') || $request->expectsJson())
-                ? response()->json([
+                ? response()->json(array_merge([
                     'message' => $e->getMessage(),
                     'code' => $e->getBusinessCode(),
-                ], $e->getStatusCode())
+                ], $e->getExtraData()), $e->getStatusCode())
                 : null,
         );
 

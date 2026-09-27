@@ -4,6 +4,7 @@ use App\Exceptions\BusinessRuleException;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\PersonalAccessToken;
 use Tests\TestCase;
 
@@ -133,4 +134,96 @@ test('el token generado en registro tiene fecha de expiración', function () {
 
     expect($token->expires_at)->not->toBeNull();
     expect($token->expires_at->isFuture())->toBeTrue();
+});
+
+test('login exitoso limpia el contador de intentos fallidos', function () {
+    $service = app(AuthService::class);
+
+    User::factory()->create([
+        'email' => 'rate@example.com',
+        'password' => bcrypt('secreto123'),
+    ]);
+
+    for ($i = 0; $i < 3; $i++) {
+        try {
+            $service->login('rate@example.com', 'incorrecta');
+        } catch (BusinessRuleException) {
+        }
+    }
+
+    $result = $service->login('rate@example.com', 'secreto123');
+
+    expect($result)->toHaveKeys(['user', 'token']);
+
+    try {
+        $service->login('rate@example.com', 'incorrecta');
+    } catch (BusinessRuleException $e) {
+        expect($e->getBusinessCode())->toBe('CREDENCIALES_INVALIDAS');
+    }
+});
+
+test('login bloqueado tras exceder intentos', function () {
+    $service = app(AuthService::class);
+
+    User::factory()->create([
+        'email' => 'bloqueo@example.com',
+        'password' => bcrypt('secreto123'),
+    ]);
+
+    for ($i = 0; $i < 5; $i++) {
+        try {
+            $service->login('bloqueo@example.com', 'incorrecta');
+        } catch (BusinessRuleException) {
+        }
+    }
+
+    expect(fn () => $service->login('bloqueo@example.com', 'secreto123'))
+        ->toThrow(BusinessRuleException::class);
+});
+
+test('excepción de rate limit tiene código DEMASIADOS_INTENTOS, status 429 y retry_after', function () {
+    $service = app(AuthService::class);
+
+    User::factory()->create([
+        'email' => 'retry@example.com',
+        'password' => bcrypt('secreto123'),
+    ]);
+
+    for ($i = 0; $i < 5; $i++) {
+        try {
+            $service->login('retry@example.com', 'incorrecta');
+        } catch (BusinessRuleException) {
+        }
+    }
+
+    try {
+        $service->login('retry@example.com', 'secreto123');
+        $this->fail('Se esperaba BusinessRuleException');
+    } catch (BusinessRuleException $e) {
+        expect($e->getBusinessCode())->toBe('DEMASIADOS_INTENTOS');
+        expect($e->getStatusCode())->toBe(429);
+        expect($e->getExtraData())->toHaveKey('retry_after');
+        expect($e->getExtraData()['retry_after'])->toBeGreaterThan(0);
+    }
+});
+
+test('el mensaje de bloqueo por rate limit no revela si el usuario existe', function () {
+    $service = app(AuthService::class);
+
+    for ($i = 0; $i < 5; $i++) {
+        try {
+            $service->login('fantasma@example.com', 'password123');
+        } catch (BusinessRuleException) {
+        }
+    }
+
+    try {
+        $service->login('fantasma@example.com', 'password123');
+        $this->fail('Se esperaba BusinessRuleException');
+    } catch (BusinessRuleException $e) {
+        expect($e->getBusinessCode())->toBe('DEMASIADOS_INTENTOS');
+        expect($e->getMessage())->toContain('Demasiados intentos');
+        expect($e->getMessage())->not->toContain('no existe');
+        expect($e->getMessage())->not->toContain('no encontrado');
+    }
 });

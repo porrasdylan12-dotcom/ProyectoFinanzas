@@ -21,15 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 
-    /*
-    |---------------------------------------------------------------------------
-    | Recursos de dominio
-    |---------------------------------------------------------------------------
-    | Las lecturas quedan abiertas a cualquier rol autenticado; cada policy
-    | filtra por propiedad del recurso. Las escrituras exigen el rol 'user'
-    | (o 'admin'), de modo que el rol 'viewer' recibe 403 sin llegar al
-    | controlador.
-    */
 
     $escritura = ['role:user'];
 
@@ -68,11 +59,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::match(['put', 'patch'], 'group-debts/{group_debt}', [GroupDebtController::class, 'update'])->middleware($escritura)->name('api.group-debts.update');
     Route::delete('group-debts/{group_debt}', [GroupDebtController::class, 'destroy'])->middleware($escritura)->name('api.group-debts.destroy');
 
-    /*
-    |---------------------------------------------------------------------------
-    | Rutas anidadas
-    |---------------------------------------------------------------------------
-    */
 
     Route::get('/accounts/{account}/transactions', [TransactionController::class, 'forAccount'])
         ->name('api.accounts.transactions.index');
@@ -92,14 +78,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware($escritura)
         ->name('api.shared-expenses.group-debts.store');
 
-    /*
-    |---------------------------------------------------------------------------
-    | Administración (solo rol admin)
-    |---------------------------------------------------------------------------
-    */
-
     Route::middleware('role:admin')->prefix('admin')->name('api.admin.')->group(function () {
         Route::get('/users', [AdminController::class, 'users'])->name('users.index');
         Route::get('/roles', [AdminController::class, 'roles'])->name('roles.index');
     });
+
 });
+

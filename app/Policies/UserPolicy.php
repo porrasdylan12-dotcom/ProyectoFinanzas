@@ -18,17 +18,17 @@ class UserPolicy extends BasePolicy
         return $user->hasRole('admin');
     }
 
-    public function view(User $user, User $model): bool
+    public function view(User $user, User $model = null): bool
     {
         return $user->hasRole('admin') || $user->is($model);
     }
 
-    public function update(User $user, User $model): bool
+    public function update(User $user, User $model = null): bool
     {
         return $user->hasRole('admin') || $user->is($model);
     }
 
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, User $model = null): bool
     {
         return $user->hasRole('admin') || $user->is($model);
     }

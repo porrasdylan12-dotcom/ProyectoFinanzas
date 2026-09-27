@@ -78,14 +78,6 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware($escritura)
         ->name('api.shared-expenses.group-debts.store');
 
-
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-});
-
-
     Route::middleware('role:admin')->prefix('admin')->name('api.admin.')->group(function () {
         Route::get('/users', [AdminController::class, 'users'])->name('users.index');
         Route::get('/roles', [AdminController::class, 'roles'])->name('roles.index');

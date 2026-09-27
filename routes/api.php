@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupDebtController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SharedExpensesController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('api.shared-expenses.group-debts.index');
     Route::post('/shared-expenses/{sharedExpense}/group-debts', [GroupDebtController::class, 'storeInSharedExpense'])
         ->name('api.shared-expenses.group-debts.store');
+
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
 });

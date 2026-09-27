@@ -12,8 +12,13 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Route;
 
+
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn () => new UserResource(request()->user()))

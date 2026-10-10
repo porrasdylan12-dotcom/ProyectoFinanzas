@@ -1,0 +1,103 @@
+.lista-cuentas,
+.lista-presupuestos {
+    display: flex;
+    flex-direction: column;
+}
+
+.cuenta,
+.presupuesto {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--espacio-4);
+    padding: var(--espacio-2) 0;
+    border-bottom: 1px solid;
+}
+
+.cuenta:last-child,
+.presupuesto:last-child {
+    border-bottom: 0;
+}
+
+.cuenta__saldo,
+.presupuesto__monto {
+    font-family: var(--fuente-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.cuenta__tipo,
+.presupuesto__categoria {
+    font-weight: 600;
+}
+
+.saldo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-1);
+}
+
+.saldo__valor {
+    font-family: var(--fuente-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.5rem;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 44rem;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+caption {
+    text-align: left;
+    margin-bottom: var(--espacio-2);
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    font-weight: 600;
+}
+
+th,
+td {
+    padding: var(--espacio-3);
+    text-align: left;
+    border-bottom: 1px solid;
+    vertical-align: top;
+}
+
+th:last-child,
+td:last-child {
+    text-align: right;
+    font-family: var(--fuente-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+@media (min-width: 40rem) {
+    .columna-cuentas,
+    .columna-detalle {
+        display: grid;
+        gap: var(--espacio-5);
+    }
+}
+
+@media (min-width: 55rem) {
+    .layout-cuentas {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+        gap: var(--espacio-5);
+        align-items: start;
+    }
+
+    .columna-detalle {
+        position: sticky;
+        top: var(--espacio-4);
+    }
+}

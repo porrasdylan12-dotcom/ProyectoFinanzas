@@ -52,6 +52,24 @@ Registro cronológico de los cambios realizados mediante commits en el proyecto.
 | 2026-09-22 | 89530d8 | Lab 22-09 | ErickSerrano19 | |
 | 2026-09-22 | f11e17b | Merge remote-tracking branch 'origin/main' into Erick | ErickSerrano19 | |
 | 2026-09-22 | 54dbd29 | Merge origin/main into Erick | ErickSerrano19 | |
+| 2026-09-22 | d87d4ca | Bitacora actualizada | ErickSerrano19 | |
+| 2026-09-25 | 6fec65f | implementacion del registro, inicio y cierre de sesion | porrasdylan12-dotcom | |
+| 2026-09-25 | bbaf13d | feat: add AuthService, RegisterRequest, and unit tests for authentication | porrasdylan12-dotcom | |
+| 2026-09-25 | ae0e585 | Merge pull request #10 from porrasdylan12-dotcom/dylan | porrasdylan12-dotcom | |
+| 2026-09-26 | 808c276 | Merge branch 'main' of https://github.com/porrasdylan12-dotcom/ProyectoFinanzas into Erick | ErickSerrano19 | |
+| 2026-09-26 | 3b20ea0 | Role control | ErickSerrano19 | opencode |
+| 2026-09-26 | 98227bd | Fix problem with roles | ErickSerrano19 | opencode |
+| 2026-09-26 | 612bec9 | modify test | ErickSerrano19 | opencode |
+| 2026-09-26 | 81aff06 | Fix test with controllers | ErickSerrano19 | opencode |
+| 2026-09-26 | f58ded1 | Merge pull request #11 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-09-26 | c87c753 | feat(auth): implementacion de endpoints de autenticación con políticas de contraseña y gestión de tokens | Eddy Mora | |
+| 2026-09-26 | 8e35d29 | chore: resolucion de conflictos en rutas de api. | Eddy Mora | |
+| 2026-09-26 | 588c119 | test(api): implementacion de pruebas de integracion para los roles y validaciones | Eddy Mora | |
+| 2026-09-27 | 63729b1 | Merge pull request #12 from porrasdylan12-dotcom/Edd | porrasdylan12-dotcom | |
+| 2026-09-27 | 6acf32c | feat(auth): agregar rate limiting al login API y respuesta genérica de error | porrasdylan12-dotcom | |
+| 2026-09-27 | 87fcc48 | Merge branch 'main' into dylan | porrasdylan12-dotcom | |
+| 2026-09-27 | d11e0eb | Merge pull request #13 from porrasdylan12-dotcom/dylan | porrasdylan12-dotcom | |
+| 2026-10-04 | e83c94f | Create Lab07-ui.md | ErickSerrano19 | Copilot / GPT-5.6 Luna / Gemini |
 
 ---Observaciones
 

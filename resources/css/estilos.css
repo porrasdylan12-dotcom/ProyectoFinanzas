@@ -1,17 +1,63 @@
+/* =====================================================================
+   JUSTIFICACIÓN DE MAQUETACIÓN:
+   - GRID: Se utiliza en el 'body' y en '.layout-cuentas' para definir la 
+     macro-estructura bidimensional de la página, facilitando la creación 
+     de columnas y áreas (header, sidebar, contenido) en pantallas grandes.
+   - FLEXBOX: Se utiliza en componentes internos ('.barra', '.acciones', 
+     '.cuenta') por su eficiencia en la distribución unidimensional, 
+     alineación de elementos adyacentes y control del espacio (gap).
+   ===================================================================== */
+
 :root {
-    --fuente-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    --fuente-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    --radio-sm: 0.375rem;
-    --radio-md: 0.5rem;
-    --radio-lg: 0.625rem;
+    /* --- 1. Paleta de Colores (Guía Lab 7) --- */
+    --color-bg: #12201A;
+    --color-bg-deep: #0D1712;
+    --color-surface: #1B2B22;
+    --color-surface-alt: #21332A;
+
+    --color-text: #ECE7D6;
+    --color-text-secondary: #B9C2B4;
+    --color-text-muted: #7F9084;
+
+    --color-accent: #CBA135;
+    --color-focus: #E8C468;
+    --color-success: #6FAE8C;
+    --color-danger: #C1573E;
+    --color-error-text: #F08A72;
+    
+    --color-borde: rgba(232, 228, 216, 0.18);
+
+    /* --- 2. Tipografía --- */
+    --fuente-display: 'Fraunces', Georgia, serif;
+    --fuente-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --fuente-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+    /* Escala tipográfica en REM (Accesibilidad 200%) */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --text-2xl: 2rem;
+
+    /* --- 3. Sistema de Espaciado (Tokens en REM) --- */
     --espacio-1: 0.25rem;
     --espacio-2: 0.5rem;
     --espacio-3: 0.75rem;
     --espacio-4: 1rem;
-    --espacio-5: 1.5rem;
-    --espacio-6: 2rem;
-    --ancho-max: 73.75rem;
+    --espacio-5: 1.25rem;
+    --espacio-6: 1.5rem;
+    --espacio-8: 2rem;
+    
+    /* --- 4. Formas, Bordes y Componentes --- */
+    --radio-sm: 0.375rem;
+    --radio-md: 0.625rem;
+    --radio-lg: 0.875rem;
     --alto-control: 2.75rem;
+    --ancho-max: 73.75rem;
+    
+    --foco-ancho: 0.125rem; /* 2px */
+    --foco-offset: 0.125rem; /* 2px */
 }
 
 *,
@@ -26,8 +72,10 @@ html {
 
 body {
     margin: 0;
-    font-family: var(--fuente-sans);
-    font-size: 1rem;
+    font-family: var(--fuente-sans); /* Fuente Inter general */
+    font-size: var(--text-base);
+    background-color: var(--color-bg); /* Fondo oscuro general */
+    color: var(--color-text); /* Texto marfil */
     line-height: 1.5;
     min-height: 100vh;
     display: grid;
@@ -38,46 +86,71 @@ body {
     grid-template-rows: auto minmax(0, 1fr);
 }
 
+/* =========================================
+   ESTADOS DE INTERFAZ (Lab 7)
+   ========================================= */
+
+/* Foco de teclado */
 :focus-visible {
-    outline: 2px solid;
-    outline-offset: 2px;
+    outline: var(--foco-ancho) solid var(--color-focus);
+    outline-offset: var(--foco-offset);
+    border-radius: 2px;
 }
 
-h1,
-h2,
-h3,
-p,
-ul,
-ol,
-fieldset {
+/* Deshabilitado */
+input:disabled,
+select:disabled,
+button:disabled,
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Error de campos (Accesibilidad) */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+input:user-invalid {
+    border-color: var(--color-error-text);
+    background-color: rgba(193, 87, 62, 0.05);
+}
+
+/* =========================================
+   TIPOGRAFÍA ESPECÍFICA
+   ========================================= */
+
+h1, h2, h3, fieldset, legend {
     margin: 0;
-}
-
-ul,
-ol {
-    padding: 0;
-    list-style: none;
-}
-
-img,
-svg {
-    display: block;
-    max-width: 100%;
+    font-family: var(--fuente-display); /* Fuente Serif para Títulos */
 }
 
 h1 {
-    font-size: 1.75rem;
+    font-size: var(--text-2xl);
     line-height: 1.2;
 }
 
 h2 {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
     line-height: 1.3;
 }
 
 h3 {
-    font-size: 1.0625rem;
+    font-size: var(--text-lg);
     line-height: 1.4;
+}
+
+p, ul, ol {
+    margin: 0;
+}
+
+ul, ol {
+    padding: 0;
+    list-style: none;
+}
+
+img, svg {
+    display: block;
+    max-width: 100%;
 }
 
 .sr-only {
@@ -92,6 +165,10 @@ h3 {
     border: 0;
 }
 
+/* =========================================
+   COMPONENTES
+   ========================================= */
+
 .barra {
     grid-area: barra;
     display: flex;
@@ -100,20 +177,23 @@ h3 {
     justify-content: space-between;
     gap: var(--espacio-3);
     padding: var(--espacio-3) var(--espacio-4);
-    border-bottom: 1px solid;
+    background-color: var(--color-surface-alt);
+    border-bottom: 1px solid var(--color-borde);
 }
 
 .contenido {
     grid-area: contenido;
     width: 100%;
-    padding: var(--espacio-5) var(--espacio-4) var(--espacio-6);
+    padding: var(--espacio-5) var(--espacio-4) var(--espacio-8);
 }
 
 .barra__logo {
+    font-family: var(--fuente-display);
     font-weight: 700;
-    font-size: 1.125rem;
+    font-size: var(--text-xl);
     text-decoration: none;
     letter-spacing: 0.02em;
+    color: var(--color-accent); /* Acento dorado */
 }
 
 .barra__checkbox {
@@ -129,9 +209,10 @@ h3 {
     justify-content: center;
     min-height: var(--alto-control);
     padding: var(--espacio-2) var(--espacio-4);
-    border: 1px solid;
+    border: 1px solid var(--color-borde);
     border-radius: var(--radio-sm);
     cursor: pointer;
+    color: var(--color-text);
 }
 
 .barra__nav {
@@ -156,27 +237,41 @@ h3 {
     padding: var(--espacio-2) var(--espacio-3);
     border-radius: var(--radio-sm);
     text-decoration: none;
+    color: var(--color-text-secondary);
+}
+
+.barra__enlace:hover {
+    color: var(--color-accent);
 }
 
 .barra__enlace[aria-current='page'] {
     font-weight: 600;
+    color: var(--color-text);
+    background-color: var(--color-bg-deep);
 }
 
 .barra__usuario {
-    font-size: 0.8125rem;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
 }
 
 .card {
     display: flex;
     flex-direction: column;
     gap: var(--espacio-3);
-    padding: var(--espacio-5);
-    border: 1px solid;
+    padding: var(--espacio-6);
+    background-color: var(--color-surface); /* Fondo de tarjeta de la guía */
+    border: 1px solid var(--color-borde);
     border-radius: var(--radio-lg);
+    
+    /* Corrección de desbordamiento */
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 .card__nota {
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
 }
 
 .cabecera-pagina {
@@ -201,14 +296,28 @@ h3 {
     justify-content: center;
     min-height: var(--alto-control);
     padding: var(--espacio-2) var(--espacio-4);
-    border: 1px solid;
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-surface-alt);
+    color: var(--color-text);
     border-radius: var(--radio-sm);
     font: inherit;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    background-color: var(--color-bg-deep);
 }
 
 .btn--primario {
     font-weight: 600;
+    background-color: var(--color-accent);
+    color: #1B1503; /* Contraste oscuro sobre dorado (Guía Lab 7) */
+    border-color: var(--color-accent);
+}
+
+.btn--primario:hover {
+    background-color: #e3b94d;
 }
 
 .enlace-accion {
@@ -217,11 +326,16 @@ h3 {
     padding: var(--espacio-1) 0;
     font-weight: 600;
     text-decoration: none;
+    color: var(--color-accent);
 }
 
 .enlace-accion:hover {
     text-decoration: underline;
 }
+
+/* =========================================
+   PUNTOS DE QUIEBRE (Móvil Primero)
+   ========================================= */
 
 @media (min-width: 55rem) {
     body:has(.barra__nav) {
@@ -239,7 +353,7 @@ h3 {
         align-items: stretch;
         gap: var(--espacio-5);
         padding: var(--espacio-5) var(--espacio-3);
-        border-right: 1px solid;
+        border-right: 1px solid var(--color-borde);
         border-bottom: 0;
         overflow-y: auto;
     }

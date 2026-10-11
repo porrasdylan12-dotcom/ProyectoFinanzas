@@ -27,7 +27,7 @@ class AccountController extends Controller
         return AccountResource::collection($this->accountService->list($filters));
     }
 
-    #[Authorize('create', 'account')]
+    #[Authorize('create', Account::class)]
     public function store(StoreAccountRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -40,6 +40,7 @@ class AccountController extends Controller
             ->setStatusCode(201)
             ->header('Location', route('api.accounts.show', $account));
     }
+
     #[Authorize('view', 'account')]
     public function show(Request $request, Account $account): AccountResource
     {

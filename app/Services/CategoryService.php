@@ -66,6 +66,18 @@ class CategoryService
         return $category;
     }
 
+    /**
+     * Capa 2 de autorizacion: resuelve la categoría exigiendo que pertenezca a la
+     * persona usuaria antes de modificarla. findForUser() responde 404, de modo que
+     * una categoría inexistente y una ajena resultan indistinguibles.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateForUser(int $id, int $userId, array $data): Category
+    {
+        return $this->update($this->findForUser($id, $userId), $data);
+    }
+
     public function delete(Category $category): bool
     {
         return DB::transaction(function () use ($category) {

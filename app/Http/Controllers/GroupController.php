@@ -9,6 +9,7 @@ use App\Services\GroupService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class GroupController extends Controller
 {
@@ -25,6 +26,7 @@ class GroupController extends Controller
         return GroupResource::collection($this->groupService->list($filters));
     }
 
+    #[Authorize('create', Group::class)]
     public function store(GroupRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -38,6 +40,7 @@ class GroupController extends Controller
             ->header('Location', route('api.groups.show', $group));
     }
 
+    #[Authorize('view', 'group')]
     public function show(Request $request, Group $group): GroupResource
     {
         $group = $this->groupService->findForUser($group->id, $request->user()->id);
@@ -45,14 +48,15 @@ class GroupController extends Controller
         return new GroupResource($group);
     }
 
+    #[Authorize('update', 'group')]
     public function update(GroupRequest $request, Group $group): GroupResource
     {
-        $group->load('users');
-        $group = $this->groupService->update($group, $request->validated());
+        $group = $this->groupService->updateForUser($group->id, $request->user()->id, $request->validated());
 
-        return new GroupResource($group);
+        return new GroupResource($group->load('users'));
     }
 
+    #[Authorize('delete', 'group')]
     public function destroy(Request $request, Group $group): JsonResponse
     {
         $group = $this->groupService->findForUser($group->id, $request->user()->id);

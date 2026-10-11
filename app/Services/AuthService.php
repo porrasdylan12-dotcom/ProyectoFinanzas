@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Exceptions\BusinessRuleException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
+
 
 class AuthService
 {
@@ -21,6 +24,8 @@ class AuthService
             'email' => $data['email'],
             'password' => $data['password'],
         ]);
+
+        $user->assignRole(Role::findOrCreate('user', 'web'));
 
         $token = $user->createToken(
             name: 'user_token',
@@ -50,6 +55,7 @@ class AuthService
                 401
             );
         }
+      
 
         RateLimiter::clear($throttleKey);
 

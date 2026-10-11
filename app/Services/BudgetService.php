@@ -86,6 +86,18 @@ class BudgetService
         return $budget;
     }
 
+    /**
+     * Capa 2 de autorizacion: resuelve el presupuesto exigiendo que pertenezca a
+     * la persona usuaria antes de modificarlo. findForUser() responde 404, de
+     * modo que un presupuesto inexistente y uno ajeno resultan indistinguibles.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateForUser(int $id, int $userId, array $data): Budget
+    {
+        return $this->update($this->findForUser($id, $userId), $data);
+    }
+
     public function delete(Budget $budget): bool
     {
         return $budget->delete();

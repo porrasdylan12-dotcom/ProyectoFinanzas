@@ -116,9 +116,13 @@ return [
     /*
      * When set to true, the method for checking permissions will be registered on the gate.
      * Set this to false if you want to implement custom logic for checking permissions.
+     *
+     * Se desactiva porque Spatie registra un Gate::before que se evalúa antes que el
+     * before() de nuestras policies y cortocircuitaría el bypass del administrador
+     * en cuanto un permiso comparta nombre con una habilidad (create, view, update...).
      */
 
-    'register_permission_check_method' => true,
+    'register_permission_check_method' => false,
 
     /*
      * When set to true, Laravel\Octane\Events\OperationTerminated event listener will be registered

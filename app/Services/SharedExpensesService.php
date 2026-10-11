@@ -79,6 +79,19 @@ class SharedExpensesService
         return $sharedExpense;
     }
 
+    /**
+     * Capa 2 de autorizacion: resuelve el gasto compartido exigiendo que la persona
+     * usuaria lo haya pagado o pertenezca al grupo antes de modificarlo.
+     * findForUser() responde 404, de modo que un gasto inexistente y uno ajeno
+     * resultan indistinguibles.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateForUser(int $id, int $userId, array $data): SharedExpenses
+    {
+        return $this->update($this->findForUser($id, $userId), $data);
+    }
+
     public function delete(SharedExpenses $sharedExpense): bool
     {
         return $sharedExpense->delete();

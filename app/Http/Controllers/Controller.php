@@ -8,10 +8,12 @@ namespace App\Http\Controllers;
  *      title="API de Proyecto Finanzas",
  *      description="Documentación de la API REST para el Laboratorio 5"
  * )
+ *
  * @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST,
  *      description="Servidor Local"
  * )
+ *
  * @OA\SecurityScheme(
  *      securityScheme="sanctum",
  *      type="http",

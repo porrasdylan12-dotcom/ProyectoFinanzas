@@ -1,5 +1,8 @@
 <?php
 
+use L5Swagger\CustomGeneratorInterface;
+use OpenApi\scan;
+
 return [
     'default' => 'default',
     'documentations' => [
@@ -107,7 +110,7 @@ return [
              * Use this to provide a custom pre-configured generator.
              * Accepts an instance or a class name (FQCN) implementing the interface.
              *
-             * @see \L5Swagger\CustomGeneratorInterface
+             * @see CustomGeneratorInterface
              */
             'generator_factory' => null,
 
@@ -132,14 +135,14 @@ return [
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
              *
-             * @see \OpenApi\scan
+             * @see scan
              */
             'analyser' => null,
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
              *
-             * @see \OpenApi\scan
+             * @see scan
              */
             'analysis' => null,
 
@@ -152,7 +155,7 @@ return [
              *   ['class' => MyProcessor::class, 'after' => SomeProcessor::class]
              *
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/processors/schema-query-parameter
-             * @see \OpenApi\scan
+             * @see scan
              */
             'processors' => [
                 // \App\SwaggerProcessors\SchemaQueryParameter::class,
@@ -162,7 +165,7 @@ return [
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
              *
-             * @see \OpenApi\scan
+             * @see scan
              */
             'pattern' => null,
 

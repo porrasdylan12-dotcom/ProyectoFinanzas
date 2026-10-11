@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\GroupDebt;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\GroupDebt */
+/** @mixin GroupDebt */
 class GroupDebtResource extends JsonResource
 {
     /**
@@ -22,8 +23,8 @@ class GroupDebtResource extends JsonResource
             'acreedor_id' => $this->creditor_id,
             'monto_total' => $this->total_amount,
             'estado' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'creada' => $this->created_at,
+            'actualizada' => $this->updated_at,
         ];
     }
 }

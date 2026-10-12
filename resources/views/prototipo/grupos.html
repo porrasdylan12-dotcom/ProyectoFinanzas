@@ -1,120 +1,181 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Vista de grupos, balance de deudas compartidas y grupos donde participo.">
-    <title>Grupos · finanzas</title>
-    <link rel="stylesheet" href="../../css/estilos.css">
-    <link rel="stylesheet" href="../../css/grupos.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header class="barra">
-        <div class="barra__marca">
-            <a class="barra__logo" href="panel-principal.html">finanzas</a>
-        </div>
-
-        <input type="checkbox" id="menu-toggle" class="barra__checkbox">
-        <label for="menu-toggle" class="barra__toggle">Menú</label>
-
-        <nav class="barra__nav" aria-label="Menú principal">
-            <ul class="barra__lista">
-                <li>
-                    <a class="barra__enlace" href="panel-principal.html">Inicio</a>
-                </li>
-                <li>
-                    <a class="barra__enlace" href="cuentas.html">Cuentas</a>
-                </li>
-                <li>
-                    <a class="barra__enlace" href="grupos.html" aria-current="page">Grupos</a>
-                </li>
-                <li>
-                    <a class="barra__enlace" href="panel-principal.html#usuario">Usuario<span class="barra__usuario">[Nombre de usuario]</span></a>
-                </li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="contenido">
-        <div class="cabecera-pagina">
-            <h1>Grupos</h1>
-            <button class="btn" type="button">+ Crear grupo</button>
-        </div>
-
-        <section class="card" aria-labelledby="balance">
-            <h2 id="balance">Balance de deudas compartidas</h2>
-            <div class="pilas">
-                <p class="pila">
-                    <span class="pila__etiqueta">Debes</span>
-                    <strong class="pila__valor">$ [0.00]</strong>
-                </p>
-                <p class="pila">
-                    <span class="pila__etiqueta">Te deben</span>
-                    <strong class="pila__valor">$ [0.00]</strong>
-                </p>
-                <p class="pila">
-                    <span class="pila__etiqueta">Balance neto</span>
-                    <strong class="pila__valor">$ [0.00]</strong>
-                </p>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Vista de grupos, balance de deudas compartidas y grupos donde participo."
+        />
+        <title>Grupos · finanzas</title>
+        <link rel="stylesheet" href="../../css/estilos.css" />
+        <link rel="stylesheet" href="../../css/grupos.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="barra">
+            <div class="barra__marca">
+                <a class="barra__logo" href="panel-principal.html">finanzas</a>
             </div>
-        </section>
 
-        <section class="card" aria-labelledby="grupos-anfitrion">
-            <h2 id="grupos-anfitrion">Grupos donde soy anfitrión</h2>
-            <ul class="lista-grupos">
-                <li class="grupo">
-                    <a class="grupo__enlace" href="grupos.html#grupos-anfitrion">
-                        <h3>[Nombre del grupo]</h3>
-                        <p class="grupo__meta">[N] integrantes · Deuda $ [0.00]</p>
-                        <span class="grupo__flecha" aria-hidden="true">→</span>
-                    </a>
-                </li>
-                <li class="grupo">
-                    <a class="grupo__enlace" href="grupos.html#grupos-anfitrion">
-                        <h3>[Nombre del grupo]</h3>
-                        <p class="grupo__meta">[N] integrantes · Deuda $ [0.00]</p>
-                        <span class="grupo__flecha" aria-hidden="true">→</span>
-                    </a>
-                </li>
-                <li class="grupo">
-                    <a class="grupo__enlace" href="grupos.html#grupos-anfitrion">
-                        <h3>[Nombre del grupo]</h3>
-                        <p class="grupo__meta">[N] integrantes · Deuda $ [0.00]</p>
-                        <span class="grupo__flecha" aria-hidden="true">→</span>
-                    </a>
-                </li>
-            </ul>
-        </section>
+            <input type="checkbox" id="menu-toggle" class="barra__checkbox" />
+            <label for="menu-toggle" class="barra__toggle">Menú</label>
 
-        <section class="card" aria-labelledby="grupos-integrante">
-            <h2 id="grupos-integrante">Grupos donde soy integrante</h2>
-            <ul class="lista-grupos">
-                <li class="grupo">
-                    <a class="grupo__enlace" href="grupos.html#grupos-integrante">
-                        <h3>[Nombre del grupo]</h3>
-                        <p class="grupo__meta">[N] integrantes · Tu parte $ [0.00]</p>
-                        <span class="grupo__flecha" aria-hidden="true">→</span>
-                    </a>
-                </li>
-                <li class="grupo">
-                    <a class="grupo__enlace" href="grupos.html#grupos-integrante">
-                        <h3>[Nombre del grupo]</h3>
-                        <p class="grupo__meta">[N] integrantes · Tu parte $ [0.00]</p>
-                        <span class="grupo__flecha" aria-hidden="true">→</span>
-                    </a>
-                </li>
-                <li class="grupo">
-                    <a class="grupo__enlace" href="grupos.html#grupos-integrante">
-                        <h3>[Nombre del grupo]</h3>
-                        <p class="grupo__meta">[N] integrantes · Tu parte $ [0.00]</p>
-                        <span class="grupo__flecha" aria-hidden="true">→</span>
-                    </a>
-                </li>
-            </ul>
-        </section>
-    </main>
-</body>
+            <nav class="barra__nav" aria-label="Menú principal">
+                <ul class="barra__lista">
+                    <li>
+                        <a class="barra__enlace" href="panel-principal.html"
+                            >Inicio</a
+                        >
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="cuentas.html">Cuentas</a>
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="grupos.html"
+                            aria-current="page"
+                            >Grupos</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="panel-principal.html#usuario"
+                            >Usuario<span class="barra__usuario"
+                                >[Nombre de usuario]</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="contenido">
+            <div class="cabecera-pagina">
+                <h1>Grupos</h1>
+                <button class="btn" type="button">+ Crear grupo</button>
+            </div>
+
+            <section class="card" aria-labelledby="balance">
+                <h2 id="balance">Balance de deudas compartidas</h2>
+                <div class="pilas">
+                    <p class="pila">
+                        <span class="pila__etiqueta">Debes</span>
+                        <strong class="pila__valor">$ [0.00]</strong>
+                    </p>
+                    <p class="pila">
+                        <span class="pila__etiqueta">Te deben</span>
+                        <strong class="pila__valor">$ [0.00]</strong>
+                    </p>
+                    <p class="pila">
+                        <span class="pila__etiqueta">Balance neto</span>
+                        <strong class="pila__valor">$ [0.00]</strong>
+                    </p>
+                </div>
+            </section>
+
+            <section class="card" aria-labelledby="grupos-anfitrion">
+                <h2 id="grupos-anfitrion">Grupos donde soy anfitrión</h2>
+                <ul class="lista-grupos">
+                    <li class="grupo">
+                        <a
+                            class="grupo__enlace"
+                            href="grupos.html#grupos-anfitrion"
+                        >
+                            <h3>[Nombre del grupo]</h3>
+                            <p class="grupo__meta">
+                                [N] integrantes · Deuda $ [0.00]
+                            </p>
+                            <span class="grupo__flecha" aria-hidden="true"
+                                >→</span
+                            >
+                        </a>
+                    </li>
+                    <li class="grupo">
+                        <a
+                            class="grupo__enlace"
+                            href="grupos.html#grupos-anfitrion"
+                        >
+                            <h3>[Nombre del grupo]</h3>
+                            <p class="grupo__meta">
+                                [N] integrantes · Deuda $ [0.00]
+                            </p>
+                            <span class="grupo__flecha" aria-hidden="true"
+                                >→</span
+                            >
+                        </a>
+                    </li>
+                    <li class="grupo">
+                        <a
+                            class="grupo__enlace"
+                            href="grupos.html#grupos-anfitrion"
+                        >
+                            <h3>[Nombre del grupo]</h3>
+                            <p class="grupo__meta">
+                                [N] integrantes · Deuda $ [0.00]
+                            </p>
+                            <span class="grupo__flecha" aria-hidden="true"
+                                >→</span
+                            >
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="card" aria-labelledby="grupos-integrante">
+                <h2 id="grupos-integrante">Grupos donde soy integrante</h2>
+                <ul class="lista-grupos">
+                    <li class="grupo">
+                        <a
+                            class="grupo__enlace"
+                            href="grupos.html#grupos-integrante"
+                        >
+                            <h3>[Nombre del grupo]</h3>
+                            <p class="grupo__meta">
+                                [N] integrantes · Tu parte $ [0.00]
+                            </p>
+                            <span class="grupo__flecha" aria-hidden="true"
+                                >→</span
+                            >
+                        </a>
+                    </li>
+                    <li class="grupo">
+                        <a
+                            class="grupo__enlace"
+                            href="grupos.html#grupos-integrante"
+                        >
+                            <h3>[Nombre del grupo]</h3>
+                            <p class="grupo__meta">
+                                [N] integrantes · Tu parte $ [0.00]
+                            </p>
+                            <span class="grupo__flecha" aria-hidden="true"
+                                >→</span
+                            >
+                        </a>
+                    </li>
+                    <li class="grupo">
+                        <a
+                            class="grupo__enlace"
+                            href="grupos.html#grupos-integrante"
+                        >
+                            <h3>[Nombre del grupo]</h3>
+                            <p class="grupo__meta">
+                                [N] integrantes · Tu parte $ [0.00]
+                            </p>
+                            <span class="grupo__flecha" aria-hidden="true"
+                                >→</span
+                            >
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </body>
 </html>

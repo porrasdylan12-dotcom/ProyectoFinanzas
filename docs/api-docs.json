@@ -8,9 +8,7 @@
     "paths": {
         "/api/transactions": {
             "get": {
-                "tags": [
-                    "Transacciones"
-                ],
+                "tags": ["Transacciones"],
                 "summary": "Listar transacciones",
                 "description": "Devuelve una lista paginada de las transacciones del usuario autenticado.",
                 "operationId": "6581469356772e7a74a0d79897544f1a",
@@ -26,9 +24,7 @@
                 ]
             },
             "post": {
-                "tags": [
-                    "Transacciones"
-                ],
+                "tags": ["Transacciones"],
                 "summary": "Crear nueva transacción",
                 "description": "Registra una nueva transacción.",
                 "operationId": "ab765dced58cfe2f620929db31452145",

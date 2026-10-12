@@ -20,19 +20,19 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
-    --color-bg: #12201A;
-    --color-bg-deep: #0D1712;
-    --color-surface: #1B2B22;
-    --color-surface-alt: #21332A;
-    --color-text: #ECE7D6;
-    --color-text-secondary: #B9C2B4;
-    --color-text-muted: #7F9084;
-    --color-accent: #CBA135;
-    --color-accent-text: #1B1503;
-    --color-focus: #E8C468;
-    --color-success: #6FAE8C;
-    --color-danger: #C1573E;
-    --color-error-text: #F08A72;
+    --color-bg: #12201a;
+    --color-bg-deep: #0d1712;
+    --color-surface: #1b2b22;
+    --color-surface-alt: #21332a;
+    --color-text: #ece7d6;
+    --color-text-secondary: #b9c2b4;
+    --color-text-muted: #7f9084;
+    --color-accent: #cba135;
+    --color-accent-text: #1b1503;
+    --color-focus: #e8c468;
+    --color-success: #6fae8c;
+    --color-danger: #c1573e;
+    --color-error-text: #f08a72;
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -62,11 +62,11 @@
     --color-input: var(--input);
     --color-ring: var(--ring);
 
-    --color-chart-1: #6FAE8C;
-    --color-chart-2: #CBA135;
-    --color-chart-3: #C1573E;
-    --color-chart-4: #B9C2B4;
-    --color-chart-5: #E8C468;
+    --color-chart-1: #6fae8c;
+    --color-chart-2: #cba135;
+    --color-chart-3: #c1573e;
+    --color-chart-4: #b9c2b4;
+    --color-chart-5: #e8c468;
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
@@ -79,21 +79,21 @@
 }
 
 :root {
-    --color-bg: #12201A;
-    --color-bg-deep: #0D1712;
-    --color-surface: #1B2B22;
-    --color-surface-alt: #21332A;
+    --color-bg: #12201a;
+    --color-bg-deep: #0d1712;
+    --color-surface: #1b2b22;
+    --color-surface-alt: #21332a;
 
-    --color-text: #ECE7D6;
-    --color-text-secondary: #B9C2B4;
-    --color-text-muted: #7F9084;
+    --color-text: #ece7d6;
+    --color-text-secondary: #b9c2b4;
+    --color-text-muted: #7f9084;
 
-    --color-accent: #CBA135;
-    --color-accent-text: #1B1503;
-    --color-focus: #E8C468;
-    --color-success: #6FAE8C;
-    --color-danger: #C1573E;
-    --color-error-text: #F08A72;
+    --color-accent: #cba135;
+    --color-accent-text: #1b1503;
+    --color-focus: #e8c468;
+    --color-success: #6fae8c;
+    --color-danger: #c1573e;
+    --color-error-text: #f08a72;
 
     --bg: var(--color-bg);
     --bg-deep: var(--color-bg-deep);
@@ -107,9 +107,9 @@
     --expense: var(--color-danger);
     --focus: var(--color-focus);
 
-    --font-display: "Fraunces", Georgia, serif;
-    --font-ui: "Inter", Arial, sans-serif;
-    --font-data: "IBM Plex Mono", monospace;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-ui: 'Inter', Arial, sans-serif;
+    --font-data: 'IBM Plex Mono', monospace;
 
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
@@ -152,7 +152,7 @@
     --accent: var(--color-surface-alt);
     --accent-foreground: var(--color-text);
     --destructive: var(--color-danger);
-    --destructive-foreground: #FFFFFF;
+    --destructive-foreground: #ffffff;
     --border: var(--border-color);
     --input: var(--border-color);
     --ring: var(--color-focus);
@@ -183,7 +183,7 @@
     --accent: var(--color-surface-alt);
     --accent-foreground: var(--color-text);
     --destructive: var(--color-danger);
-    --destructive-foreground: #FFFFFF;
+    --destructive-foreground: #ffffff;
     --border: var(--border-color);
     --input: var(--border-color);
     --ring: var(--color-focus);
@@ -222,9 +222,8 @@ button:disabled {
     cursor: not-allowed;
 }
 
-input[aria-invalid="true"],
-select[aria-invalid="true"],
-textarea[aria-invalid="true"] {
+input[aria-invalid='true'],
+select[aria-invalid='true'],
+textarea[aria-invalid='true'] {
     border-color: var(--color-error-text);
 }
-

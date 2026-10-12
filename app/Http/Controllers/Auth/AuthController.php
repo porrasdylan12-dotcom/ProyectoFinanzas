@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends Controller
 {
-   
     public function register(RegisterRequest $request): JsonResponse
     {
 
@@ -25,8 +23,8 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken(
-            'auth_token', 
-            ['*'], 
+            'auth_token',
+            ['*'],
             now()->addMinutes(120)
         )->plainTextToken;
 
@@ -36,19 +34,20 @@ class AuthController extends Controller
                 'user' => clone $user,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-            ]
+            ],
         ], 201);
     }
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $throttleKey = strtolower($request->email) . '|' . $request->ip();
+        $throttleKey = strtolower($request->email).'|'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
+
             return response()->json([
-                'message' => "Demasiados intentos de inicio de sesión. Por favor, intente de nuevo en {$seconds} segundos."
-            ], 429); 
+                'message' => "Demasiados intentos de inicio de sesión. Por favor, intente de nuevo en {$seconds} segundos.",
+            ], 429);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -57,15 +56,15 @@ class AuthController extends Controller
             RateLimiter::hit($throttleKey, 60);
 
             return response()->json([
-                'message' => 'Las credenciales proporcionadas son incorrectas.'
-            ], 401); 
+                'message' => 'Las credenciales proporcionadas son incorrectas.',
+            ], 401);
         }
 
         RateLimiter::clear($throttleKey);
 
         $token = $user->createToken(
-            'auth_token', 
-            ['*'], 
+            'auth_token',
+            ['*'],
             now()->addMinutes(120)
         )->plainTextToken;
 
@@ -75,7 +74,7 @@ class AuthController extends Controller
                 'user' => $user,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-            ]
+            ],
         ]);
     }
 
@@ -84,7 +83,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Sesión cerrada exitosamente'
+            'message' => 'Sesión cerrada exitosamente',
         ]);
     }
 }

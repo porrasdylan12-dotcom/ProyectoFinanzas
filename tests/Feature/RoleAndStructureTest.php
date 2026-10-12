@@ -9,12 +9,12 @@ use Tests\TestCase;
 
 class RoleAndStructureTest extends TestCase
 {
-    use RefreshDatabase; 
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
     }
@@ -24,7 +24,7 @@ class RoleAndStructureTest extends TestCase
         $response = $this->getJson('/api/admin/users');
 
         $response->assertStatus(401)
-                 ->assertJsonStructure(['message']);
+            ->assertJsonStructure(['message']);
     }
 
     public function test_deniega_acceso_a_panel_admin_si_no_tiene_el_rol_correcto_con_403()
@@ -44,19 +44,19 @@ class RoleAndStructureTest extends TestCase
         $response = $this->actingAs($admin)->getJson('/api/admin/users');
 
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         '*' => [
-                             'id', 
-                             'nombre', 
-                             'email', 
-                             'creada', 
-                             'actualizada'
-                         ]
-                     ],
-                     'links',
-                     'meta'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'nombre',
+                        'email',
+                        'creada',
+                        'actualizada',
+                    ],
+                ],
+                'links',
+                'meta',
+            ]);
     }
 
     public function test_rechaza_creacion_de_cuenta_sin_token_con_401()
@@ -64,7 +64,7 @@ class RoleAndStructureTest extends TestCase
         $payload = [
             'name' => 'Cuenta Nueva',
             'type' => 'ahorros',
-            'balance' => 500.00
+            'balance' => 500.00,
         ];
 
         $response = $this->postJson('/api/accounts', $payload);
@@ -80,11 +80,11 @@ class RoleAndStructureTest extends TestCase
         $payload = [
             'name' => 'Cuenta Nueva',
             'type' => 'ahorros',
-            'balance' => 500.00
+            'balance' => 500.00,
         ];
 
         $response = $this->actingAs($userWithoutRole)->postJson('/api/accounts', $payload);
-        
+
         $response->assertStatus(403);
     }
 
@@ -96,22 +96,22 @@ class RoleAndStructureTest extends TestCase
         $payload = [
             'name' => 'Cuenta Principal',
             'type' => 'corriente',
-            'balance' => 1500.75
+            'balance' => 1500.75,
         ];
 
         $response = $this->actingAs($user)->postJson('/api/accounts', $payload);
 
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'user_id',
-                         'nombre',
-                         'saldo',
-                         'tipo',
-                         'creada',
-                         'actualizada'
-                     ]
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'user_id',
+                    'nombre',
+                    'saldo',
+                    'tipo',
+                    'creada',
+                    'actualizada',
+                ],
+            ]);
     }
 }

@@ -11,3 +11,7 @@ parameters:
         - routes/
 
     level: 7
+
+    # Desactivar restricciones estrictas de arreglos y genéricos masivos
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

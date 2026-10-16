@@ -9,7 +9,6 @@
    ===================================================================== */
 
 :root {
-    /* --- 1. Paleta de Colores (Guía Lab 7) --- */
     --color-bg: #12201a;
     --color-bg-deep: #0d1712;
     --color-surface: #1b2b22;
@@ -26,13 +25,10 @@
     --color-error-text: #f08a72;
 
     --color-borde: rgba(232, 228, 216, 0.18);
-
-    /* --- 2. Tipografía --- */
     --fuente-display: 'Fraunces', Georgia, serif;
     --fuente-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --fuente-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-    /* Escala tipográfica en REM (Accesibilidad 200%) */
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;
@@ -40,7 +36,6 @@
     --text-xl: 1.5rem;
     --text-2xl: 2rem;
 
-    /* --- 3. Sistema de Espaciado (Tokens en REM) --- */
     --espacio-1: 0.25rem;
     --espacio-2: 0.5rem;
     --espacio-3: 0.75rem;
@@ -49,15 +44,14 @@
     --espacio-6: 1.5rem;
     --espacio-8: 2rem;
 
-    /* --- 4. Formas, Bordes y Componentes --- */
     --radio-sm: 0.375rem;
     --radio-md: 0.625rem;
     --radio-lg: 0.875rem;
     --alto-control: 2.75rem;
     --ancho-max: 73.75rem;
 
-    --foco-ancho: 0.125rem; /* 2px */
-    --foco-offset: 0.125rem; /* 2px */
+    --foco-ancho: 0.125rem;
+    --foco-offset: 0.125rem;
 }
 
 *,
@@ -72,10 +66,10 @@ html {
 
 body {
     margin: 0;
-    font-family: var(--fuente-sans); /* Fuente Inter general */
+    font-family: var(--fuente-sans);
     font-size: var(--text-base);
-    background-color: var(--color-bg); /* Fondo oscuro general */
-    color: var(--color-text); /* Texto marfil */
+    background-color: var(--color-bg);
+    color: var(--color-text);
     line-height: 1.5;
     min-height: 100vh;
     display: grid;
@@ -86,18 +80,12 @@ body {
     grid-template-rows: auto minmax(0, 1fr);
 }
 
-/* =========================================
-   ESTADOS DE INTERFAZ (Lab 7)
-   ========================================= */
-
-/* Foco de teclado */
 :focus-visible {
     outline: var(--foco-ancho) solid var(--color-focus);
     outline-offset: var(--foco-offset);
     border-radius: 2px;
 }
 
-/* Deshabilitado */
 input:disabled,
 select:disabled,
 button:disabled,
@@ -107,7 +95,6 @@ button:disabled,
     pointer-events: none;
 }
 
-/* Error de campos (Accesibilidad) */
 input[aria-invalid='true'],
 select[aria-invalid='true'],
 input:user-invalid {
@@ -115,17 +102,13 @@ input:user-invalid {
     background-color: rgba(193, 87, 62, 0.05);
 }
 
-/* =========================================
-   TIPOGRAFÍA ESPECÍFICA
-   ========================================= */
-
 h1,
 h2,
 h3,
 fieldset,
 legend {
     margin: 0;
-    font-family: var(--fuente-display); /* Fuente Serif para Títulos */
+    font-family: var(--fuente-display);
 }
 
 h1 {
@@ -173,10 +156,6 @@ svg {
     border: 0;
 }
 
-/* =========================================
-   COMPONENTES
-   ========================================= */
-
 .barra {
     grid-area: barra;
     display: flex;
@@ -201,7 +180,7 @@ svg {
     font-size: var(--text-xl);
     text-decoration: none;
     letter-spacing: 0.02em;
-    color: var(--color-accent); /* Acento dorado */
+    color: var(--color-accent);
 }
 
 .barra__checkbox {
@@ -268,11 +247,10 @@ svg {
     flex-direction: column;
     gap: var(--espacio-3);
     padding: var(--espacio-6);
-    background-color: var(--color-surface); /* Fondo de tarjeta de la guía */
+    background-color: var(--color-surface);
     border: 1px solid var(--color-borde);
     border-radius: var(--radio-lg);
 
-    /* Corrección de desbordamiento */
     min-width: 0;
     overflow-wrap: break-word;
 }
@@ -320,7 +298,7 @@ svg {
 .btn--primario {
     font-weight: 600;
     background-color: var(--color-accent);
-    color: #1b1503; /* Contraste oscuro sobre dorado (Guía Lab 7) */
+    color: #1b1503;
     border-color: var(--color-accent);
 }
 
@@ -340,10 +318,6 @@ svg {
 .enlace-accion:hover {
     text-decoration: underline;
 }
-
-/* =========================================
-   PUNTOS DE QUIEBRE (Móvil Primero)
-   ========================================= */
 
 @media (min-width: 55rem) {
     body:has(.barra__nav) {

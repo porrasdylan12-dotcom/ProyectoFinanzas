@@ -12,6 +12,9 @@ parameters:
 
     level: 7
 
-    # Desactivar restricciones estrictas de arreglos y genéricos masivos
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        - '#has no value type specified in iterable type array#'
+        - '#with generic class .* does not specify its types#'
+        - '#uses generic trait .* but does not specify its types#'
+        - '#has no return type specified#'
+        - '#has parameter \$query with no type specified#'

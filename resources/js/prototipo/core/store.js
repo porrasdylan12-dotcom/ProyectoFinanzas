@@ -3,33 +3,63 @@ import { TOKEN_KEY, USER_KEY } from './config.js';
 
 const oyentes = new Set();
 
+let almacenActivo = 'local';
+
 let estado = {
     token: null,
     user: null,
     loading: false,
     errors: {},
     message: null,
-    online: typeof navigator === 'undefined' ? true : navigator.onLine,
 };
 
-function leerStorage(clave) {
+function obtenerAlmacen(nombre) {
     try {
-        return window.localStorage.getItem(clave);
+        return nombre === 'sesion'
+            ? window.sessionStorage
+            : window.localStorage;
     } catch {
         return null;
     }
 }
 
-function guardarStorage(clave, valor) {
+function leer(nombre, clave) {
+    const almacen = obtenerAlmacen(nombre);
+
+    if (!almacen) {
+        return null;
+    }
+
+    try {
+        return almacen.getItem(clave);
+    } catch {
+        return null;
+    }
+}
+
+function escribir(nombre, clave, valor) {
+    const almacen = obtenerAlmacen(nombre);
+
+    if (!almacen) {
+        return;
+    }
+
     try {
         if (valor === null || valor === undefined) {
-            window.localStorage.removeItem(clave);
+            almacen.removeItem(clave);
         } else {
-            window.localStorage.setItem(clave, valor);
+            almacen.setItem(clave, valor);
         }
     } catch {
         return;
     }
+}
+
+function limpiarSesionGuardada() {
+    escribir('local', TOKEN_KEY, null);
+    escribir('local', USER_KEY, null);
+    escribir('sesion', TOKEN_KEY, null);
+    escribir('sesion', USER_KEY, null);
 }
 
 function notificar() {
@@ -62,26 +92,43 @@ export function subscribe(oyente) {
     };
 }
 
+function persistirUsuario() {
+    escribir(
+        almacenActivo,
+        USER_KEY,
+        estado.user ? JSON.stringify(estado.user) : null,
+    );
+}
+
 export const store = {
     getState,
     setState,
     subscribe,
 
-    setToken(token) {
+    setSesion({ token, user = null, recordar = true }) {
+        almacenActivo = recordar ? 'local' : 'sesion';
+        limpiarSesionGuardada();
         api.setToken(token);
-        guardarStorage(TOKEN_KEY, token);
-        return setState({ token: token || null });
+        escribir(almacenActivo, TOKEN_KEY, token);
+        estado = { ...estado, token: token || null, user };
+        persistirUsuario();
+        notificar();
+        return estado;
     },
 
-    clearToken() {
+    limpiarSesion() {
+        limpiarSesionGuardada();
         api.clearToken();
-        guardarStorage(TOKEN_KEY, null);
-        return setState({ token: null, user: null });
+        estado = { ...estado, token: null, user: null, errors: {} };
+        notificar();
+        return estado;
     },
 
     setUser(user) {
-        guardarStorage(USER_KEY, user ? JSON.stringify(user) : null);
-        return setState({ user });
+        estado = { ...estado, user };
+        persistirUsuario();
+        notificar();
+        return estado;
     },
 
     setLoading(loading) {
@@ -102,21 +149,28 @@ export const store = {
 };
 
 function inicializar() {
-    const tokenGuardado = leerStorage(TOKEN_KEY);
+    const tokenLocal = leer('local', TOKEN_KEY);
+    const tokenSesion = leer('sesion', TOKEN_KEY);
+    const token = tokenLocal || tokenSesion;
 
-    if (tokenGuardado) {
-        api.setToken(tokenGuardado);
-        estado = { ...estado, token: tokenGuardado };
+    if (!token) {
+        return;
     }
 
-    const usuarioGuardado = leerStorage(USER_KEY);
+    almacenActivo = tokenLocal ? 'local' : 'sesion';
+    api.setToken(token);
+    estado = { ...estado, token };
 
-    if (usuarioGuardado) {
-        try {
-            estado = { ...estado, user: JSON.parse(usuarioGuardado) };
-        } catch {
-            guardarStorage(USER_KEY, null);
-        }
+    const usuario = leer(almacenActivo, USER_KEY);
+
+    if (!usuario) {
+        return;
+    }
+
+    try {
+        estado = { ...estado, user: JSON.parse(usuario) };
+    } catch {
+        escribir(almacenActivo, USER_KEY, null);
     }
 }
 

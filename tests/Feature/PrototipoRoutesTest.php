@@ -11,6 +11,19 @@ test('sirve una página del prototipo con mayúsculas en el nombre', function ()
     $this->get('/prototipo/Registro.html')->assertOk();
 });
 
+test('inyecta el bootstrap de módulos en las páginas del prototipo', function () {
+    $response = $this->get('/prototipo/login.html');
+
+    $response->assertOk();
+    $response->assertSee('/js/prototipo/main.js', false);
+});
+
+test('serve módulos JavaScript de los dominios', function () {
+    $this->get('/js/prototipo/usuarios/state.js')
+        ->assertOk()
+        ->assertSee('iniciarSesion', false);
+});
+
 test('sirve una hoja de estilos del prototipo', function () {
     $response = $this->get('/css/estilos.css');
 

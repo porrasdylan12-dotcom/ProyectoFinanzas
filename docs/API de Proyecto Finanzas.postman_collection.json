@@ -1,192 +1,167 @@
 {
-  "info": {
-    "_postman_id": "f875f31a-7b25-466e-a0bc-a2420037c9cc",
-    "name": "API de Proyecto Finanzas",
-    "description": "Documentación de la API REST para el Laboratorio 5",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "57941838",
-    "_collection_link": "https://go.postman.co/collection/57941838-f875f31a-7b25-466e-a0bc-a2420037c9cc?source=collection_link"
-  },
-  "item": [
-    {
-      "name": "api",
-      "item": [
+    "info": {
+        "_postman_id": "f875f31a-7b25-466e-a0bc-a2420037c9cc",
+        "name": "API de Proyecto Finanzas",
+        "description": "Documentación de la API REST para el Laboratorio 5",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "57941838",
+        "_collection_link": "https://go.postman.co/collection/57941838-f875f31a-7b25-466e-a0bc-a2420037c9cc?source=collection_link"
+    },
+    "item": [
         {
-          "name": "transactions",
-          "item": [
-            {
-              "name": "Listar transacciones",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/api/transactions",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "api",
-                    "transactions"
-                  ]
-                },
-                "description": "Devuelve una lista paginada de las transacciones del usuario autenticado."
-              },
-              "response": [
+            "name": "api",
+            "item": [
                 {
-                  "name": "Listado obtenido correctamente.",
-                  "originalRequest": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/api/transactions",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "transactions"
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                }
-              ]
-            },
-            {
-              "name": "Crear nueva transacción",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"account_id\": 1,\n  \"category_id\": 3,\n  \"amount\": 150.5,\n  \"transaction_date\": \"2026-09-15\",\n  \"description\": \"Compra de supermercado\"\n}",
-                  "options": {
-                    "raw": {
-                      "headerFamily": "json",
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/api/transactions",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "api",
-                    "transactions"
-                  ]
-                },
-                "description": "Registra una nueva transacción."
-              },
-              "response": [
-                {
-                  "name": "Transacción creada exitosamente",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [
-                      {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                      }
-                    ],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"account_id\": 1,\n  \"category_id\": 3,\n  \"amount\": 150.5,\n  \"transaction_date\": \"2026-09-15\",\n  \"description\": \"Compra de supermercado\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
+                    "name": "transactions",
+                    "item": [
+                        {
+                            "name": "Listar transacciones",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/transactions",
+                                    "host": ["{{baseUrl}}"],
+                                    "path": ["api", "transactions"]
+                                },
+                                "description": "Devuelve una lista paginada de las transacciones del usuario autenticado."
+                            },
+                            "response": [
+                                {
+                                    "name": "Listado obtenido correctamente.",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "url": {
+                                            "raw": "{{baseUrl}}/api/transactions",
+                                            "host": ["{{baseUrl}}"],
+                                            "path": ["api", "transactions"]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "text",
+                                    "header": [],
+                                    "cookie": [],
+                                    "body": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Crear nueva transacción",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"account_id\": 1,\n  \"category_id\": 3,\n  \"amount\": 150.5,\n  \"transaction_date\": \"2026-09-15\",\n  \"description\": \"Compra de supermercado\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/transactions",
+                                    "host": ["{{baseUrl}}"],
+                                    "path": ["api", "transactions"]
+                                },
+                                "description": "Registra una nueva transacción."
+                            },
+                            "response": [
+                                {
+                                    "name": "Transacción creada exitosamente",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"account_id\": 1,\n  \"category_id\": 3,\n  \"amount\": 150.5,\n  \"transaction_date\": \"2026-09-15\",\n  \"description\": \"Compra de supermercado\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": {
+                                            "raw": "{{baseUrl}}/api/transactions",
+                                            "host": ["{{baseUrl}}"],
+                                            "path": ["api", "transactions"]
+                                        }
+                                    },
+                                    "status": "Created",
+                                    "code": 201,
+                                    "_postman_previewlanguage": "text",
+                                    "header": [],
+                                    "cookie": [],
+                                    "body": ""
+                                },
+                                {
+                                    "name": "Error de validación",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"account_id\": 1,\n  \"category_id\": 3,\n  \"amount\": 150.5,\n  \"transaction_date\": \"2026-09-15\",\n  \"description\": \"Compra de supermercado\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": {
+                                            "raw": "{{baseUrl}}/api/transactions",
+                                            "host": ["{{baseUrl}}"],
+                                            "path": ["api", "transactions"]
+                                        }
+                                    },
+                                    "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                                    "code": 422,
+                                    "_postman_previewlanguage": "text",
+                                    "header": [],
+                                    "cookie": [],
+                                    "body": ""
+                                }
+                            ]
                         }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{baseUrl}}/api/transactions",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "transactions"
-                      ]
-                    }
-                  },
-                  "status": "Created",
-                  "code": 201,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                },
-                {
-                  "name": "Error de validación",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [
-                      {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                      }
-                    ],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"account_id\": 1,\n  \"category_id\": 3,\n  \"amount\": 150.5,\n  \"transaction_date\": \"2026-09-15\",\n  \"description\": \"Compra de supermercado\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{baseUrl}}/api/transactions",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "transactions"
-                      ]
-                    }
-                  },
-                  "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
-                  "code": 422,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
+                    ]
                 }
-              ]
-            }
-          ]
+            ]
         }
-      ]
-    }
-  ],
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "1|CIUQJTYtwCsTrKTnG5FPajXA3L1nbYP1LZivfo7Za9a21775",
-        "type": "string"
-      }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "1|CIUQJTYtwCsTrKTnG5FPajXA3L1nbYP1LZivfo7Za9a21775",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "/"
+        }
     ]
-  },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "/"
-    }
-  ]
 }

@@ -12,20 +12,20 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Route;
 
-
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
-
+Route::post('/sanctum/token', [AuthController::class, 'login'])
+    ->middleware('throttle:5,1')
+    ->name('api.sanctum.token');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn () => new UserResource(request()->user()))
         ->name('api.user');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
-
 
     $escritura = ['role:user'];
 
@@ -64,7 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::match(['put', 'patch'], 'group-debts/{group_debt}', [GroupDebtController::class, 'update'])->middleware($escritura)->name('api.group-debts.update');
     Route::delete('group-debts/{group_debt}', [GroupDebtController::class, 'destroy'])->middleware($escritura)->name('api.group-debts.destroy');
 
-
     Route::get('/accounts/{account}/transactions', [TransactionController::class, 'forAccount'])
         ->name('api.accounts.transactions.index');
     Route::post('/accounts/{account}/transactions', [TransactionController::class, 'storeInAccount'])
@@ -89,4 +88,3 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 });
-

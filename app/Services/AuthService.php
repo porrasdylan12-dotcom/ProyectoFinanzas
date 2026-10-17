@@ -5,11 +5,9 @@ namespace App\Services;
 use App\Exceptions\BusinessRuleException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
-
 
 class AuthService
 {
@@ -55,7 +53,6 @@ class AuthService
                 401
             );
         }
-      
 
         RateLimiter::clear($throttleKey);
 

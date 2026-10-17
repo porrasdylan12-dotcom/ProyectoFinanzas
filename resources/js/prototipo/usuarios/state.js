@@ -4,6 +4,9 @@ import {
     registrarCuenta as solicitarRegistro,
     cerrarSesion as solicitarLogout,
     obtenerUsuario,
+    actualizarPerfil as solicitarActualizarPerfil,
+    cambiarContrasena as solicitarCambioContrasena,
+    solicitarEnlaceRecuperacion,
     normalizarUsuario,
 } from './api.js';
 
@@ -108,4 +111,38 @@ export async function cargarUsuario() {
     } finally {
         store.setLoading(false);
     }
+}
+
+export function actualizarPerfil({ name, email }) {
+    return ejecutar(async () => {
+        const usuario = normalizarUsuario(
+            await solicitarActualizarPerfil({ name, email }),
+        );
+        store.setUser(usuario);
+
+        return usuario;
+    }, 'Datos actualizados correctamente.');
+}
+
+export function cambiarContrasena({
+    currentPassword,
+    password,
+    passwordConfirmation,
+}) {
+    return ejecutar(
+        () =>
+            solicitarCambioContrasena({
+                currentPassword,
+                password,
+                passwordConfirmation,
+            }),
+        'Contraseña actualizada correctamente.',
+    );
+}
+
+export function solicitarRecuperacion({ email }) {
+    return ejecutar(
+        () => solicitarEnlaceRecuperacion({ email }),
+        'Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.',
+    );
 }

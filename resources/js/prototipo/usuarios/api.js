@@ -45,3 +45,25 @@ export async function obtenerUsuario() {
 
     return respuesta && respuesta.data ? respuesta.data : respuesta;
 }
+
+export async function actualizarPerfil({ name, email }) {
+    const respuesta = await api.patch('/user', { name, email });
+
+    return respuesta && respuesta.data ? respuesta.data : respuesta;
+}
+
+export async function cambiarContrasena({
+    currentPassword,
+    password,
+    passwordConfirmation,
+}) {
+    return api.put('/user/password', {
+        current_password: currentPassword,
+        password,
+        password_confirmation: passwordConfirmation,
+    });
+}
+
+export async function solicitarEnlaceRecuperacion({ email }) {
+    return api.post('/forgot-password', { email });
+}

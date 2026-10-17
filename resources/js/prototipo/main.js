@@ -13,6 +13,9 @@ const paginas = {
     'AnadirGasto.html': () => import('./grupos/views/AnadirGasto.js'),
     'AnadirUsuario.html': () => import('./grupos/views/AnadirUsuario.js'),
     'SaldarDeuda.html': () => import('./grupos/views/SaldarDeuda.js'),
+    'AjustesUsuarios.html': () => import('./usuarios/views/ajustesUsuarios.js'),
+    'RecuperarContrasena.html': () =>
+        import('./usuarios/views/recuperarContrasena.js'),
 };
 
 function nombreDePagina() {

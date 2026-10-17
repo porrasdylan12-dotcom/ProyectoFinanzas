@@ -9,7 +9,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupDebtController;
 use App\Http\Controllers\SharedExpensesController;
 use App\Http\Controllers\TransactionController;
-use App\Http\Resources\UserResource;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
@@ -17,13 +17,17 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,
 
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])
+    ->middleware('throttle:5,1')
+    ->name('api.forgot-password');
 Route::post('/sanctum/token', [AuthController::class, 'login'])
     ->middleware('throttle:5,1')
     ->name('api.sanctum.token');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', fn () => new UserResource(request()->user()))
-        ->name('api.user');
+    Route::get('/user', [UserController::class, 'show'])->name('api.user');
+    Route::patch('/user', [UserController::class, 'update'])->name('api.user.update');
+    Route::put('/user/password', [UserController::class, 'updatePassword'])->name('api.user.password.update');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 

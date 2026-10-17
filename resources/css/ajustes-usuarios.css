@@ -1,0 +1,6 @@
+.ajustes {
+    display: grid;
+    gap: var(--espacio-5);
+    max-width: 40rem;
+    margin-inline: auto;
+}

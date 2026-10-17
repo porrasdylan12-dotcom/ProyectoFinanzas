@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessRuleException;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -67,6 +69,39 @@ class GroupService
 
             return $group;
         });
+    }
+
+    /**
+     * Incorpora a una persona al grupo por su correo. Solo el anfitrion (rol
+     * 'admin' del pivote user_group) puede administrar la composicion del grupo;
+     * las personas invitadas solo pueden registrar gastos y deudas.
+     */
+    public function addMember(Group $group, int $userId, string $email): Group
+    {
+        $membership = $group->users()->where('user_id', $userId)->first();
+
+        if (! $membership || $membership->pivot->role !== 'admin') {
+            throw new AuthorizationException(
+                'Solo el anfitrión del grupo puede añadir integrantes.'
+            );
+        }
+
+        $usuario = User::where('email', $email)->firstOrFail();
+
+        if ($group->users()->where('user_id', $usuario->id)->exists()) {
+            throw new BusinessRuleException(
+                'La persona ya pertenece al grupo.',
+                'YA_ES_MIEMBRO',
+                409
+            );
+        }
+
+        $group->users()->attach($usuario->id, [
+            'role' => 'member',
+            'joined_at' => now(),
+        ]);
+
+        return $group;
     }
 
     public function update(Group $group, array $data): Group

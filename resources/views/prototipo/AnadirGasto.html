@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Registro de un gasto compartido y reparto automático entre las personas participantes de un grupo."
+        />
+        <title>Añadir gasto · finanzas</title>
+        <link rel="stylesheet" href="../../css/estilos.css" />
+        <link rel="stylesheet" href="../../css/formulario.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="barra">
+            <div class="barra__marca">
+                <a class="barra__logo" href="panel-principal.html">finanzas</a>
+            </div>
+
+            <input type="checkbox" id="menu-toggle" class="barra__checkbox" />
+            <label for="menu-toggle" class="barra__toggle">Menú</label>
+
+            <nav class="barra__nav" aria-label="Menú principal">
+                <ul class="barra__lista">
+                    <li>
+                        <a class="barra__enlace" href="panel-principal.html"
+                            >Inicio</a
+                        >
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="cuentas.html">Cuentas</a>
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="grupos.html"
+                            aria-current="page"
+                            >Grupos</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="panel-principal.html#usuario"
+                            >Usuario<span class="barra__usuario"
+                                >[Nombre de usuario]</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="contenido">
+            <div class="cabecera-pagina">
+                <h1>Añadir gasto</h1>
+                <a class="enlace-accion" href="grupos.html"
+                    ><span aria-hidden="true">←</span> Volver a grupos</a
+                >
+            </div>
+
+            <section class="card panel-form" aria-labelledby="gasto-form">
+                <h2 id="gasto-form">Gasto compartido</h2>
+
+                <form class="formulario" action="grupos.html" method="post">
+                    <fieldset class="grupo-campos">
+                        <legend>Detalles del gasto</legend>
+
+                        <div class="campo">
+                            <label for="gasto-grupo">Grupo</label>
+                            <select
+                                id="gasto-grupo"
+                                name="group_id"
+                                required
+                                aria-describedby="gasto-grupo-error"
+                            >
+                                <option value="" selected disabled>
+                                    Elige un grupo
+                                </option>
+                                <option value="1">[Nombre del grupo]</option>
+                                <option value="2">[Nombre del grupo]</option>
+                                <option value="3">[Nombre del grupo]</option>
+                            </select>
+                            <p
+                                class="campo__error"
+                                id="gasto-grupo-error"
+                                role="alert"
+                            >
+                                Selecciona un grupo al que pertenezcas.
+                            </p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="gasto-monto">Monto total</label>
+                            <input
+                                type="number"
+                                id="gasto-monto"
+                                name="amount"
+                                required
+                                min="0.01"
+                                max="999999999999.99"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder="0.00"
+                                aria-describedby="gasto-monto-ayuda gasto-monto-error"
+                            />
+                            <p class="campo__ayuda" id="gasto-monto-ayuda">
+                                Se reparte en partes iguales entre las personas
+                                participantes.
+                            </p>
+                            <p
+                                class="campo__error"
+                                id="gasto-monto-error"
+                                role="alert"
+                            >
+                                El monto debe ser mayor que cero.
+                            </p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="gasto-fecha">Fecha</label>
+                            <input
+                                type="date"
+                                id="gasto-fecha"
+                                name="date"
+                                required
+                                aria-describedby="gasto-fecha-error"
+                            />
+                            <p
+                                class="campo__error"
+                                id="gasto-fecha-error"
+                                role="alert"
+                            >
+                                Indica una fecha válida.
+                            </p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="gasto-descripcion"
+                                >Descripción <span>(opcional)</span></label
+                            >
+                            <textarea
+                                id="gasto-descripcion"
+                                name="description"
+                                maxlength="1000"
+                                rows="3"
+                                placeholder="¿En qué se gastó?"
+                                aria-describedby="gasto-descripcion-ayuda gasto-descripcion-error"
+                            ></textarea>
+                            <p class="campo__ayuda" id="gasto-descripcion-ayuda">
+                                Hasta 1000 caracteres.
+                            </p>
+                            <p
+                                class="campo__error"
+                                id="gasto-descripcion-error"
+                                role="alert"
+                            >
+                                La descripción no puede superar los 1000
+                                caracteres.
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="grupo-campos">
+                        <legend>Personas participantes</legend>
+                        <p class="campo__ayuda">
+                            Marca al menos dos personas. Tu propia parte no
+                            genera deuda para ti.
+                        </p>
+
+                        <div class="campo">
+                            <span
+                                class="campo__etiqueta"
+                                id="participantes-label"
+                                >Participantes</span
+                            >
+                            <div
+                                class="opciones"
+                                role="group"
+                                aria-labelledby="participantes-label"
+                                aria-describedby="participantes-ayuda participantes-error"
+                            >
+                                <span class="opcion">
+                                    <input
+                                        type="checkbox"
+                                        id="participante-1"
+                                        name="participants[]"
+                                        value="1"
+                                    />
+                                    <label for="participante-1">[Nombre 1]</label>
+                                </span>
+                                <span class="opcion">
+                                    <input
+                                        type="checkbox"
+                                        id="participante-2"
+                                        name="participants[]"
+                                        value="2"
+                                    />
+                                    <label for="participante-2">[Nombre 2]</label>
+                                </span>
+                                <span class="opcion">
+                                    <input
+                                        type="checkbox"
+                                        id="participante-3"
+                                        name="participants[]"
+                                        value="3"
+                                    />
+                                    <label for="participante-3">[Nombre 3]</label>
+                                </span>
+                                <span class="opcion">
+                                    <input
+                                        type="checkbox"
+                                        id="participante-4"
+                                        name="participants[]"
+                                        value="4"
+                                    />
+                                    <label for="participante-4">[Nombre 4]</label>
+                                </span>
+                            </div>
+                            <p class="campo__ayuda" id="participantes-ayuda">
+                                Se necesitan al menos 2 participantes
+                                distintos.
+                            </p>
+                            <p
+                                class="campo__error"
+                                id="participantes-error"
+                                role="alert"
+                            >
+                                Selecciona al menos dos personas participantes.
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <div class="acciones">
+                        <button class="btn btn--primario" type="submit">
+                            Guardar gasto
+                        </button>
+                        <a class="enlace-accion" href="grupos.html"
+                            >Cancelar</a
+                        >
+                    </div>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>

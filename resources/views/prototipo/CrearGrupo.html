@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Creación de un grupo nuevo para gastos compartidos en la aplicación de finanzas personales."
+        />
+        <title>Crear grupo · finanzas</title>
+        <link rel="stylesheet" href="../../css/estilos.css" />
+        <link rel="stylesheet" href="../../css/formulario.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="barra">
+            <div class="barra__marca">
+                <a class="barra__logo" href="panel-principal.html">finanzas</a>
+            </div>
+
+            <input type="checkbox" id="menu-toggle" class="barra__checkbox" />
+            <label for="menu-toggle" class="barra__toggle">Menú</label>
+
+            <nav class="barra__nav" aria-label="Menú principal">
+                <ul class="barra__lista">
+                    <li>
+                        <a class="barra__enlace" href="panel-principal.html"
+                            >Inicio</a
+                        >
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="cuentas.html">Cuentas</a>
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="grupos.html"
+                            aria-current="page"
+                            >Grupos</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="panel-principal.html#usuario"
+                            >Usuario<span class="barra__usuario"
+                                >[Nombre de usuario]</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="contenido">
+            <div class="cabecera-pagina">
+                <h1>Crear grupo</h1>
+                <a class="enlace-accion" href="grupos.html"
+                    ><span aria-hidden="true">←</span> Volver a grupos</a
+                >
+            </div>
+
+            <section class="card panel-form" aria-labelledby="grupo-form">
+                <h2 id="grupo-form">Datos del grupo</h2>
+
+                <form class="formulario" action="grupos.html" method="post">
+                    <fieldset class="grupo-campos">
+                        <legend>Identifica tu grupo</legend>
+
+                        <div class="campo">
+                            <label for="grupo-nombre">Nombre del grupo</label>
+                            <input
+                                type="text"
+                                id="grupo-nombre"
+                                name="name"
+                                required
+                                maxlength="100"
+                                autocomplete="off"
+                                placeholder="Viaje a la playa"
+                                aria-describedby="grupo-nombre-ayuda grupo-nombre-error"
+                            />
+                            <p class="campo__ayuda" id="grupo-nombre-ayuda">
+                                Hasta 100 caracteres; no puede repetirse. Al
+                                crearlo serás el anfitrión.
+                            </p>
+                            <p
+                                class="campo__error"
+                                id="grupo-nombre-error"
+                                role="alert"
+                            >
+                                El nombre es obligatorio (máximo 100
+                                caracteres).
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <div class="acciones">
+                        <button class="btn btn--primario" type="submit">
+                            Crear grupo
+                        </button>
+                        <a class="enlace-accion" href="grupos.html"
+                            >Cancelar</a
+                        >
+                    </div>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>

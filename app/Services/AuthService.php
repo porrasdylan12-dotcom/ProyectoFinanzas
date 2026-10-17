@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\BusinessRuleException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -70,6 +71,14 @@ class AuthService
     public function logout(User $user): void
     {
         $user->currentAccessToken()->delete();
+    }
+
+    /**
+     * Envía el enlace de restablecimiento sin revelar si el correo existe.
+     */
+    public function sendPasswordResetLink(string $email): void
+    {
+        Password::broker()->sendResetLink(['email' => $email]);
     }
 
     private function throttleKey(string $email): string

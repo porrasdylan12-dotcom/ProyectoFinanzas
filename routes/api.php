@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('groups', [GroupController::class, 'store'])->middleware($escritura)->name('api.groups.store');
     Route::match(['put', 'patch'], 'groups/{group}', [GroupController::class, 'update'])->middleware($escritura)->name('api.groups.update');
     Route::delete('groups/{group}', [GroupController::class, 'destroy'])->middleware($escritura)->name('api.groups.destroy');
+    Route::post('groups/{group}/members', [GroupController::class, 'addMember'])->middleware($escritura)->name('api.groups.members.store');
 
     Route::apiResource('shared-expenses', SharedExpensesController::class)->only(['index', 'show'])->names('api.shared-expenses');
     Route::post('shared-expenses', [SharedExpensesController::class, 'store'])->middleware($escritura)->name('api.shared-expenses.store');

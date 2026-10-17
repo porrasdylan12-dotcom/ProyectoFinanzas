@@ -103,7 +103,11 @@ export function aplicarErroresDeValidacion(formulario, errores, mapa = {}) {
             ? mensajes[0]
             : String(mensajes);
 
-        if (input instanceof HTMLInputElement) {
+        if (
+            input instanceof HTMLInputElement ||
+            input instanceof HTMLSelectElement ||
+            input instanceof HTMLTextAreaElement
+        ) {
             mostrarErrorDeCampo(input, mensaje);
             aplicados += 1;
         }

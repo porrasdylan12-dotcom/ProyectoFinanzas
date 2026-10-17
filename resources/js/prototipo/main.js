@@ -8,6 +8,11 @@ const paginas = {
         import('./cuentas/views/CrearPresupuesto.js'),
     'NuevaTransaccion.html': () =>
         import('./cuentas/views/NuevaTransaccion.js'),
+    'grupos.html': () => import('./grupos/views/grupos.js'),
+    'CrearGrupo.html': () => import('./grupos/views/CrearGrupo.js'),
+    'AnadirGasto.html': () => import('./grupos/views/AnadirGasto.js'),
+    'AnadirUsuario.html': () => import('./grupos/views/AnadirUsuario.js'),
+    'SaldarDeuda.html': () => import('./grupos/views/SaldarDeuda.js'),
 };
 
 function nombreDePagina() {

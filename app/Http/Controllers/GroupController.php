@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupMemberRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
@@ -46,6 +47,17 @@ class GroupController extends Controller
         $group = $this->groupService->findForUser($group->id, $request->user()->id);
 
         return new GroupResource($group);
+    }
+
+    #[Authorize('update', 'group')]
+    public function addMember(GroupMemberRequest $request, Group $group): JsonResponse
+    {
+        $group = $this->groupService->findForUser($group->id, $request->user()->id);
+        $group = $this->groupService->addMember($group, $request->user()->id, $request->validated('email'));
+
+        return (new GroupResource($group->load('users')))
+            ->response()
+            ->setStatusCode(201);
     }
 
     #[Authorize('update', 'group')]

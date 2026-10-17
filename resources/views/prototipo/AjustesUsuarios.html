@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Ajustes de la cuenta: información personal y cambio seguro de contraseña."
+        />
+        <title>Ajustes de usuario · finanzas</title>
+        <link rel="stylesheet" href="../../css/estilos.css" />
+        <link rel="stylesheet" href="../../css/formulario.css" />
+        <link rel="stylesheet" href="../../css/ajustes-usuarios.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="barra">
+            <div class="barra__marca">
+                <a class="barra__logo" href="panel-principal.html">finanzas</a>
+            </div>
+
+            <input type="checkbox" id="menu-toggle" class="barra__checkbox" />
+            <label for="menu-toggle" class="barra__toggle">Menú</label>
+
+            <nav class="barra__nav" aria-label="Menú principal">
+                <ul class="barra__lista">
+                    <li>
+                        <a class="barra__enlace" href="panel-principal.html"
+                            >Inicio</a
+                        >
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="cuentas.html">Cuentas</a>
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="grupos.html">Grupos</a>
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="AjustesUsuarios.html"
+                            aria-current="page"
+                            >Usuario<span class="barra__usuario"
+                                >[Nombre de usuario]</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="contenido">
+            <div class="cabecera-pagina">
+                <h1>Ajustes de usuario</h1>
+                <a class="enlace-accion" href="login.html"
+                    >Cerrar sesión</a
+                >
+            </div>
+
+            <div class="ajustes">
+                <section class="card" aria-labelledby="info-personal">
+                    <h2 id="info-personal">Información personal</h2>
+                    <p class="card__intro">
+                        Actualiza tu nombre y tu correo electrónico.
+                    </p>
+
+                    <form class="formulario" action="panel-principal.html" method="post">
+                        <fieldset class="grupo-campos">
+                            <legend>Datos de la cuenta</legend>
+
+                            <div class="campo">
+                                <label for="perfil-nombre"
+                                    >Nombre completo</label
+                                >
+                                <input
+                                    type="text"
+                                    id="perfil-nombre"
+                                    name="name"
+                                    required
+                                    maxlength="255"
+                                    autocomplete="name"
+                                    value="[Nombre]"
+                                    aria-describedby="perfil-nombre-error"
+                                />
+                                <p
+                                    class="campo__error"
+                                    id="perfil-nombre-error"
+                                    role="alert"
+                                >
+                                    Escribe tu nombre (máximo 255 caracteres).
+                                </p>
+                            </div>
+
+                            <div class="campo">
+                                <label for="perfil-correo"
+                                    >Correo electrónico</label
+                                >
+                                <input
+                                    type="email"
+                                    id="perfil-correo"
+                                    name="email"
+                                    required
+                                    maxlength="255"
+                                    autocomplete="email"
+                                    value="[correo]"
+                                    aria-describedby="perfil-correo-ayuda perfil-correo-error"
+                                />
+                                <p
+                                    class="campo__ayuda"
+                                    id="perfil-correo-ayuda"
+                                >
+                                    Debe ser un correo único y válido.
+                                </p>
+                                <p
+                                    class="campo__error"
+                                    id="perfil-correo-error"
+                                    role="alert"
+                                >
+                                    Introduce un correo electrónico válido.
+                                </p>
+                            </div>
+                        </fieldset>
+
+                        <div class="acciones">
+                            <button class="btn btn--primario" type="submit">
+                                Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card" aria-labelledby="cambiar-clave">
+                    <h2 id="cambiar-clave">Cambiar contraseña</h2>
+                    <p class="card__intro">
+                        Por seguridad, confirma tu contraseña actual antes de
+                        elegir una nueva.
+                    </p>
+
+                    <form class="formulario" action="panel-principal.html" method="post">
+                        <fieldset class="grupo-campos">
+                            <legend>Verificación</legend>
+
+                            <div class="campo">
+                                <label for="clave-actual"
+                                    >Contraseña actual</label
+                                >
+                                <input
+                                    type="password"
+                                    id="clave-actual"
+                                    name="current_password"
+                                    required
+                                    autocomplete="current-password"
+                                    aria-describedby="clave-actual-error"
+                                />
+                                <p
+                                    class="campo__error"
+                                    id="clave-actual-error"
+                                    role="alert"
+                                >
+                                    Escribe tu contraseña actual.
+                                </p>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="grupo-campos">
+                            <legend>Nueva contraseña</legend>
+
+                            <div class="campo">
+                                <label for="clave-nueva"
+                                    >Nueva contraseña</label
+                                >
+                                <input
+                                    type="password"
+                                    id="clave-nueva"
+                                    name="password"
+                                    required
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    aria-describedby="clave-nueva-ayuda clave-nueva-error"
+                                />
+                                <p
+                                    class="campo__ayuda"
+                                    id="clave-nueva-ayuda"
+                                >
+                                    Al menos 8 caracteres, con mayúsculas,
+                                    minúsculas, números y símbolos. No puede
+                                    coincidir con contraseñas filtradas.
+                                </p>
+                                <p
+                                    class="campo__error"
+                                    id="clave-nueva-error"
+                                    role="alert"
+                                >
+                                    La contraseña no cumple los requisitos
+                                    mínimos.
+                                </p>
+                            </div>
+
+                            <div class="campo">
+                                <label for="clave-nueva-confirmar"
+                                    >Confirmar nueva contraseña</label
+                                >
+                                <input
+                                    type="password"
+                                    id="clave-nueva-confirmar"
+                                    name="password_confirmation"
+                                    required
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    aria-describedby="clave-nueva-confirmar-error"
+                                />
+                                <p
+                                    class="campo__error"
+                                    id="clave-nueva-confirmar-error"
+                                    role="alert"
+                                >
+                                    Las contraseñas deben coincidir.
+                                </p>
+                            </div>
+                        </fieldset>
+
+                        <div class="acciones">
+                            <button class="btn btn--primario" type="submit">
+                                Actualizar contraseña
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </body>
+</html>

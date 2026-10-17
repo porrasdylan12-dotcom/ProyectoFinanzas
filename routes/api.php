@@ -17,6 +17,9 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,
 
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+Route::post('/sanctum/token', [AuthController::class, 'login'])
+    ->middleware('throttle:5,1')
+    ->name('api.sanctum.token');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn () => new UserResource(request()->user()))

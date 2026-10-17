@@ -2,6 +2,12 @@ const paginas = {
     'login.html': () => import('./usuarios/views/login.js'),
     'Registro.html': () => import('./usuarios/views/registro.js'),
     'panel-principal.html': () => import('./usuarios/views/panelPrincipal.js'),
+    'cuentas.html': () => import('./cuentas/views/cuentas.js'),
+    'NuevaCuenta.html': () => import('./cuentas/views/NuevaCuenta.js'),
+    'CrearPresupuesto.html': () =>
+        import('./cuentas/views/CrearPresupuesto.js'),
+    'NuevaTransaccion.html': () =>
+        import('./cuentas/views/NuevaTransaccion.js'),
 };
 
 function nombreDePagina() {

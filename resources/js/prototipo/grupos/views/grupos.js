@@ -165,6 +165,28 @@ function renderizarTodo(grupos, deudas, gastos, yoId) {
     );
 }
 
+async function cargarGrupos() {
+    let yoId = null;
+    let grupos = [];
+    let deudas = [];
+    let gastos = [];
+
+    try {
+        [yoId, grupos, deudas, gastos] = await Promise.all([
+            resolverUsuarioId(),
+            listarGrupos(),
+            listarDeudas({ status: 'pending', per_page: 50 }),
+            listarGastosCompartidos(),
+        ]);
+    } catch {
+    }
+
+    setGrupos(grupos);
+    setDeudas(deudas);
+    setGastos(gastos);
+    renderizarTodo(grupos, deudas, gastos, yoId);
+}
+
 export function init() {
     if (!estaAutenticado()) {
         window.location.replace('login.html');
@@ -172,17 +194,5 @@ export function init() {
         return;
     }
 
-    void Promise.all([
-        resolverUsuarioId(),
-        listarGrupos(),
-        listarDeudas({ status: 'pending', per_page: 50 }),
-        listarGastosCompartidos(),
-    ])
-        .catch(() => [null, [], [], []])
-        .then(([yoId, grupos, deudas, gastos]) => {
-            setGrupos(grupos);
-            setDeudas(deudas);
-            setGastos(gastos);
-            renderizarTodo(grupos, deudas, gastos, yoId);
-        });
+    void cargarGrupos();
 }

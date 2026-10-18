@@ -90,6 +90,30 @@ function limpiarErrorConfirmacion() {
         'Confirma que quieres marcar la deuda como pagada.';
 }
 
+async function cargarDeudasPendientes() {
+    let yoId = null;
+    let deudas = [];
+    let grupos = [];
+
+    try {
+        [yoId, deudas, grupos] = await Promise.all([
+            resolverUsuarioId(),
+            listarDeudas({ status: 'pending', per_page: 50 }),
+            listarGrupos(),
+        ]);
+    } catch {
+       
+    }
+
+    const nombres = construirMapaNombres(grupos);
+
+    deudasPendientes = deudas.filter(
+        (deuda) => Number(deuda.deudorId) === Number(yoId),
+    );
+
+    rellenarDeudas(deudasPendientes, nombres);
+}
+
 export function init() {
     const formulario = document.querySelector('form.formulario');
     const select = document.querySelector('#deuda');
@@ -99,21 +123,7 @@ export function init() {
         return;
     }
 
-    void Promise.all([
-        resolverUsuarioId(),
-        listarDeudas({ status: 'pending', per_page: 50 }),
-        listarGrupos(),
-    ])
-        .catch(() => [null, [], []])
-        .then(([yoId, deudas, grupos]) => {
-            const nombres = construirMapaNombres(grupos);
-
-            deudasPendientes = deudas.filter(
-                (deuda) => Number(deuda.deudorId) === Number(yoId),
-            );
-
-            rellenarDeudas(deudasPendientes, nombres);
-        });
+    void cargarDeudasPendientes();
 
     const boton = formulario.querySelector('button[type="submit"]');
 

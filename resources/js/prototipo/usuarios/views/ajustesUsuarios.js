@@ -1,7 +1,9 @@
 import {
     aplicarErroresDeValidacion,
+    conectarBorrador,
     escaparHtml,
     establecerCargando,
+    limpiarBorrador,
     limpiarErroresDeFormulario,
     mostrarAviso,
     ocultarAviso,
@@ -23,6 +25,8 @@ const MAPA_CLAVE = {
     password: 'clave-nueva',
     password_confirmation: 'clave-nueva-confirmar',
 };
+
+let restaurarBorradorPerfil = null;
 
 function idDe(usuario) {
     return usuario && usuario.id !== null && usuario.id !== undefined
@@ -96,6 +100,8 @@ function conectarFormularioPerfil(formulario) {
         return;
     }
 
+    restaurarBorradorPerfil = conectarBorrador(formulario, 'perfil');
+
     const boton = formulario.querySelector('button[type="submit"]');
 
     formulario.addEventListener('submit', async (evento) => {
@@ -114,6 +120,7 @@ function conectarFormularioPerfil(formulario) {
                 email: correo ? correo.value.trim() : '',
             });
 
+            limpiarBorrador('perfil');
             window.location.assign('panel-principal.html');
         } catch (error) {
             const aplicados = aplicarErroresDeValidacion(
@@ -139,6 +146,8 @@ function conectarFormularioClave(formulario) {
     if (!formulario) {
         return;
     }
+
+    conectarBorrador(formulario, 'clave');
 
     const boton = formulario.querySelector('button[type="submit"]');
 
@@ -171,6 +180,7 @@ function conectarFormularioClave(formulario) {
                 passwordConfirmation: confirmar.value,
             });
 
+            limpiarBorrador('clave');
             formulario.reset();
             mostrarAviso(
                 formulario,
@@ -211,6 +221,21 @@ function conectarCierreDeSesion() {
     });
 }
 
+async function refrescarUsuario() {
+    try {
+        const actualizado = await cargarUsuario();
+        pintarUsuario(actualizado);
+
+        if (restaurarBorradorPerfil) {
+            restaurarBorradorPerfil();
+        }
+    } catch (error) {
+        if (error && error.status === 401) {
+            window.location.replace('login.html');
+        }
+    }
+}
+
 export function init() {
     const seccionInfo = document.querySelector(
         'section.card[aria-labelledby="info-personal"]',
@@ -237,13 +262,5 @@ export function init() {
     conectarFormularioClave(seccionClave.querySelector('form.formulario'));
     conectarCierreDeSesion();
 
-    cargarUsuario()
-        .then((actualizado) => {
-            pintarUsuario(actualizado);
-        })
-        .catch((error) => {
-            if (error && error.status === 401) {
-                window.location.replace('login.html');
-            }
-        });
+    void refrescarUsuario();
 }

@@ -41,6 +41,24 @@ function rellenarGrupos(grupos, yoId) {
         });
 }
 
+async function cargarGrupos() {
+    let yoId = null;
+    let grupos = [];
+
+    try {
+        [yoId, grupos] = await Promise.all([
+            resolverUsuarioId(),
+            listarGrupos(),
+        ]);
+    } catch {
+        
+    }
+
+    if (Array.isArray(grupos)) {
+        rellenarGrupos(grupos, yoId);
+    }
+}
+
 export function init() {
     const formulario = document.querySelector('form.formulario');
     const grupo = document.querySelector('#usuario-grupo');
@@ -50,13 +68,7 @@ export function init() {
         return;
     }
 
-    void Promise.all([resolverUsuarioId(), listarGrupos()])
-        .catch(() => [null, []])
-        .then(([yoId, grupos]) => {
-            if (Array.isArray(grupos)) {
-                rellenarGrupos(grupos, yoId);
-            }
-        });
+    void cargarGrupos();
 
     const boton = formulario.querySelector('button[type="submit"]');
 

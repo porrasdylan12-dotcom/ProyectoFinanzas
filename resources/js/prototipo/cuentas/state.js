@@ -46,24 +46,24 @@ export function setCuentaSeleccionada(cuenta) {
     return setState({ cuentaSeleccionada: cuenta });
 }
 
-export function ejecutar(accion, mensajeExito) {
+export async function ejecutar(accion, mensajeExito) {
     setState({ cargando: true, errores: {}, mensaje: null });
 
-    return accion()
-        .then((resultado) => {
-            if (mensajeExito) {
-                setState({ mensaje: mensajeExito });
-            }
-            return resultado;
-        })
-        .catch((error) => {
-            setState({
-                errores: error && error.errors ? error.errors : {},
-                mensaje: error && error.message ? error.message : null,
-            });
-            throw error;
-        })
-        .finally(() => {
-            setState({ cargando: false });
+    try {
+        const resultado = await accion();
+
+        if (mensajeExito) {
+            setState({ mensaje: mensajeExito });
+        }
+
+        return resultado;
+    } catch (error) {
+        setState({
+            errores: error && error.errors ? error.errors : {},
+            mensaje: error && error.message ? error.message : null,
         });
+        throw error;
+    } finally {
+        setState({ cargando: false });
+    }
 }

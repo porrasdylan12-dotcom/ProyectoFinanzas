@@ -129,31 +129,40 @@ function seleccionarCuenta(cuenta) {
     cuentaSeleccionadaId = Number(cuenta.id);
     setCuentaSeleccionada(cuenta);
     renderizarDetalle(cuenta);
-    cargarTransacciones(cuentaSeleccionadaId);
+    void cargarTransacciones(cuentaSeleccionadaId);
 }
 
-function cargarTransacciones(cuentaId) {
-    void listarTransaccionesDeCuenta(cuentaId)
-        .then(renderizarTransacciones)
-        .catch(() => {
-            const cuerpo = document.querySelector('tbody');
+async function cargarTransacciones(cuentaId) {
+    try {
+        const transacciones = await listarTransaccionesDeCuenta(cuentaId);
+        renderizarTransacciones(transacciones);
+    } catch {
+        const cuerpo = document.querySelector('tbody');
 
-            if (cuerpo) {
-                setHtml(
-                    cuerpo,
-                    '<tr><td colspan="4">Error al cargar transacciones</td></tr>',
-                );
-            }
-        });
+        if (cuerpo) {
+            setHtml(
+                cuerpo,
+                '<tr><td colspan="4">Error al cargar transacciones</td></tr>',
+            );
+        }
+    }
 }
 
-function cargarDatosIniciales() {
-    void Promise.all([listarCuentas(), listarPresupuestos()])
-        .catch(() => [[], []])
-        .then(([cuentas, presupuestos]) => {
-            renderizarCuentas(cuentas);
-            renderizarPresupuestos(presupuestos);
-        });
+async function cargarDatosIniciales() {
+    let cuentas = [];
+    let presupuestos = [];
+
+    try {
+        [cuentas, presupuestos] = await Promise.all([
+            listarCuentas(),
+            listarPresupuestos(),
+        ]);
+    } catch {
+      
+    }
+
+    renderizarCuentas(cuentas);
+    renderizarPresupuestos(presupuestos);
 }
 
 export function init() {
@@ -172,9 +181,9 @@ export function init() {
         ) {
             cuentaSeleccionadaId = Number(cuentaSeleccionada.id);
             renderizarDetalle(cuentaSeleccionada);
-            cargarTransacciones(cuentaSeleccionadaId);
+            void cargarTransacciones(cuentaSeleccionadaId);
         }
     });
 
-    cargarDatosIniciales();
+    void cargarDatosIniciales();
 }

@@ -1,6 +1,8 @@
 import {
     aplicarErroresDeValidacion,
+    conectarBorrador,
     establecerCargando,
+    limpiarBorrador,
     limpiarErroresDeFormulario,
     mostrarAviso,
     ocultarAviso,
@@ -39,6 +41,21 @@ function rellenarCategorias(categorias) {
         });
 }
 
+async function cargarCategorias(restaurar) {
+    let categorias = [];
+
+    try {
+        categorias = await listarCategorias();
+    } catch {
+    }
+
+    if (Array.isArray(categorias)) {
+        rellenarCategorias(categorias);
+    }
+
+    restaurar();
+}
+
 export function init() {
     const formulario = document.querySelector('form.formulario');
     const categoria = document.querySelector('#categoria');
@@ -51,13 +68,9 @@ export function init() {
         return;
     }
 
-    void listarCategorias()
-        .catch(() => [])
-        .then((categorias) => {
-            if (Array.isArray(categorias)) {
-                rellenarCategorias(categorias);
-            }
-        });
+    const restaurar = conectarBorrador(formulario);
+
+    void cargarCategorias(restaurar);
 
     const boton = formulario.querySelector('button[type="submit"]');
 
@@ -76,6 +89,7 @@ export function init() {
                 year: Number(anio.value),
             });
 
+            limpiarBorrador();
             window.location.assign('cuentas.html');
         } catch (error) {
             const aplicados = aplicarErroresDeValidacion(

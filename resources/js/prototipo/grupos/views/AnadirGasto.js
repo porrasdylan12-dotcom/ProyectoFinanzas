@@ -108,6 +108,23 @@ function limpiarErrorParticipantes() {
     contenedor.textContent = 'Selecciona al menos dos personas participantes.';
 }
 
+async function cargarGrupos() {
+    let datos = [];
+
+    try {
+        datos = await listarGrupos();
+    } catch {
+        
+    }
+
+    if (!Array.isArray(datos)) {
+        return;
+    }
+
+    grupos = datos;
+    rellenarGrupos();
+}
+
 export function init() {
     const formulario = document.querySelector('form.formulario');
     const grupo = document.querySelector('#gasto-grupo');
@@ -119,16 +136,7 @@ export function init() {
         return;
     }
 
-    void listarGrupos()
-        .catch(() => [])
-        .then((datos) => {
-            if (!Array.isArray(datos)) {
-                return;
-            }
-
-            grupos = datos;
-            rellenarGrupos();
-        });
+    void cargarGrupos();
 
     grupo.addEventListener('change', renderizarParticipantes);
 

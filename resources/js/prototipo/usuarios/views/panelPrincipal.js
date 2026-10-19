@@ -45,6 +45,17 @@ function conectarCierreDeSesion() {
     });
 }
 
+async function refrescarUsuario() {
+    try {
+        const actualizado = await cargarUsuario();
+        pintarUsuario(actualizado);
+    } catch (error) {
+        if (error && error.status === 401) {
+            window.location.replace('login.html');
+        }
+    }
+}
+
 export function init() {
     const titulo = document.querySelector('#bienvenida');
     const tarjeta = document.querySelector('#usuario');
@@ -62,11 +73,5 @@ export function init() {
     pintarUsuario(usuarioActual());
     conectarCierreDeSesion();
 
-    cargarUsuario()
-        .then(pintarUsuario)
-        .catch((error) => {
-            if (error && error.status === 401) {
-                window.location.replace('login.html');
-            }
-        });
+    void refrescarUsuario();
 }

@@ -1,6 +1,8 @@
 import {
     aplicarErroresDeValidacion,
+    conectarBorrador,
     establecerCargando,
+    limpiarBorrador,
     limpiarErroresDeFormulario,
     mostrarAviso,
     ocultarAviso,
@@ -64,6 +66,28 @@ function rellenarCategorias(categorias) {
         });
 }
 
+async function cargarCuentasYcategorias(restaurar) {
+    let cuentas = [];
+    let categorias = [];
+
+    try {
+        [cuentas, categorias] = await Promise.all([
+            listarCuentas(),
+            listarCategorias(),
+        ]);
+    } catch {
+    }
+
+    if (Array.isArray(cuentas)) {
+        rellenarCuentas(cuentas);
+    }
+    if (Array.isArray(categorias)) {
+        rellenarCategorias(categorias);
+    }
+
+    restaurar();
+}
+
 export function init() {
     const formulario = document.querySelector('form.formulario');
     const cuenta = document.querySelector('#transaccion-cuenta');
@@ -86,16 +110,9 @@ export function init() {
         return;
     }
 
-    void Promise.all([listarCuentas(), listarCategorias()])
-        .catch(() => [[], []])
-        .then(([cuentas, categorias]) => {
-            if (Array.isArray(cuentas)) {
-                rellenarCuentas(cuentas);
-            }
-            if (Array.isArray(categorias)) {
-                rellenarCategorias(categorias);
-            }
-        });
+    const restaurar = conectarBorrador(formulario);
+
+    void cargarCuentasYcategorias(restaurar);
 
     const boton = formulario.querySelector('button[type="submit"]');
 
@@ -117,6 +134,7 @@ export function init() {
                 description: descripcion ? descripcion.value.trim() : '',
             });
 
+            limpiarBorrador();
             window.location.assign('cuentas.html');
         } catch (error) {
             const aplicados = aplicarErroresDeValidacion(

@@ -74,11 +74,7 @@ textarea:user-invalid {
     border-width: 2px;
 }
 
-.campo:has(
-        input:user-invalid,
-        select:user-invalid,
-        textarea:user-invalid
-    )
+.campo:has(input:user-invalid, select:user-invalid, textarea:user-invalid)
     .campo__error {
     display: block;
 }

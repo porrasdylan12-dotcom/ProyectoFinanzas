@@ -50,9 +50,7 @@ async function cargarGrupos() {
             resolverUsuarioId(),
             listarGrupos(),
         ]);
-    } catch {
-        
-    }
+    } catch {}
 
     if (Array.isArray(grupos)) {
         rellenarGrupos(grupos, yoId);

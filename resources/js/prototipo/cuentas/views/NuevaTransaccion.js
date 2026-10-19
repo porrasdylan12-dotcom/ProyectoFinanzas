@@ -75,8 +75,7 @@ async function cargarCuentasYcategorias(restaurar) {
             listarCuentas(),
             listarCategorias(),
         ]);
-    } catch {
-    }
+    } catch {}
 
     if (Array.isArray(cuentas)) {
         rellenarCuentas(cuentas);

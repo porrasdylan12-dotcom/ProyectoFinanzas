@@ -35,8 +35,7 @@ export function guardarBorrador(idFormulario = '', entradas) {
         } else {
             storage.setItem(clave, JSON.stringify(entradas));
         }
-    } catch {
-    }
+    } catch {}
 }
 
 export function leerBorrador(idFormulario = '') {
@@ -64,8 +63,7 @@ export function limpiarBorrador(idFormulario = '') {
 
     try {
         storage.removeItem(claveDeBorrador(idFormulario));
-    } catch {
-    }
+    } catch {}
 }
 
 function restaurarCampo(control, valor) {

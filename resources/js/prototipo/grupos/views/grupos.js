@@ -178,8 +178,7 @@ async function cargarGrupos() {
             listarDeudas({ status: 'pending', per_page: 50 }),
             listarGastosCompartidos(),
         ]);
-    } catch {
-    }
+    } catch {}
 
     setGrupos(grupos);
     setDeudas(deudas);

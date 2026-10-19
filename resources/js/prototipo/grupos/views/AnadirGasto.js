@@ -113,9 +113,7 @@ async function cargarGrupos() {
 
     try {
         datos = await listarGrupos();
-    } catch {
-        
-    }
+    } catch {}
 
     if (!Array.isArray(datos)) {
         return;

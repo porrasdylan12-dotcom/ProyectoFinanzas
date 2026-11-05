@@ -157,9 +157,7 @@ async function cargarDatosIniciales() {
             listarCuentas(),
             listarPresupuestos(),
         ]);
-    } catch {
-      
-    }
+    } catch {}
 
     renderizarCuentas(cuentas);
     renderizarPresupuestos(presupuestos);

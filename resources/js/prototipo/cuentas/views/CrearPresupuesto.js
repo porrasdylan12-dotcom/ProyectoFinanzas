@@ -46,8 +46,7 @@ async function cargarCategorias(restaurar) {
 
     try {
         categorias = await listarCategorias();
-    } catch {
-    }
+    } catch {}
 
     if (Array.isArray(categorias)) {
         rellenarCategorias(categorias);

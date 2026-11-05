@@ -101,9 +101,7 @@ async function cargarDeudasPendientes() {
             listarDeudas({ status: 'pending', per_page: 50 }),
             listarGrupos(),
         ]);
-    } catch {
-       
-    }
+    } catch {}
 
     const nombres = construirMapaNombres(grupos);
 

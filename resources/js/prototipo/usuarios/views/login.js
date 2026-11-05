@@ -1,6 +1,8 @@
 import {
     aplicarErroresDeValidacion,
+    conectarBorrador,
     establecerCargando,
+    limpiarBorrador,
     limpiarErroresDeFormulario,
     mostrarAviso,
     ocultarAviso,
@@ -21,6 +23,8 @@ export function init() {
     const recordarme = document.querySelector('#recordarme');
     const boton = formulario.querySelector('button[type="submit"]');
 
+    conectarBorrador(formulario);
+
     formulario.addEventListener('submit', async (evento) => {
         evento.preventDefault();
         ocultarAviso(formulario);
@@ -34,6 +38,7 @@ export function init() {
                 recordar: recordarme ? recordarme.checked : true,
             });
 
+            limpiarBorrador();
             window.location.assign('panel-principal.html');
         } catch (error) {
             const aplicados = aplicarErroresDeValidacion(

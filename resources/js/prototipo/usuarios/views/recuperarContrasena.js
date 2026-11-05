@@ -1,6 +1,8 @@
 import {
     aplicarErroresDeValidacion,
+    conectarBorrador,
     establecerCargando,
+    limpiarBorrador,
     limpiarErroresDeFormulario,
     mostrarAviso,
     ocultarAviso,
@@ -19,6 +21,8 @@ export function init() {
 
     const boton = formulario.querySelector('button[type="submit"]');
 
+    conectarBorrador(formulario);
+
     formulario.addEventListener('submit', async (evento) => {
         evento.preventDefault();
         ocultarAviso(formulario);
@@ -28,6 +32,7 @@ export function init() {
         try {
             await solicitarRecuperacion({ email: correo.value.trim() });
 
+            limpiarBorrador();
             formulario.reset();
             mostrarAviso(
                 formulario,

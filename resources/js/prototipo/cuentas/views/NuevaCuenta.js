@@ -1,6 +1,8 @@
 import {
     aplicarErroresDeValidacion,
+    conectarBorrador,
     establecerCargando,
+    limpiarBorrador,
     limpiarErroresDeFormulario,
     mostrarAviso,
     ocultarAviso,
@@ -25,6 +27,8 @@ export function init() {
 
     const boton = formulario.querySelector('button[type="submit"]');
 
+    conectarBorrador(formulario);
+
     formulario.addEventListener('submit', async (evento) => {
         evento.preventDefault();
         ocultarAviso(formulario);
@@ -38,6 +42,7 @@ export function init() {
                 balance: Number(saldo.value),
             });
 
+            limpiarBorrador();
             window.location.assign('cuentas.html');
         } catch (error) {
             const aplicados = aplicarErroresDeValidacion(

@@ -1,0 +1,7 @@
+{
+  "name": "proyecto-finanzas-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

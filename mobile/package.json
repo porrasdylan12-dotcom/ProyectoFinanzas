@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "cap:sync": "cap sync",
     "cap:add:android": "cap add android",
+    "cap:open:android": "cap open android",
     "cap:add:ios": "cap add ios",
     "lint": "npm run eslint && npm run typecheck:e2e && npm run prettier -- --check",
     "lint:fix": "npm run eslint -- --fix && npm run prettier -- --write",
@@ -21,12 +22,15 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@aparajita/capacitor-secure-storage": "^8.0.1",
     "@capacitor/android": "^8.6.0",
     "@capacitor/app": "8.1.2",
     "@capacitor/core": "8.6.0",
     "@capacitor/haptics": "8.0.2",
     "@capacitor/ios": "^8.6.0",
     "@capacitor/keyboard": "8.0.6",
+    "@capacitor/network": "^8.0.1",
+    "@capacitor/preferences": "^8.0.1",
     "@capacitor/status-bar": "8.0.4",
     "@ionic/react": "^9.0.0",
     "@ionic/react-router": "^9.0.0",

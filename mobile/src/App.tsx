@@ -1,8 +1,11 @@
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Navigate, Route } from 'react-router-dom';
+import { lazy, Suspense, type ReactNode } from 'react';
+import { Route } from 'react-router-dom';
 
-import Home from './pages/Home';
+import { AuthProvider } from './auth/AuthProvider';
+import { GuestOnly, RequireAuth, RootRedirect } from './auth/guards';
+import SessionLoading from './components/SessionLoading';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -34,15 +37,26 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
+const Login = lazy(() => import('./pages/auth/Login'));
+const Register = lazy(() => import('./pages/auth/Register'));
+const Panel = lazy(() => import('./pages/panel/Panel'));
+
 setupIonicReact();
+
+const withSuspense = (page: ReactNode): ReactNode => <Suspense fallback={<SessionLoading />}>{page}</Suspense>;
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Navigate to="/home" replace />} />
-      </IonRouterOutlet>
+      <AuthProvider>
+        <IonRouterOutlet>
+          <Route path="/login" element={<GuestOnly>{withSuspense(<Login />)}</GuestOnly>} />
+          <Route path="/register" element={<GuestOnly>{withSuspense(<Register />)}</GuestOnly>} />
+          <Route path="/panel" element={<RequireAuth>{withSuspense(<Panel />)}</RequireAuth>} />
+          <Route path="/" element={<RootRedirect />} />
+          <Route path="*" element={<RootRedirect />} />
+        </IonRouterOutlet>
+      </AuthProvider>
     </IonReactRouter>
   </IonApp>
 );

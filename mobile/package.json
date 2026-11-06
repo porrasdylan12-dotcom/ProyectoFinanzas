@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "cap:sync": "cap sync",
     "cap:add:android": "cap add android",
+    "cap:open:android": "cap open android",
     "cap:add:ios": "cap add ios",
     "lint": "npm run eslint && npm run typecheck:e2e && npm run prettier -- --check",
     "lint:fix": "npm run eslint -- --fix && npm run prettier -- --write",

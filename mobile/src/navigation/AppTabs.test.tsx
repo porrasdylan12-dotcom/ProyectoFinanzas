@@ -1,0 +1,55 @@
+import { IonApp } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+
+import { AuthContext, type AuthContextValue } from '../auth/AuthContext';
+
+import AppTabs from './AppTabs';
+
+const authValue: AuthContextValue = {
+  user: { id: 1, nombre: 'Erick', email: 'erick@example.com' },
+  status: 'authenticated',
+  login: async () => undefined,
+  register: async () => undefined,
+  logout: async () => undefined,
+};
+
+function renderTabs(path: string) {
+  window.history.replaceState({}, '', path);
+
+  return render(
+    <AuthContext.Provider value={authValue}>
+      <IonApp>
+        <IonReactRouter>
+          <AppTabs />
+        </IonReactRouter>
+      </IonApp>
+    </AuthContext.Provider>,
+  );
+}
+
+describe('AppTabs', () => {
+  it('muestra el panel con la barra de tabs', async () => {
+    renderTabs('/panel');
+
+    expect(await screen.findByText('Hola, Erick.')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-grupos')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-ajustes')).toBeInTheDocument();
+  });
+
+  it('muestra la pantalla de cuentas', async () => {
+    renderTabs('/cuentas');
+
+    expect(await screen.findByText('El listado de cuentas se implementará en el segmento 8.')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
+  });
+
+  it('redirige las rutas desconocidas al panel', async () => {
+    renderTabs('/ruta-inexistente');
+
+    expect(await screen.findByText('Hola, Erick.')).toBeInTheDocument();
+  });
+});

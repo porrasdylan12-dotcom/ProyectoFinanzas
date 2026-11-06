@@ -6,6 +6,7 @@ import { Navigate, Route, useLocation } from 'react-router-dom';
 import SessionLoading from '../components/SessionLoading';
 
 import { TAB_ROUTES, isTabRoot } from './routes';
+import { useAndroidBackButton } from './useAndroidBackButton';
 
 const Panel = lazy(() => import('../pages/panel/Panel'));
 const Cuentas = lazy(() => import('../pages/cuentas/Cuentas'));
@@ -24,6 +25,8 @@ const withSuspense = (page: ReactNode): ReactNode => <Suspense fallback={<Sessio
 const AppTabs: React.FC = () => {
   const location = useLocation();
   const showTabBar = isTabRoot(location.pathname);
+
+  useAndroidBackButton();
 
   return (
     <IonTabs>

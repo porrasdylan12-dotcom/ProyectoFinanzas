@@ -39,6 +39,7 @@ import './theme/variables.css';
 
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
 const Panel = lazy(() => import('./pages/panel/Panel'));
 
 setupIonicReact();
@@ -52,6 +53,7 @@ const App: React.FC = () => (
         <IonRouterOutlet>
           <Route path="/login" element={<GuestOnly>{withSuspense(<Login />)}</GuestOnly>} />
           <Route path="/register" element={<GuestOnly>{withSuspense(<Register />)}</GuestOnly>} />
+          <Route path="/forgot-password" element={<GuestOnly>{withSuspense(<ForgotPassword />)}</GuestOnly>} />
           <Route path="/panel" element={<RequireAuth>{withSuspense(<Panel />)}</RequireAuth>} />
           <Route path="/" element={<RootRedirect />} />
           <Route path="*" element={<RootRedirect />} />

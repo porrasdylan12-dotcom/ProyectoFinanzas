@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-test('visits the app root url', async ({ page }) => {
+test('redirige al login desde la raíz', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#container')).toContainText('Ready to create an app?');
+
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();
+  await expect(page.getByTestId('login-email')).toBeVisible();
 });

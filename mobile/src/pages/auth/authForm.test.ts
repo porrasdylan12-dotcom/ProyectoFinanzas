@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { ApiError } from '../../lib/apiClient';
 
 import {
+  buildLoginCredentials,
+  buildRegisterPayload,
   getErrorMessage,
   toFieldErrors,
   validateEmail,
@@ -87,6 +89,33 @@ describe('validateForgotPasswordForm', () => {
 
   it('no devuelve errores con un correo válido', () => {
     expect(validateForgotPasswordForm('ana@example.com')).toEqual({});
+  });
+});
+
+describe('buildLoginCredentials', () => {
+  it('recorta el correo y conserva la contraseña', () => {
+    expect(buildLoginCredentials({ email: '  ana@example.com ', password: ' secreto ' })).toEqual({
+      email: 'ana@example.com',
+      password: ' secreto ',
+    });
+  });
+});
+
+describe('buildRegisterPayload', () => {
+  it('recorta nombre y correo y mapea la confirmación', () => {
+    expect(
+      buildRegisterPayload({
+        name: '  Ana Pérez ',
+        email: ' ana@example.com ',
+        password: 'secret123',
+        passwordConfirmation: 'secret123',
+      }),
+    ).toEqual({
+      name: 'Ana Pérez',
+      email: 'ana@example.com',
+      password: 'secret123',
+      password_confirmation: 'secret123',
+    });
   });
 });
 

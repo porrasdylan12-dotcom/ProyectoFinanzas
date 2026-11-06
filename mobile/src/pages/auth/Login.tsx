@@ -5,7 +5,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { ApiError } from '../../lib/apiClient';
 
 import AuthLayout from './AuthLayout';
-import { getErrorMessage, toFieldErrors, validateLoginForm, type FormErrors } from './authForm';
+import { buildLoginCredentials, getErrorMessage, toFieldErrors, validateLoginForm, type FormErrors } from './authForm';
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await login({ email: email.trim(), password });
+      await login(buildLoginCredentials({ email, password }));
     } catch (error) {
       if (error instanceof ApiError) {
         setErrors(toFieldErrors(error));

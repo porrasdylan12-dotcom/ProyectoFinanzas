@@ -5,7 +5,13 @@ import { useAuth } from '../../auth/AuthContext';
 import { ApiError } from '../../lib/apiClient';
 
 import AuthLayout from './AuthLayout';
-import { getErrorMessage, toFieldErrors, validateRegisterForm, type FormErrors } from './authForm';
+import {
+  buildRegisterPayload,
+  getErrorMessage,
+  toFieldErrors,
+  validateRegisterForm,
+  type FormErrors,
+} from './authForm';
 
 const Register: React.FC = () => {
   const { register } = useAuth();
@@ -40,12 +46,7 @@ const Register: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await register({
-        name: name.trim(),
-        email: email.trim(),
-        password,
-        password_confirmation: passwordConfirmation,
-      });
+      await register(buildRegisterPayload({ name, email, password, passwordConfirmation }));
     } catch (error) {
       if (error instanceof ApiError) {
         setErrors(toFieldErrors(error));

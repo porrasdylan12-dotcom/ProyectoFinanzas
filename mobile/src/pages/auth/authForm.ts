@@ -30,6 +30,24 @@ export function validateEmail(email: string): string | null {
   return null;
 }
 
+export function buildLoginCredentials({ email, password }: LoginFormValues): LoginFormValues {
+  return { email: email.trim(), password };
+}
+
+export function buildRegisterPayload(values: RegisterFormValues): {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+} {
+  return {
+    name: values.name.trim(),
+    email: values.email.trim(),
+    password: values.password,
+    password_confirmation: values.passwordConfirmation,
+  };
+}
+
 export function validateLoginForm({ email, password }: LoginFormValues): FormErrors {
   const errors: FormErrors = {};
   const emailError = validateEmail(email);

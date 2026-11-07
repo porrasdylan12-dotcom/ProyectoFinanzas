@@ -141,6 +141,18 @@ describe('ApiClient', () => {
     expect(fetchFn).not.toHaveBeenCalled();
   });
 
+  it('envía peticiones PUT con cuerpo JSON', async () => {
+    const fetchFn = vi.fn().mockResolvedValue(jsonResponse({ message: 'Actualizado' }));
+    const { client } = createClient(fetchFn);
+
+    await client.put('/user/password', { password: 'nueva' });
+
+    const [url, init] = fetchFn.mock.calls[0] as [string, RequestInit];
+    expect(url).toBe('http://localhost:8000/api/user/password');
+    expect(init.method).toBe('PUT');
+    expect(init.body).toBe(JSON.stringify({ password: 'nueva' }));
+  });
+
   it('devuelve null en respuestas 204', async () => {
     const fetchFn = vi.fn().mockResolvedValue(jsonResponse(undefined, 204));
     const { client } = createClient(fetchFn);

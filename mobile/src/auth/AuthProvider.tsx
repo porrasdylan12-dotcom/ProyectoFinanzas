@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type PropsWithChildren } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import { apiClient } from '../lib/apiClient';
+import { updateMyPassword, updateMyProfile } from '../lib/profile';
 import { tokenStore } from '../lib/secureStorage';
 
 import {
@@ -9,6 +10,8 @@ import {
   type AuthStatus,
   type AuthUser,
   type LoginCredentials,
+  type PasswordPayload,
+  type ProfilePayload,
   type RegisterPayload,
 } from './AuthContext';
 
@@ -50,6 +53,16 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     },
     [startSession],
   );
+
+  const updateProfile = useCallback(async (payload: ProfilePayload): Promise<void> => {
+    const updated = await updateMyProfile(payload);
+
+    setUser(updated);
+  }, []);
+
+  const changePassword = useCallback(async (payload: PasswordPayload): Promise<void> => {
+    await updateMyPassword(payload);
+  }, []);
 
   const logout = useCallback(async (): Promise<void> => {
     try {
@@ -118,5 +131,9 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     };
   }, [navigate]);
 
-  return <AuthContext.Provider value={{ user, status, login, register, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, status, login, register, updateProfile, changePassword, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

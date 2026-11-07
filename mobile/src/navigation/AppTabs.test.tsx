@@ -85,6 +85,8 @@ const authValue: AuthContextValue = {
   status: 'authenticated',
   login: async () => undefined,
   register: async () => undefined,
+  updateProfile: async () => undefined,
+  changePassword: async () => undefined,
   logout: async () => undefined,
 };
 
@@ -125,6 +127,13 @@ describe('AppTabs', () => {
 
     expect(await screen.findByText('Aún no tienes grupos.')).toBeInTheDocument();
     expect(screen.getByTestId('tab-grupos')).toBeInTheDocument();
+  });
+
+  it('muestra la pantalla de ajustes', async () => {
+    renderTabs('/ajustes');
+
+    expect(await screen.findByRole('heading', { name: 'Tu cuenta' })).toBeInTheDocument();
+    expect(screen.getByTestId('tab-ajustes')).toBeInTheDocument();
   });
 
   it('redirige las rutas desconocidas al panel', async () => {

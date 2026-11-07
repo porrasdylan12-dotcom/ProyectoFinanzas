@@ -60,6 +60,8 @@ const authValue: AuthContextValue = {
   status: 'authenticated',
   login: async () => undefined,
   register: async () => undefined,
+  updateProfile: async () => undefined,
+  changePassword: async () => undefined,
   logout: async () => undefined,
 };
 

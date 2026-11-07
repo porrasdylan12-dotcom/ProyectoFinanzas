@@ -1,0 +1,29 @@
+.ajustes {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.ajustes__intro h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.ajustes__intro p {
+  margin: 0.25rem 0 1rem;
+  color: var(--ion-color-medium);
+}
+
+.ajustes__card {
+  margin: 0 0 1rem;
+}
+
+.ajustes-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ajustes__alert {
+  margin: 0 0 0.75rem;
+}

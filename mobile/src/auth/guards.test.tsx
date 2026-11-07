@@ -11,6 +11,8 @@ const baseValue: AuthContextValue = {
   status: 'guest',
   login: async () => undefined,
   register: async () => undefined,
+  updateProfile: async () => undefined,
+  changePassword: async () => undefined,
   logout: async () => undefined,
 };
 

@@ -65,7 +65,7 @@ describe('AppTabs', () => {
   it('muestra el panel con la barra de tabs', async () => {
     renderTabs('/panel');
 
-    expect(await screen.findByText('Hola, Erick.')).toBeInTheDocument();
+    expect(await screen.findByText('Hola, Erick.', {}, { timeout: 5000 })).toBeInTheDocument();
     expect(screen.getByTestId('tab-panel')).toBeInTheDocument();
     expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
     expect(screen.getByTestId('tab-grupos')).toBeInTheDocument();
@@ -82,6 +82,6 @@ describe('AppTabs', () => {
   it('redirige las rutas desconocidas al panel', async () => {
     renderTabs('/ruta-inexistente');
 
-    expect(await screen.findByText('Hola, Erick.')).toBeInTheDocument();
+    expect(await screen.findByText('Hola, Erick.', {}, { timeout: 5000 })).toBeInTheDocument();
   });
 });

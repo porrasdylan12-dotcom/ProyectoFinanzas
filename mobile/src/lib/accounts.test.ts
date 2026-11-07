@@ -13,11 +13,12 @@ import {
   type Account,
   type AccountFormValues,
 } from './accounts';
+import type * as ApiClientModule from './apiClient';
 import { apiClient, ApiError } from './apiClient';
 import type { PaginatedResponse } from './pagination';
 
 vi.mock('./apiClient', async () => {
-  const actual = await vi.importActual<typeof import('./apiClient')>('./apiClient');
+  const actual = await vi.importActual<typeof ApiClientModule>('./apiClient');
 
   return {
     ...actual,

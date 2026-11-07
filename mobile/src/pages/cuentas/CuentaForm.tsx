@@ -18,7 +18,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import DataState from '../../components/DataState';
 import { useAsyncData } from '../../hooks/useAsyncData';
-import { ApiError } from '../../lib/apiClient';
 import {
   ACCOUNT_TYPES,
   accountToFormValues,
@@ -35,6 +34,7 @@ import {
   type AccountFormErrors,
   type AccountFormValues,
 } from '../../lib/accounts';
+import { ApiError } from '../../lib/apiClient';
 import { CUENTA_ROUTES } from '../../navigation/routes';
 
 import './cuentas.css';
@@ -46,21 +46,13 @@ interface AccountFormFieldsProps {
   onSubmit: (values: AccountFormValues) => Promise<void>;
 }
 
-const AccountFormFields: React.FC<AccountFormFieldsProps> = ({
-  initialValues,
-  submitLabel,
-  cancelHref,
-  onSubmit,
-}) => {
+const AccountFormFields: React.FC<AccountFormFieldsProps> = ({ initialValues, submitLabel, cancelHref, onSubmit }) => {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState<AccountFormErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const updateField = <Field extends keyof AccountFormValues>(
-    field: Field,
-    value: AccountFormValues[Field],
-  ): void => {
+  const updateField = <Field extends keyof AccountFormValues>(field: Field, value: AccountFormValues[Field]): void => {
     setValues((current) => ({ ...current, [field]: value }));
   };
 
@@ -211,7 +203,9 @@ const CuentaFormPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={isEditing && accountId ? CUENTA_ROUTES.detail(accountId) : CUENTA_ROUTES.list} />
+            <IonBackButton
+              defaultHref={isEditing && accountId ? CUENTA_ROUTES.detail(accountId) : CUENTA_ROUTES.list}
+            />
           </IonButtons>
           <IonTitle>{isEditing ? 'Editar cuenta' : 'Nueva cuenta'}</IonTitle>
         </IonToolbar>

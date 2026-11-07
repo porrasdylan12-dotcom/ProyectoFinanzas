@@ -10,6 +10,22 @@
   margin: 0;
 }
 
+.cuentas__section {
+  margin-bottom: 1.5rem;
+}
+
+.cuentas__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cuentas__section-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
 .cuentas__balance {
   color: var(--ion-color-dark);
   font-weight: 600;
@@ -39,6 +55,40 @@
   font-size: 2rem;
   font-weight: 700;
   line-height: 1.1;
+}
+
+.cuenta-detalle__transactions {
+  margin-top: 1.5rem;
+}
+
+.cuenta-detalle__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cuenta-detalle__section-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.cuenta-detalle__list {
+  margin: 0;
+}
+
+.cuenta-detalle__amount {
+  font-weight: 600;
+}
+
+.cuenta-detalle__alert {
+  margin: 0 0 1rem;
+}
+
+.cuenta-detalle__empty-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .cuenta-form {

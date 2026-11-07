@@ -48,13 +48,18 @@ test('rechaza un grupo sin nombre o duplicado', function () {
         ->assertJsonValidationErrors('name');
 });
 
-test('muestra y actualiza un grupo propio', function () {
+test('muestra y actualiza un grupo propio con sus miembros', function () {
+    $member = User::factory()->create();
+
     $group = Group::factory()->create();
     $group->users()->attach($this->user->id, ['role' => 'admin', 'joined_at' => now()]);
+    $group->users()->attach($member->id, ['role' => 'member', 'joined_at' => now()]);
 
     $this->getJson("/api/groups/{$group->id}")
         ->assertOk()
-        ->assertJsonPath('data.id', $group->id);
+        ->assertJsonPath('data.id', $group->id)
+        ->assertJsonCount(2, 'data.miembros')
+        ->assertJsonFragment(['email' => $member->email, 'rol' => 'member']);
 
     $this->putJson("/api/groups/{$group->id}", ['name' => 'Grupo renombrado'])
         ->assertOk()

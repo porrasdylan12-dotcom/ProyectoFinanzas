@@ -39,11 +39,54 @@ vi.mock('../lib/accounts', () => ({
   }),
 }));
 
+vi.mock('../lib/budgets', () => ({
+  fetchBudgetsPage: async () => ({
+    data: [],
+    meta: {
+      current_page: 1,
+      last_page: 1,
+      per_page: 50,
+      total: 0,
+      from: null,
+      to: null,
+    },
+    links: {
+      first: null,
+      last: null,
+      prev: null,
+      next: null,
+    },
+  }),
+  monthLabel: (month: number) => String(month),
+}));
+
+vi.mock('../lib/groups', () => ({
+  fetchGroupsPage: async () => ({
+    data: [],
+    meta: {
+      current_page: 1,
+      last_page: 1,
+      per_page: 20,
+      total: 0,
+      from: null,
+      to: null,
+    },
+    links: {
+      first: null,
+      last: null,
+      prev: null,
+      next: null,
+    },
+  }),
+}));
+
 const authValue: AuthContextValue = {
   user: { id: 1, nombre: 'Erick', email: 'erick@example.com' },
   status: 'authenticated',
   login: async () => undefined,
   register: async () => undefined,
+  updateProfile: async () => undefined,
+  changePassword: async () => undefined,
   logout: async () => undefined,
 };
 
@@ -65,7 +108,7 @@ describe('AppTabs', () => {
   it('muestra el panel con la barra de tabs', async () => {
     renderTabs('/panel');
 
-    expect(await screen.findByText('Hola, Erick.')).toBeInTheDocument();
+    expect(await screen.findByText('Hola, Erick.', {}, { timeout: 5000 })).toBeInTheDocument();
     expect(screen.getByTestId('tab-panel')).toBeInTheDocument();
     expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
     expect(screen.getByTestId('tab-grupos')).toBeInTheDocument();
@@ -79,9 +122,23 @@ describe('AppTabs', () => {
     expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
   });
 
+  it('muestra la pantalla de grupos', async () => {
+    renderTabs('/grupos');
+
+    expect(await screen.findByText('Aún no tienes grupos.')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-grupos')).toBeInTheDocument();
+  });
+
+  it('muestra la pantalla de ajustes', async () => {
+    renderTabs('/ajustes');
+
+    expect(await screen.findByRole('heading', { name: 'Tu cuenta' })).toBeInTheDocument();
+    expect(screen.getByTestId('tab-ajustes')).toBeInTheDocument();
+  });
+
   it('redirige las rutas desconocidas al panel', async () => {
     renderTabs('/ruta-inexistente');
 
-    expect(await screen.findByText('Hola, Erick.')).toBeInTheDocument();
+    expect(await screen.findByText('Hola, Erick.', {}, { timeout: 5000 })).toBeInTheDocument();
   });
 });

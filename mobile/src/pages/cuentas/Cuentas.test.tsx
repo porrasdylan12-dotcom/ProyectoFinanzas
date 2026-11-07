@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchAccountsPage, type Account } from '../../lib/accounts';
+import { fetchBudgetsPage, type Budget } from '../../lib/budgets';
 import type { PaginatedResponse } from '../../lib/pagination';
 
 import Cuentas from './Cuentas';
@@ -14,14 +15,24 @@ vi.mock('../../lib/accounts', () => ({
   fetchAccountsPage: vi.fn(),
 }));
 
+vi.mock('../../lib/budgets', () => ({
+  fetchBudgetsPage: vi.fn(),
+  monthLabel: (month: number) => (month === 11 ? 'Noviembre' : String(month)),
+}));
+
 const fetchPage = vi.mocked(fetchAccountsPage);
+const fetchBudgets = vi.mocked(fetchBudgetsPage);
 
 const accounts: Account[] = [
   { id: 7, user_id: 1, nombre: 'Ahorros', saldo: '1500.50', tipo: 'ahorros' },
   { id: 8, user_id: 1, nombre: 'Efectivo', saldo: 120, tipo: 'efectivo' },
 ];
 
-function page(data: Account[]): PaginatedResponse<Account> {
+const budgets: Budget[] = [
+  { id: 3, user_id: 1, categoria_id: 1, nombre: 'Comida', monto_maximo: '2500.00', mes: 11, año: 2026 },
+];
+
+function page<T>(data: T[]): PaginatedResponse<T> {
   return {
     data,
     meta: {
@@ -51,6 +62,7 @@ function renderCuentas() {
           <Route path="/cuentas" element={<Cuentas />} />
           <Route path="/cuentas/nueva" element={<div>Nueva cuenta</div>} />
           <Route path="/cuentas/:id" element={<div>Detalle de cuenta</div>} />
+          <Route path="/presupuestos/nuevo" element={<div>Nuevo presupuesto</div>} />
         </Routes>
       </IonReactRouter>
     </IonApp>,
@@ -61,6 +73,7 @@ describe('Cuentas', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     fetchPage.mockResolvedValue(page(accounts));
+    fetchBudgets.mockResolvedValue(page(budgets));
   });
 
   it('muestra las cuentas y navega al detalle', async () => {
@@ -74,6 +87,18 @@ describe('Cuentas', () => {
     fireEvent.click(screen.getByTestId('cuenta-7'));
 
     expect(await screen.findByText('Detalle de cuenta')).toBeInTheDocument();
+  });
+
+  it('muestra los presupuestos y permite crear uno', async () => {
+    renderCuentas();
+
+    expect(await screen.findByText('Comida')).toBeInTheDocument();
+    expect(screen.getByText('Noviembre 2026')).toBeInTheDocument();
+    expect(screen.getByText('$ 2500.00')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText('Crear presupuesto'));
+
+    expect(await screen.findByText('Nuevo presupuesto')).toBeInTheDocument();
   });
 
   it('muestra el estado vacío y permite crear una cuenta', async () => {

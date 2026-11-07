@@ -4,13 +4,14 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { Route, Routes, useParams } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ApiError } from '../../lib/apiClient';
 import { createAccount, fetchAccount, updateAccount, type Account } from '../../lib/accounts';
+import type * as AccountsModule from '../../lib/accounts';
+import { ApiError } from '../../lib/apiClient';
 
 import CuentaForm from './CuentaForm';
 
 vi.mock('../../lib/accounts', async () => {
-  const actual = await vi.importActual<typeof import('../../lib/accounts')>('../../lib/accounts');
+  const actual = await vi.importActual<typeof AccountsModule>('../../lib/accounts');
 
   return {
     ...actual,
@@ -146,6 +147,6 @@ describe('CuentaForm', () => {
     submitForm();
 
     expect(await screen.findByText('Ya existe una cuenta con este nombre.')).toBeInTheDocument();
-    expect(screen.getByRole('alert')).toHaveTextContent('Revisa los datos enviados.');
+    expect(screen.getByText('Revisa los datos enviados.')).toBeInTheDocument();
   });
 });

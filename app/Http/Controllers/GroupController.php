@@ -46,7 +46,7 @@ class GroupController extends Controller
     {
         $group = $this->groupService->findForUser($group->id, $request->user()->id);
 
-        return new GroupResource($group);
+        return new GroupResource($group->load('users'));
     }
 
     #[Authorize('update', 'group')]

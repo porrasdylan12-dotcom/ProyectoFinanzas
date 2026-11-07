@@ -61,11 +61,16 @@ test('exige al menos dos participantes', function () {
         ->assertJsonValidationErrors('participants');
 });
 
-test('lista los gastos compartidos del usuario y por grupo', function () {
+test('lista los gastos compartidos pagados por el usuario y todos los del grupo', function () {
     SharedExpenses::factory()->create([
         'group_id' => $this->group->id,
         'user_id' => $this->user->id,
         'participants' => [$this->user->id, $this->memberA->id],
+    ]);
+    SharedExpenses::factory()->create([
+        'group_id' => $this->group->id,
+        'user_id' => $this->memberA->id,
+        'participants' => [$this->memberA->id, $this->memberB->id],
     ]);
 
     $this->getJson('/api/shared-expenses')
@@ -74,7 +79,7 @@ test('lista los gastos compartidos del usuario y por grupo', function () {
 
     $this->getJson("/api/groups/{$this->group->id}/shared-expenses")
         ->assertOk()
-        ->assertJsonCount(1, 'data');
+        ->assertJsonCount(2, 'data');
 });
 
 test('muestra y actualiza un gasto compartido propio', function () {

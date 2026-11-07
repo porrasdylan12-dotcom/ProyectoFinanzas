@@ -1,0 +1,157 @@
+.grupos,
+.grupo-form,
+.grupo-detalle,
+.gasto-form,
+.gasto-detalle {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.grupos__intro h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.grupos__intro p {
+  margin: 0.25rem 0 1rem;
+  color: var(--ion-color-medium);
+}
+
+.grupos__list {
+  margin: 0;
+}
+
+.grupos__alert,
+.grupo-form__alert,
+.grupo-form__hint,
+.grupo-detalle__alert,
+.gasto-form__alert,
+.gasto-form__hint,
+.gasto-detalle__alert {
+  margin: 0 0 0.75rem;
+}
+
+.grupos__empty-action,
+.grupo-detalle__empty-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.grupo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.grupo-form__actions,
+.gasto-form__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.grupo-detalle__card,
+.gasto-detalle__card {
+  margin: 0;
+}
+
+.grupo-detalle__section {
+  margin-top: 1.5rem;
+}
+
+.grupo-detalle__section-header,
+.gasto-detalle__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.grupo-detalle__section-header h2,
+.gasto-detalle__section-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.grupo-detalle__list,
+.gasto-detalle__list {
+  margin: 0;
+}
+
+.grupo-detalle__member-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.grupo-detalle__member-form ion-input {
+  flex: 1;
+}
+
+.grupo-detalle__amount,
+.gasto-detalle__amount {
+  font-weight: 600;
+}
+
+.grupo-detalle__paid,
+.gasto-detalle__paid {
+  color: var(--ion-color-success);
+}
+
+.gasto-form__participants {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 0.5rem;
+}
+
+.gasto-form__participants h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.gasto-form__participant {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.gasto-form__participant-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.gasto-detalle__label {
+  margin: 0;
+  color: var(--ion-color-medium);
+}
+
+.gasto-detalle__total {
+  margin: 0.25rem 0 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.gasto-detalle__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  color: var(--ion-color-medium);
+}
+
+.gasto-detalle__meta p {
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .grupo-detalle__member-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

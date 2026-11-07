@@ -22,11 +22,24 @@ export interface RegisterPayload {
   password_confirmation: string;
 }
 
+export interface ProfilePayload {
+  name: string;
+  email: string;
+}
+
+export interface PasswordPayload {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
+}
+
 export interface AuthContextValue {
   user: AuthUser | null;
   status: AuthStatus;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
+  updateProfile: (payload: ProfilePayload) => Promise<void>;
+  changePassword: (payload: PasswordPayload) => Promise<void>;
   logout: () => Promise<void>;
 }
 

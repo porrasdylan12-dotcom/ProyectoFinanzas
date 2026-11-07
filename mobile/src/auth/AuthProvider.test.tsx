@@ -12,6 +12,8 @@ vi.mock('../lib/apiClient', () => ({
   apiClient: {
     get: vi.fn(),
     post: vi.fn(),
+    patch: vi.fn(),
+    put: vi.fn(),
     setUnauthorizedHandler: vi.fn(),
   },
 }));
@@ -39,13 +41,15 @@ const registerPayload: RegisterPayload = {
 
 const getRequest = vi.mocked(apiClient.get);
 const postRequest = vi.mocked(apiClient.post);
+const patchRequest = vi.mocked(apiClient.patch);
+const putRequest = vi.mocked(apiClient.put);
 const setUnauthorizedHandler = vi.mocked(apiClient.setUnauthorizedHandler);
 const getToken = vi.mocked(tokenStore.get);
 const setToken = vi.mocked(tokenStore.set);
 const clearToken = vi.mocked(tokenStore.clear);
 
 function SessionProbe() {
-  const { status, user: currentUser, login, register, logout } = useAuth();
+  const { status, user: currentUser, login, register, updateProfile, changePassword, logout } = useAuth();
 
   return (
     <div>
@@ -53,6 +57,20 @@ function SessionProbe() {
       <span data-testid="user">{currentUser?.nombre ?? ''}</span>
       <button onClick={() => void login({ email: 'ana@example.com', password: 'secret123' })}>Entrar</button>
       <button onClick={() => void register(registerPayload)}>Registrarse</button>
+      <button onClick={() => void updateProfile({ name: 'Ana María', email: 'ana@example.com' })}>
+        Actualizar perfil
+      </button>
+      <button
+        onClick={() =>
+          void changePassword({
+            current_password: 'secret123',
+            password: 'nueva123',
+            password_confirmation: 'nueva123',
+          })
+        }
+      >
+        Cambiar contraseña
+      </button>
       <button onClick={() => void logout()}>Salir</button>
     </div>
   );
@@ -79,6 +97,8 @@ describe('AuthProvider', () => {
     setToken.mockResolvedValue();
     clearToken.mockResolvedValue();
     postRequest.mockResolvedValue({ user, token: 'token-nuevo' });
+    patchRequest.mockResolvedValue({ data: { ...user, nombre: 'Ana María' } });
+    putRequest.mockResolvedValue({ message: 'Contraseña actualizada correctamente.' });
   });
 
   it('restaura la sesión si hay token guardado', async () => {
@@ -151,6 +171,43 @@ describe('AuthProvider', () => {
 
     expect(postRequest).toHaveBeenCalledWith('/register', registerPayload, { auth: false });
     expect(setToken).toHaveBeenCalledWith('token-nuevo');
+  });
+
+  it('actualiza el perfil y refleja el nombre en la sesión', async () => {
+    renderProvider();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('guest');
+    });
+
+    fireEvent.click(screen.getByText('Actualizar perfil'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('user')).toHaveTextContent('Ana María');
+    });
+
+    expect(patchRequest).toHaveBeenCalledWith('/user', {
+      name: 'Ana María',
+      email: 'ana@example.com',
+    });
+  });
+
+  it('cambia la contraseña con el payload completo', async () => {
+    renderProvider();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('guest');
+    });
+
+    fireEvent.click(screen.getByText('Cambiar contraseña'));
+
+    await waitFor(() => {
+      expect(putRequest).toHaveBeenCalledWith('/user/password', {
+        current_password: 'secret123',
+        password: 'nueva123',
+        password_confirmation: 'nueva123',
+      });
+    });
   });
 
   it('cierra sesión, limpia el token y navega a login', async () => {

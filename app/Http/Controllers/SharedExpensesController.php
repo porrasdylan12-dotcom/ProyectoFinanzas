@@ -51,7 +51,7 @@ class SharedExpensesController extends Controller
         $this->groupService->findForUser($group->id, $request->user()->id);
 
         $filters = $request->all();
-        $filters['user_id'] = $request->user()->id;
+        unset($filters['user_id']);
         $filters['group_id'] = $group->id;
 
         return SharedExpensesResource::collection($this->sharedExpensesService->list($filters));

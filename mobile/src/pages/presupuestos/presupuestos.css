@@ -1,0 +1,20 @@
+.presupuesto-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.presupuesto-form__alert,
+.presupuesto-form__hint {
+  margin: 0;
+}
+
+.presupuesto-form__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

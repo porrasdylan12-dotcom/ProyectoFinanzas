@@ -82,4 +82,54 @@ describe('useAsyncData', () => {
     act(() => resolveFirst?.('primera'));
     expect(result.current.data).toBe('segunda');
   });
+
+  it('mantiene los datos mientras recarga', async () => {
+    let resolveReload: ((value: string) => void) | undefined;
+
+    const fetcher = vi
+      .fn<() => Promise<string>>()
+      .mockResolvedValueOnce('primero')
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveReload = resolve;
+          }),
+      );
+
+    const { result } = renderHook(() => useAsyncData(fetcher));
+
+    await waitFor(() => expect(result.current.data).toBe('primero'));
+
+    act(() => {
+      void result.current.reload();
+    });
+
+    expect(result.current.status).toBe('loading');
+    expect(result.current.data).toBe('primero');
+
+    await act(async () => {
+      resolveReload?.('segundo');
+    });
+
+    await waitFor(() => expect(result.current.data).toBe('segundo'));
+  });
+
+  it('conserva los datos si falla una recarga', async () => {
+    const fetcher = vi
+      .fn<() => Promise<string>>()
+      .mockResolvedValueOnce('primero')
+      .mockRejectedValueOnce(new Error('Sin conexión'));
+
+    const { result } = renderHook(() => useAsyncData(fetcher));
+
+    await waitFor(() => expect(result.current.data).toBe('primero'));
+
+    await act(async () => {
+      await result.current.reload();
+    });
+
+    expect(result.current.data).toBe('primero');
+    expect(result.current.status).toBe('success');
+    expect(result.current.error?.message).toBe('Sin conexión');
+  });
 });

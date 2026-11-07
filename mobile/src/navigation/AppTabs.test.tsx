@@ -1,11 +1,22 @@
 import { IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AuthContext, type AuthContextValue } from '../auth/AuthContext';
 
 import AppTabs from './AppTabs';
+
+vi.mock('../lib/panelSummary', () => ({
+  formatMoney: (value: number) => `$ ${value.toFixed(2)}`,
+  loadPanelSummary: async () => ({
+    accountsCount: 0,
+    totalBalance: 0,
+    budgetsNearLimit: 0,
+    owedByUser: 0,
+    owedToUser: 0,
+  }),
+}));
 
 const authValue: AuthContextValue = {
   user: { id: 1, nombre: 'Erick', email: 'erick@example.com' },

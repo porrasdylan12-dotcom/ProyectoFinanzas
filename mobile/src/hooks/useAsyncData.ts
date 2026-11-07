@@ -52,7 +52,7 @@ export function useAsyncData<T>(fetcher: () => Promise<T>): UseAsyncDataResult<T
   const reload = useCallback(async (): Promise<void> => {
     const requestId = ++requestIdRef.current;
 
-    setState({ data: null, status: 'loading', error: null });
+    setState((previous) => ({ ...previous, status: 'loading', error: null }));
 
     try {
       const data = await fetcher();
@@ -67,7 +67,11 @@ export function useAsyncData<T>(fetcher: () => Promise<T>): UseAsyncDataResult<T
         return;
       }
 
-      setState({ data: null, status: 'error', error: toError(error) });
+      setState((previous) => ({
+        data: previous.data,
+        status: previous.data === null ? 'error' : 'success',
+        error: toError(error),
+      }));
     }
   }, [fetcher]);
 

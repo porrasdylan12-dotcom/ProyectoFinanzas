@@ -5,7 +5,15 @@ import { Navigate, Route, useLocation } from 'react-router-dom';
 
 import SessionLoading from '../components/SessionLoading';
 
-import { CUENTA_PATHS, PRESUPUESTO_PATHS, TAB_ROUTES, TRANSACCION_PATHS, isTabRoot } from './routes';
+import {
+  CUENTA_PATHS,
+  GASTO_COMPARTIDO_PATHS,
+  GRUPO_PATHS,
+  PRESUPUESTO_PATHS,
+  TAB_ROUTES,
+  TRANSACCION_PATHS,
+  isTabRoot,
+} from './routes';
 import { useAndroidBackButton } from './useAndroidBackButton';
 
 const Panel = lazy(() => import('../pages/panel/Panel'));
@@ -16,6 +24,10 @@ const TransaccionDetalle = lazy(() => import('../pages/transacciones/Transaccion
 const TransaccionForm = lazy(() => import('../pages/transacciones/TransaccionForm'));
 const PresupuestoForm = lazy(() => import('../pages/presupuestos/PresupuestoForm'));
 const Grupos = lazy(() => import('../pages/grupos/Grupos'));
+const GrupoForm = lazy(() => import('../pages/grupos/GrupoForm'));
+const GrupoDetalle = lazy(() => import('../pages/grupos/GrupoDetalle'));
+const GastoForm = lazy(() => import('../pages/grupos/GastoForm'));
+const GastoDetalle = lazy(() => import('../pages/grupos/GastoDetalle'));
 const Ajustes = lazy(() => import('../pages/ajustes/Ajustes'));
 
 const TABS = [
@@ -45,6 +57,10 @@ const AppTabs: React.FC = () => {
         <Route path={PRESUPUESTO_PATHS.new} element={withSuspense(<PresupuestoForm />)} />
         <Route path={CUENTA_PATHS.detail} element={withSuspense(<CuentaDetalle />)} />
         <Route path={TAB_ROUTES.grupos} element={withSuspense(<Grupos />)} />
+        <Route path={GRUPO_PATHS.new} element={withSuspense(<GrupoForm />)} />
+        <Route path={GRUPO_PATHS.newExpense} element={withSuspense(<GastoForm />)} />
+        <Route path={GRUPO_PATHS.detail} element={withSuspense(<GrupoDetalle />)} />
+        <Route path={GASTO_COMPARTIDO_PATHS.detail} element={withSuspense(<GastoDetalle />)} />
         <Route path={TAB_ROUTES.ajustes} element={withSuspense(<Ajustes />)} />
         <Route path="*" element={<Navigate to={TAB_ROUTES.panel} replace />} />
       </IonRouterOutlet>

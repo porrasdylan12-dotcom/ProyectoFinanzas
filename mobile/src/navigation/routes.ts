@@ -40,6 +40,28 @@ export const PRESUPUESTO_ROUTES = {
   new: PRESUPUESTO_PATHS.new,
 } as const;
 
+export const GRUPO_PATHS = {
+  list: TAB_ROUTES.grupos,
+  new: '/grupos/nuevo',
+  detail: '/grupos/:id',
+  newExpense: '/grupos/:id/gastos/nuevo',
+} as const;
+
+export const GRUPO_ROUTES = {
+  list: GRUPO_PATHS.list,
+  new: GRUPO_PATHS.new,
+  detail: (id: number | string) => `/grupos/${id}`,
+  newExpense: (id: number | string) => `/grupos/${id}/gastos/nuevo`,
+} as const;
+
+export const GASTO_COMPARTIDO_PATHS = {
+  detail: '/gastos-compartidos/:id',
+} as const;
+
+export const GASTO_COMPARTIDO_ROUTES = {
+  detail: (id: number | string) => `/gastos-compartidos/${id}`,
+} as const;
+
 const TAB_ROUTE_VALUES: readonly string[] = Object.values(TAB_ROUTES);
 
 export function isTabRoot(pathname: string): boolean {

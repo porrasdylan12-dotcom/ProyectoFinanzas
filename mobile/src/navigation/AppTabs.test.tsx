@@ -60,6 +60,26 @@ vi.mock('../lib/budgets', () => ({
   monthLabel: (month: number) => String(month),
 }));
 
+vi.mock('../lib/groups', () => ({
+  fetchGroupsPage: async () => ({
+    data: [],
+    meta: {
+      current_page: 1,
+      last_page: 1,
+      per_page: 20,
+      total: 0,
+      from: null,
+      to: null,
+    },
+    links: {
+      first: null,
+      last: null,
+      prev: null,
+      next: null,
+    },
+  }),
+}));
+
 const authValue: AuthContextValue = {
   user: { id: 1, nombre: 'Erick', email: 'erick@example.com' },
   status: 'authenticated',
@@ -98,6 +118,13 @@ describe('AppTabs', () => {
 
     expect(await screen.findByText('Aún no tienes cuentas.')).toBeInTheDocument();
     expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
+  });
+
+  it('muestra la pantalla de grupos', async () => {
+    renderTabs('/grupos');
+
+    expect(await screen.findByText('Aún no tienes grupos.')).toBeInTheDocument();
+    expect(screen.getByTestId('tab-grupos')).toBeInTheDocument();
   });
 
   it('redirige las rutas desconocidas al panel', async () => {

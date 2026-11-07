@@ -39,6 +39,27 @@ vi.mock('../lib/accounts', () => ({
   }),
 }));
 
+vi.mock('../lib/budgets', () => ({
+  fetchBudgetsPage: async () => ({
+    data: [],
+    meta: {
+      current_page: 1,
+      last_page: 1,
+      per_page: 50,
+      total: 0,
+      from: null,
+      to: null,
+    },
+    links: {
+      first: null,
+      last: null,
+      prev: null,
+      next: null,
+    },
+  }),
+  monthLabel: (month: number) => String(month),
+}));
+
 const authValue: AuthContextValue = {
   user: { id: 1, nombre: 'Erick', email: 'erick@example.com' },
   status: 'authenticated',

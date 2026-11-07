@@ -104,9 +104,9 @@ describe('CuentaDetalle', () => {
     expect(screen.getByRole('heading', { name: 'Ahorros' })).toBeInTheDocument();
     expect(screen.getByTestId('cuenta-saldo')).toHaveTextContent('$ 1500.50');
     expect(fetchAccountMock).toHaveBeenCalledWith(7);
-    expect(fetchTransactionsMock).toHaveBeenCalledWith(7, 1, 20);
 
     expect(await screen.findByText('Café')).toBeInTheDocument();
+    expect(fetchTransactionsMock).toHaveBeenCalledWith(7, 1, 20);
     expect(screen.getByText(/Comida/)).toBeInTheDocument();
     expect(screen.getByText('-$ 45.00')).toBeInTheDocument();
 

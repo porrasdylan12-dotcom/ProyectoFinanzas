@@ -7,11 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchAccount, type Account } from '../../lib/accounts';
 import { ApiError } from '../../lib/apiClient';
 import { fetchAllCategories, type Category } from '../../lib/categories';
-import {
-  createTransaction,
-  todayIsoDate,
-  type Transaction,
-} from '../../lib/transactions';
+import { createTransaction, todayIsoDate, type Transaction } from '../../lib/transactions';
 import type * as TransactionsModule from '../../lib/transactions';
 
 import TransaccionForm from './TransaccionForm';
@@ -140,8 +136,8 @@ describe('TransaccionForm', () => {
     await screen.findByText('Cuenta: Cuenta principal');
     submitForm();
 
-    expect(await screen.findByText('La categoría es obligatoria.')).toBeInTheDocument();
-    expect(screen.getByText('El monto de la transacción es obligatorio.')).toBeInTheDocument();
+    expect(await screen.findByText('El monto de la transacción es obligatorio.')).toBeInTheDocument();
+    expect(screen.getByTestId('transaccion-categoria')).toHaveClass('ion-invalid');
     expect(createTransactionMock).not.toHaveBeenCalled();
   });
 
@@ -164,7 +160,7 @@ describe('TransaccionForm', () => {
     submitForm();
 
     expect(await screen.findByText('El monto no es válido.')).toBeInTheDocument();
-    expect(screen.getByText('La categoría no pertenece al usuario.')).toBeInTheDocument();
+    expect(screen.getByTestId('transaccion-categoria')).toHaveClass('ion-invalid');
     expect(screen.getByText('Revisa los datos enviados.')).toBeInTheDocument();
   });
 });

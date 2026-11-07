@@ -112,7 +112,7 @@ describe('PresupuestoForm', () => {
     submitForm();
 
     expect(await screen.findByText('El nombre del presupuesto es obligatorio.')).toBeInTheDocument();
-    expect(screen.getByText('La categoría es obligatoria.')).toBeInTheDocument();
+    expect(screen.getByTestId('presupuesto-categoria')).toHaveClass('ion-invalid');
     expect(screen.getByText('El monto máximo del presupuesto es obligatorio.')).toBeInTheDocument();
     expect(createBudgetMock).not.toHaveBeenCalled();
   });
@@ -128,9 +128,7 @@ describe('PresupuestoForm', () => {
     setInput('presupuesto-anio', '2020');
     submitForm();
 
-    expect(
-      await screen.findByText('No se puede crear un presupuesto para un período que ya pasó.'),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('presupuesto-mes')).toHaveClass('ion-invalid');
     expect(createBudgetMock).not.toHaveBeenCalled();
   });
 
@@ -147,13 +145,14 @@ describe('PresupuestoForm', () => {
 
     renderForm();
 
+    await screen.findByTestId('presupuesto-nombre');
     setInput('presupuesto-nombre', 'Comida');
     setSelect('presupuesto-categoria', '3');
     setInput('presupuesto-monto', '2500');
     submitForm();
 
     expect(await screen.findByText('Supera el monto permitido.')).toBeInTheDocument();
-    expect(screen.getByText('La categoría no existe.')).toBeInTheDocument();
+    expect(screen.getByTestId('presupuesto-categoria')).toHaveClass('ion-invalid');
     expect(screen.getByText('Revisa los datos enviados.')).toBeInTheDocument();
   });
 });

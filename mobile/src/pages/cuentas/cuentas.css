@@ -1,0 +1,59 @@
+.cuentas,
+.cuenta-detalle,
+.cuenta-form {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cuentas__list {
+  margin: 0;
+}
+
+.cuentas__balance {
+  color: var(--ion-color-dark);
+  font-weight: 600;
+}
+
+.cuentas__alert {
+  margin: 0 0 1rem;
+}
+
+.cuentas__empty-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.cuenta-detalle__card {
+  margin: 0;
+}
+
+.cuenta-detalle__label {
+  margin: 0;
+  color: var(--ion-color-medium);
+}
+
+.cuenta-detalle__balance {
+  margin: 0.25rem 0 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.cuenta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cuenta-form__alert {
+  margin: 0 0 0.5rem;
+}
+
+.cuenta-form__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

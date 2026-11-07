@@ -18,6 +18,27 @@ vi.mock('../lib/panelSummary', () => ({
   }),
 }));
 
+vi.mock('../lib/accounts', () => ({
+  accountTypeLabel: (type: string) => type,
+  fetchAccountsPage: async () => ({
+    data: [],
+    meta: {
+      current_page: 1,
+      last_page: 1,
+      per_page: 20,
+      total: 0,
+      from: null,
+      to: null,
+    },
+    links: {
+      first: null,
+      last: null,
+      prev: null,
+      next: null,
+    },
+  }),
+}));
+
 const authValue: AuthContextValue = {
   user: { id: 1, nombre: 'Erick', email: 'erick@example.com' },
   status: 'authenticated',
@@ -54,7 +75,7 @@ describe('AppTabs', () => {
   it('muestra la pantalla de cuentas', async () => {
     renderTabs('/cuentas');
 
-    expect(await screen.findByText('El listado de cuentas se implementará en el segmento 8.')).toBeInTheDocument();
+    expect(await screen.findByText('Aún no tienes cuentas.')).toBeInTheDocument();
     expect(screen.getByTestId('tab-cuentas')).toBeInTheDocument();
   });
 

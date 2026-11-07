@@ -5,11 +5,13 @@ import { Navigate, Route, useLocation } from 'react-router-dom';
 
 import SessionLoading from '../components/SessionLoading';
 
-import { TAB_ROUTES, isTabRoot } from './routes';
+import { CUENTA_PATHS, TAB_ROUTES, isTabRoot } from './routes';
 import { useAndroidBackButton } from './useAndroidBackButton';
 
 const Panel = lazy(() => import('../pages/panel/Panel'));
 const Cuentas = lazy(() => import('../pages/cuentas/Cuentas'));
+const CuentaDetalle = lazy(() => import('../pages/cuentas/CuentaDetalle'));
+const CuentaForm = lazy(() => import('../pages/cuentas/CuentaForm'));
 const Grupos = lazy(() => import('../pages/grupos/Grupos'));
 const Ajustes = lazy(() => import('../pages/ajustes/Ajustes'));
 
@@ -33,6 +35,9 @@ const AppTabs: React.FC = () => {
       <IonRouterOutlet>
         <Route path={TAB_ROUTES.panel} element={withSuspense(<Panel />)} />
         <Route path={TAB_ROUTES.cuentas} element={withSuspense(<Cuentas />)} />
+        <Route path={CUENTA_PATHS.new} element={withSuspense(<CuentaForm />)} />
+        <Route path={CUENTA_PATHS.edit} element={withSuspense(<CuentaForm />)} />
+        <Route path={CUENTA_PATHS.detail} element={withSuspense(<CuentaDetalle />)} />
         <Route path={TAB_ROUTES.grupos} element={withSuspense(<Grupos />)} />
         <Route path={TAB_ROUTES.ajustes} element={withSuspense(<Ajustes />)} />
         <Route path="*" element={<Navigate to={TAB_ROUTES.panel} replace />} />

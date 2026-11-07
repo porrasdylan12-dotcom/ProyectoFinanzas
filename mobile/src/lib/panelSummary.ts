@@ -1,6 +1,8 @@
 import { apiClient } from './apiClient';
 import type { PaginatedResponse } from './pagination';
 
+export { formatMoney } from './money';
+
 export interface Account {
   id: number;
   nombre: string;
@@ -99,10 +101,6 @@ function formatDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
-}
-
-export function formatMoney(value: number): string {
-  return `$ ${(Number.isFinite(value) ? value : 0).toFixed(2)}`;
 }
 
 export function buildPanelSummary({ userId, accounts, budgets, debts, expenses }: PanelSummaryInput): PanelSummary {

@@ -6,6 +6,7 @@ import { Route } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import { GuestOnly, RequireAuth, RootRedirect } from './auth/guards';
 import SessionLoading from './components/SessionLoading';
+import AppTabs from './navigation/AppTabs';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -39,7 +40,7 @@ import './theme/variables.css';
 
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
-const Panel = lazy(() => import('./pages/panel/Panel'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
 
 setupIonicReact();
 
@@ -52,9 +53,16 @@ const App: React.FC = () => (
         <IonRouterOutlet>
           <Route path="/login" element={<GuestOnly>{withSuspense(<Login />)}</GuestOnly>} />
           <Route path="/register" element={<GuestOnly>{withSuspense(<Register />)}</GuestOnly>} />
-          <Route path="/panel" element={<RequireAuth>{withSuspense(<Panel />)}</RequireAuth>} />
+          <Route path="/forgot-password" element={<GuestOnly>{withSuspense(<ForgotPassword />)}</GuestOnly>} />
           <Route path="/" element={<RootRedirect />} />
-          <Route path="*" element={<RootRedirect />} />
+          <Route
+            path="/*"
+            element={
+              <RequireAuth>
+                <AppTabs />
+              </RequireAuth>
+            }
+          />
         </IonRouterOutlet>
       </AuthProvider>
     </IonReactRouter>

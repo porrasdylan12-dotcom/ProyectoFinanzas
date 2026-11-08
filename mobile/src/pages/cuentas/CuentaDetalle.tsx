@@ -45,8 +45,8 @@ const CuentaDetalleContent: React.FC<CuentaDetalleContentProps> = ({ account }) 
     (page: number, perPage: number) => fetchTransactionsPage(account.id, page, perPage),
     [account.id],
   );
-  const transactions = useInfiniteList(loadTransactions);
-  const { data: categories } = useAsyncData(fetchAllCategories);
+  const transactions = useInfiniteList(loadTransactions, { cacheKey: `transactions:${account.id}` });
+  const { data: categories } = useAsyncData(fetchAllCategories, { cacheKey: 'categories:all' });
   const categoryNames = useMemo(
     () => new Map((categories ?? []).map((category) => [category.id, category.nombre])),
     [categories],
@@ -156,7 +156,14 @@ const CuentaDetalle: React.FC = () => {
     return fetchAccount(accountId);
   }, [accountId]);
 
-  const { data: account, status, error, reload } = useAsyncData(fetchCurrentAccount);
+  const {
+    data: account,
+    status,
+    error,
+    reload,
+  } = useAsyncData(fetchCurrentAccount, {
+    cacheKey: `account:${accountId}`,
+  });
 
   return (
     <IonPage>

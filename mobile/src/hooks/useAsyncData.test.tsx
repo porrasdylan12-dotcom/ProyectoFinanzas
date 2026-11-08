@@ -1,9 +1,26 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { ApiError } from '../lib/apiClient';
+import { readCache, writeCache } from '../lib/offlineCache';
 
 import { useAsyncData } from './useAsyncData';
 
+vi.mock('../lib/offlineCache', () => ({
+  readCache: vi.fn(),
+  writeCache: vi.fn(),
+}));
+
+const readCached = vi.mocked(readCache);
+const writeCached = vi.mocked(writeCache);
+
 describe('useAsyncData', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    readCached.mockResolvedValue(null);
+    writeCached.mockResolvedValue();
+  });
+
   it('carga los datos y pasa a success', async () => {
     const fetcher = vi.fn(async () => ({ id: 1, nombre: 'Efectivo' }));
 
@@ -131,5 +148,44 @@ describe('useAsyncData', () => {
     expect(result.current.data).toBe('primero');
     expect(result.current.status).toBe('success');
     expect(result.current.error?.message).toBe('Sin conexión');
+  });
+
+  it('guarda los datos en la caché cuando se indica una clave', async () => {
+    const fetcher = vi.fn(async () => ({ id: 1 }));
+
+    const { result } = renderHook(() => useAsyncData(fetcher, { cacheKey: 'panel' }));
+
+    await waitFor(() => expect(result.current.status).toBe('success'));
+
+    expect(writeCached).toHaveBeenCalledWith('panel', { id: 1 });
+  });
+
+  it('usa la caché si la carga inicial falla por falta de red', async () => {
+    const fetcher = vi.fn(async () => {
+      throw new ApiError(0, 'NETWORK_ERROR', 'Sin conexión');
+    });
+    readCached.mockResolvedValue({ id: 9 });
+
+    const { result } = renderHook(() => useAsyncData(fetcher, { cacheKey: 'panel' }));
+
+    await waitFor(() => expect(result.current.status).toBe('success'));
+
+    expect(result.current.data).toEqual({ id: 9 });
+    expect(result.current.error?.message).toBe('Sin conexión');
+    expect(readCached).toHaveBeenCalledWith('panel');
+  });
+
+  it('no usa la caché ante errores que no son de red', async () => {
+    const fetcher = vi.fn(async () => {
+      throw new ApiError(500, 'HTTP_500', 'Error del servidor');
+    });
+    readCached.mockResolvedValue({ id: 9 });
+
+    const { result } = renderHook(() => useAsyncData(fetcher, { cacheKey: 'panel' }));
+
+    await waitFor(() => expect(result.current.status).toBe('error'));
+
+    expect(result.current.data).toBeNull();
+    expect(readCached).not.toHaveBeenCalled();
   });
 });

@@ -61,7 +61,9 @@ const TransaccionDetalle: React.FC = () => {
     };
   }, [transactionId]);
 
-  const { data, status, error, reload } = useAsyncData(loadTransaction);
+  const { data, status, error, reload } = useAsyncData(loadTransaction, {
+    cacheKey: `transaction:${transactionId}`,
+  });
   const isIncome = data?.transaction.tipo === 'ingreso';
 
   return (

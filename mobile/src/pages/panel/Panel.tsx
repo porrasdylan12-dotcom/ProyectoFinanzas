@@ -72,7 +72,14 @@ const Panel: React.FC = () => {
     return loadPanelSummary(user.id);
   }, [user]);
 
-  const { data: summary, status, error, reload } = useAsyncData(fetchSummary);
+  const {
+    data: summary,
+    status,
+    error,
+    reload,
+  } = useAsyncData(fetchSummary, {
+    cacheKey: user ? `panel:${user.id}` : undefined,
+  });
 
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>): void => {
     void reload().finally(() => event.detail.complete());

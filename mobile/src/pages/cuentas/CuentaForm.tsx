@@ -183,7 +183,14 @@ const CuentaFormPage: React.FC = () => {
     return fetchAccount(accountId);
   }, [accountId]);
 
-  const { data: account, status, error, reload } = useAsyncData(fetchCurrentAccount);
+  const {
+    data: account,
+    status,
+    error,
+    reload,
+  } = useAsyncData(fetchCurrentAccount, {
+    cacheKey: accountId ? `account:${accountId}` : undefined,
+  });
 
   const handleSubmit = async (values: AccountFormValues): Promise<void> => {
     const payload = buildAccountPayload(values);

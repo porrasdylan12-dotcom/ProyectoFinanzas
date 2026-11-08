@@ -160,7 +160,9 @@ const GastoDetalle: React.FC = () => {
     return { expense, group };
   }, [expenseId]);
 
-  const { data, status, error, reload } = useAsyncData(loadExpense);
+  const { data, status, error, reload } = useAsyncData(loadExpense, {
+    cacheKey: `shared-expense:${expenseId}`,
+  });
 
   return (
     <IonPage>

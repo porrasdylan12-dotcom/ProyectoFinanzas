@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { type LoadStatus, toError } from '../lib/asyncState';
+import { type LoadStatus, isNetworkError, toError } from '../lib/asyncState';
+import { readCache, writeCache } from '../lib/offlineCache';
 
 interface AsyncDataState<T> {
   data: T | null;
@@ -8,12 +9,19 @@ interface AsyncDataState<T> {
   error: Error | null;
 }
 
+export interface UseAsyncDataOptions {
+  cacheKey?: string;
+}
+
 export interface UseAsyncDataResult<T> extends AsyncDataState<T> {
   isLoading: boolean;
   reload: () => Promise<void>;
 }
 
-export function useAsyncData<T>(fetcher: () => Promise<T>): UseAsyncDataResult<T> {
+export function useAsyncData<T>(
+  fetcher: () => Promise<T>,
+  { cacheKey }: UseAsyncDataOptions = {},
+): UseAsyncDataResult<T> {
   const [state, setState] = useState<AsyncDataState<T>>({
     data: null,
     status: 'loading',
@@ -21,33 +29,56 @@ export function useAsyncData<T>(fetcher: () => Promise<T>): UseAsyncDataResult<T
   });
   const mountedRef = useRef(true);
   const requestIdRef = useRef(0);
+  const stateRef = useRef(state);
+
+  stateRef.current = state;
 
   useEffect(() => {
     mountedRef.current = true;
 
     const requestId = ++requestIdRef.current;
 
-    fetcher().then(
-      (data) => {
+    const load = async (): Promise<void> => {
+      try {
+        const data = await fetcher();
+
         if (!mountedRef.current || requestId !== requestIdRef.current) {
           return;
         }
 
         setState({ data, status: 'success', error: null });
-      },
-      (error: unknown) => {
+
+        if (cacheKey) {
+          await writeCache(cacheKey, data);
+        }
+      } catch (error) {
         if (!mountedRef.current || requestId !== requestIdRef.current) {
           return;
         }
 
+        if (cacheKey && isNetworkError(error)) {
+          const cached = await readCache<T>(cacheKey);
+
+          if (!mountedRef.current || requestId !== requestIdRef.current) {
+            return;
+          }
+
+          if (cached !== null) {
+            setState({ data: cached, status: 'success', error: toError(error) });
+            return;
+          }
+        }
+
         setState({ data: null, status: 'error', error: toError(error) });
-      },
-    );
+      }
+    };
+
+    void load();
 
     return () => {
       mountedRef.current = false;
     };
-  }, [fetcher]);
+  }, [cacheKey, fetcher]);
 
   const reload = useCallback(async (): Promise<void> => {
     const requestId = ++requestIdRef.current;
@@ -62,9 +93,26 @@ export function useAsyncData<T>(fetcher: () => Promise<T>): UseAsyncDataResult<T
       }
 
       setState({ data, status: 'success', error: null });
+
+      if (cacheKey) {
+        await writeCache(cacheKey, data);
+      }
     } catch (error) {
       if (!mountedRef.current || requestId !== requestIdRef.current) {
         return;
+      }
+
+      if (cacheKey && stateRef.current.data === null && isNetworkError(error)) {
+        const cached = await readCache<T>(cacheKey);
+
+        if (!mountedRef.current || requestId !== requestIdRef.current) {
+          return;
+        }
+
+        if (cached !== null) {
+          setState({ data: cached, status: 'success', error: toError(error) });
+          return;
+        }
       }
 
       setState((previous) => ({
@@ -73,7 +121,7 @@ export function useAsyncData<T>(fetcher: () => Promise<T>): UseAsyncDataResult<T
         error: toError(error),
       }));
     }
-  }, [fetcher]);
+  }, [cacheKey, fetcher]);
 
   return {
     ...state,

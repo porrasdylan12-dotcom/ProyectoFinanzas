@@ -221,7 +221,14 @@ const GastoForm: React.FC = () => {
     return fetchGroup(groupId);
   }, [groupId]);
 
-  const { data: group, status, error, reload } = useAsyncData(loadGroup);
+  const {
+    data: group,
+    status,
+    error,
+    reload,
+  } = useAsyncData(loadGroup, {
+    cacheKey: `group:${groupId}`,
+  });
 
   const handleSubmit = async (values: SharedExpenseFormValues): Promise<void> => {
     const created = await createSharedExpense(groupId, buildSharedExpensePayload(values));

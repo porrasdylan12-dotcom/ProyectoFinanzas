@@ -1,9 +1,19 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { ApiError } from '../lib/apiClient';
+import { readCache, writeCache } from '../lib/offlineCache';
 import type { PaginatedResponse } from '../lib/pagination';
 
 import { useInfiniteList } from './useInfiniteList';
+
+vi.mock('../lib/offlineCache', () => ({
+  readCache: vi.fn(),
+  writeCache: vi.fn(),
+}));
+
+const readCached = vi.mocked(readCache);
+const writeCached = vi.mocked(writeCache);
 
 interface Item {
   id: number;
@@ -30,6 +40,12 @@ function page(data: Item[], currentPage = 1, lastPage = 1): PaginatedResponse<It
 }
 
 describe('useInfiniteList', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    readCached.mockResolvedValue(null);
+    writeCached.mockResolvedValue();
+  });
+
   it('carga la primera página', async () => {
     const fetcher = vi.fn(async () => page([{ id: 1 }], 1, 2));
 
@@ -173,5 +189,45 @@ describe('useInfiniteList', () => {
 
     expect(result.current.items).toEqual([]);
     expect(result.current.isEmpty).toBe(true);
+  });
+
+  it('guarda en caché los elementos cargados', async () => {
+    const fetcher = vi.fn(async () => page([{ id: 1 }], 1, 2));
+
+    const { result } = renderHook(() => useInfiniteList(fetcher, { cacheKey: 'accounts:list' }));
+
+    await waitFor(() => expect(result.current.items).toEqual([{ id: 1 }]));
+
+    expect(writeCached).toHaveBeenCalledWith('accounts:list', { items: [{ id: 1 }] });
+  });
+
+  it('usa la caché si la carga inicial falla por falta de red', async () => {
+    const fetcher = vi.fn(async () => {
+      throw new ApiError(0, 'NETWORK_ERROR', 'Sin conexión');
+    });
+    readCached.mockResolvedValue({ items: [{ id: 4 }, { id: 5 }] });
+
+    const { result } = renderHook(() => useInfiniteList(fetcher, { cacheKey: 'groups:list' }));
+
+    await waitFor(() => expect(result.current.status).toBe('success'));
+
+    expect(result.current.items).toEqual([{ id: 4 }, { id: 5 }]);
+    expect(result.current.hasMore).toBe(false);
+    expect(result.current.error?.message).toBe('Sin conexión');
+    expect(readCached).toHaveBeenCalledWith('groups:list');
+  });
+
+  it('no usa la caché ante errores que no son de red', async () => {
+    const fetcher = vi.fn(async () => {
+      throw new ApiError(500, 'HTTP_500', 'Error del servidor');
+    });
+    readCached.mockResolvedValue({ items: [{ id: 4 }] });
+
+    const { result } = renderHook(() => useInfiniteList(fetcher, { cacheKey: 'groups:list' }));
+
+    await waitFor(() => expect(result.current.status).toBe('error'));
+
+    expect(result.current.items).toEqual([]);
+    expect(readCached).not.toHaveBeenCalled();
   });
 });

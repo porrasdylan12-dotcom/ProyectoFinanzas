@@ -61,7 +61,7 @@ const GrupoDetalleContent: React.FC<GrupoDetalleContentProps> = ({ group, reload
     (page: number, perPage: number) => fetchSharedExpensesPage(group.id, page, perPage),
     [group.id],
   );
-  const expenses = useInfiniteList(loadExpenses);
+  const expenses = useInfiniteList(loadExpenses, { cacheKey: `shared-expenses:${group.id}` });
   const [memberEmail, setMemberEmail] = useState('');
   const [memberError, setMemberError] = useState<string | null>(null);
   const [isAddingMember, setIsAddingMember] = useState(false);
@@ -258,7 +258,14 @@ const GrupoDetalle: React.FC = () => {
     return fetchGroup(groupId);
   }, [groupId]);
 
-  const { data: group, status, error, reload } = useAsyncData(loadGroup);
+  const {
+    data: group,
+    status,
+    error,
+    reload,
+  } = useAsyncData(loadGroup, {
+    cacheKey: `group:${groupId}`,
+  });
 
   return (
     <IonPage>

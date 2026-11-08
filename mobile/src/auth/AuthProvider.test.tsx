@@ -2,21 +2,40 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { apiClient } from '../lib/apiClient';
+import type * as ApiClientModule from '../lib/apiClient';
+import { apiClient, ApiError } from '../lib/apiClient';
+import type * as OfflineCacheModule from '../lib/offlineCache';
+import { SESSION_USER_KEY, clearOfflineCache, readCache, writeCache } from '../lib/offlineCache';
 import { tokenStore } from '../lib/secureStorage';
 
 import { useAuth, type AuthUser, type RegisterPayload } from './AuthContext';
 import { AuthProvider } from './AuthProvider';
 
-vi.mock('../lib/apiClient', () => ({
-  apiClient: {
-    get: vi.fn(),
-    post: vi.fn(),
-    patch: vi.fn(),
-    put: vi.fn(),
-    setUnauthorizedHandler: vi.fn(),
-  },
-}));
+vi.mock('../lib/apiClient', async () => {
+  const actual = await vi.importActual<typeof ApiClientModule>('../lib/apiClient');
+
+  return {
+    ...actual,
+    apiClient: {
+      get: vi.fn(),
+      post: vi.fn(),
+      patch: vi.fn(),
+      put: vi.fn(),
+      setUnauthorizedHandler: vi.fn(),
+    },
+  };
+});
+
+vi.mock('../lib/offlineCache', async () => {
+  const actual = await vi.importActual<typeof OfflineCacheModule>('../lib/offlineCache');
+
+  return {
+    ...actual,
+    readCache: vi.fn(),
+    writeCache: vi.fn(),
+    clearOfflineCache: vi.fn(),
+  };
+});
 
 vi.mock('../lib/secureStorage', () => ({
   tokenStore: {
@@ -47,6 +66,9 @@ const setUnauthorizedHandler = vi.mocked(apiClient.setUnauthorizedHandler);
 const getToken = vi.mocked(tokenStore.get);
 const setToken = vi.mocked(tokenStore.set);
 const clearToken = vi.mocked(tokenStore.clear);
+const readCached = vi.mocked(readCache);
+const writeCached = vi.mocked(writeCache);
+const clearCache = vi.mocked(clearOfflineCache);
 
 function SessionProbe() {
   const { status, user: currentUser, login, register, updateProfile, changePassword, logout } = useAuth();
@@ -96,6 +118,9 @@ describe('AuthProvider', () => {
     getRequest.mockResolvedValue({ data: user });
     setToken.mockResolvedValue();
     clearToken.mockResolvedValue();
+    readCached.mockResolvedValue(null);
+    writeCached.mockResolvedValue();
+    clearCache.mockResolvedValue();
     postRequest.mockResolvedValue({ user, token: 'token-nuevo' });
     patchRequest.mockResolvedValue({ data: { ...user, nombre: 'Ana María' } });
     putRequest.mockResolvedValue({ message: 'Contraseña actualizada correctamente.' });
@@ -110,6 +135,22 @@ describe('AuthProvider', () => {
     });
 
     expect(getRequest).toHaveBeenCalledWith('/user');
+    expect(writeCached).toHaveBeenCalledWith(SESSION_USER_KEY, user);
+    expect(screen.getByTestId('user')).toHaveTextContent('Ana');
+  });
+
+  it('restaura la sesión desde la caché si no hay red', async () => {
+    getToken.mockResolvedValue('token-guardado');
+    getRequest.mockRejectedValue(new ApiError(0, 'NETWORK_ERROR', 'Sin conexión'));
+    readCached.mockResolvedValue(user);
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('authenticated');
+    });
+
+    expect(readCached).toHaveBeenCalledWith(SESSION_USER_KEY);
     expect(screen.getByTestId('user')).toHaveTextContent('Ana');
   });
 
@@ -153,6 +194,8 @@ describe('AuthProvider', () => {
       { auth: false },
     );
     expect(setToken).toHaveBeenCalledWith('token-nuevo');
+    expect(clearCache).toHaveBeenCalled();
+    expect(writeCached).toHaveBeenCalledWith(SESSION_USER_KEY, user);
     expect(screen.getByTestId('user')).toHaveTextContent('Ana');
   });
 
@@ -190,6 +233,10 @@ describe('AuthProvider', () => {
       name: 'Ana María',
       email: 'ana@example.com',
     });
+    expect(writeCached).toHaveBeenCalledWith(SESSION_USER_KEY, {
+      ...user,
+      nombre: 'Ana María',
+    });
   });
 
   it('cambia la contraseña con el payload completo', async () => {
@@ -226,6 +273,7 @@ describe('AuthProvider', () => {
 
     expect(postRequest).toHaveBeenCalledWith('/logout');
     expect(clearToken).toHaveBeenCalled();
+    expect(clearCache).toHaveBeenCalled();
   });
 
   it('registra el manejador de 401 y navega a login', async () => {
@@ -246,5 +294,7 @@ describe('AuthProvider', () => {
     await waitFor(() => {
       expect(screen.getByText('Pantalla de login')).toBeInTheDocument();
     });
+
+    expect(clearCache).toHaveBeenCalled();
   });
 });

@@ -29,7 +29,7 @@ import { GRUPO_ROUTES } from '../../navigation/routes';
 import './grupos.css';
 
 const Grupos: React.FC = () => {
-  const list = useInfiniteList(fetchGroupsPage);
+  const list = useInfiniteList(fetchGroupsPage, { cacheKey: 'groups:list' });
 
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>): void => {
     void list.refresh().finally(() => event.detail.complete());

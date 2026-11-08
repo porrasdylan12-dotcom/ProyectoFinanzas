@@ -233,7 +233,9 @@ const TransaccionForm: React.FC = () => {
     return { account, categories };
   }, [accountId]);
 
-  const { data, status, error, reload } = useAsyncData(loadFormData);
+  const { data, status, error, reload } = useAsyncData(loadFormData, {
+    cacheKey: `transaction-form:${accountId}`,
+  });
 
   const handleSubmit = async (values: TransactionFormValues): Promise<void> => {
     const created = await createTransaction(buildTransactionPayload(values));

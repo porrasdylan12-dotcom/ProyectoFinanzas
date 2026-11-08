@@ -33,9 +33,9 @@ import { CUENTA_ROUTES, PRESUPUESTO_ROUTES } from '../../navigation/routes';
 import './cuentas.css';
 
 const Cuentas: React.FC = () => {
-  const list = useInfiniteList(fetchAccountsPage);
+  const list = useInfiniteList(fetchAccountsPage, { cacheKey: 'accounts:list' });
   const loadBudgets = useCallback(() => fetchBudgetsPage(1, 50), []);
-  const budgets = useAsyncData(loadBudgets);
+  const budgets = useAsyncData(loadBudgets, { cacheKey: 'budgets:list' });
   const budgetItems = budgets.data?.data ?? [];
 
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>): void => {

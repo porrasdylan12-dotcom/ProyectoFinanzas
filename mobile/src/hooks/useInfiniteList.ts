@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { type LoadStatus, toError } from '../lib/asyncState';
+import { type LoadStatus, isNetworkError, toError } from '../lib/asyncState';
+import { readCache, writeCache } from '../lib/offlineCache';
 import { type PaginatedResponse, hasNextPage } from '../lib/pagination';
 
 const DEFAULT_PAGE_SIZE = 20;
 
+interface CachedList<T> {
+  items: T[];
+}
+
 export interface UseInfiniteListOptions {
   perPage?: number;
+  cacheKey?: string;
 }
 
 export interface UseInfiniteListResult<T> {
@@ -24,7 +30,7 @@ export interface UseInfiniteListResult<T> {
 
 export function useInfiniteList<T>(
   fetchPage: (page: number, perPage: number) => Promise<PaginatedResponse<T>>,
-  { perPage = DEFAULT_PAGE_SIZE }: UseInfiniteListOptions = {},
+  { perPage = DEFAULT_PAGE_SIZE, cacheKey }: UseInfiniteListOptions = {},
 ): UseInfiniteListResult<T> {
   const [items, setItems] = useState<T[]>([]);
   const [status, setStatus] = useState<LoadStatus>('loading');
@@ -38,6 +44,16 @@ export function useInfiniteList<T>(
   const mountedRef = useRef(true);
   const requestIdRef = useRef(0);
   const itemsCountRef = useRef(0);
+  const itemsRef = useRef<T[]>([]);
+
+  const saveItems = useCallback(
+    async (nextItems: T[]): Promise<void> => {
+      if (cacheKey) {
+        await writeCache(cacheKey, { items: nextItems } satisfies CachedList<T>);
+      }
+    },
+    [cacheKey],
+  );
 
   useEffect(() => {
     mountedRef.current = true;
@@ -46,34 +62,61 @@ export function useInfiniteList<T>(
 
     loadingRef.current = true;
 
-    fetchPage(1, perPage)
-      .then((response) => {
+    const load = async (): Promise<void> => {
+      try {
+        const response = await fetchPage(1, perPage);
+
         if (!mountedRef.current || requestId !== requestIdRef.current) {
           return;
         }
 
         itemsCountRef.current = response.data.length;
+        itemsRef.current = response.data;
         setItems(response.data);
         pageRef.current = response.meta.current_page;
         setHasMore(hasNextPage(response.meta));
         setStatus('success');
         setError(null);
         loadingRef.current = false;
-      })
-      .catch((loadError: unknown) => {
+
+        await saveItems(response.data);
+      } catch (loadError) {
         if (!mountedRef.current || requestId !== requestIdRef.current) {
           return;
+        }
+
+        if (cacheKey && isNetworkError(loadError)) {
+          const cached = await readCache<CachedList<T>>(cacheKey);
+
+          if (!mountedRef.current || requestId !== requestIdRef.current) {
+            return;
+          }
+
+          if (cached !== null && Array.isArray(cached.items)) {
+            itemsCountRef.current = cached.items.length;
+            itemsRef.current = cached.items;
+            setItems(cached.items);
+            pageRef.current = 1;
+            setHasMore(false);
+            setStatus('success');
+            setError(toError(loadError));
+            loadingRef.current = false;
+            return;
+          }
         }
 
         setError(toError(loadError));
         setStatus('error');
         loadingRef.current = false;
-      });
+      }
+    };
+
+    void load();
 
     return () => {
       mountedRef.current = false;
     };
-  }, [fetchPage, perPage]);
+  }, [cacheKey, fetchPage, perPage, saveItems]);
 
   const loadMore = useCallback(async (): Promise<void> => {
     if (loadingRef.current || !hasMore) {
@@ -94,11 +137,15 @@ export function useInfiniteList<T>(
         return;
       }
 
-      itemsCountRef.current += response.data.length;
-      setItems((currentItems) => [...currentItems, ...response.data]);
+      const nextItems = [...itemsRef.current, ...response.data];
+      itemsCountRef.current = nextItems.length;
+      itemsRef.current = nextItems;
+      setItems(nextItems);
       pageRef.current = response.meta.current_page;
       setHasMore(hasNextPage(response.meta));
       setStatus('success');
+
+      await saveItems(nextItems);
     } catch (loadError) {
       if (mountedRef.current && requestId === requestIdRef.current) {
         setError(toError(loadError));
@@ -109,7 +156,7 @@ export function useInfiniteList<T>(
         setIsLoadingMore(false);
       }
     }
-  }, [fetchPage, hasMore, perPage]);
+  }, [fetchPage, hasMore, perPage, saveItems]);
 
   const refresh = useCallback(async (): Promise<void> => {
     if (loadingRef.current) {
@@ -130,10 +177,13 @@ export function useInfiniteList<T>(
       }
 
       itemsCountRef.current = response.data.length;
+      itemsRef.current = response.data;
       setItems(response.data);
       pageRef.current = response.meta.current_page;
       setHasMore(hasNextPage(response.meta));
       setStatus('success');
+
+      await saveItems(response.data);
     } catch (loadError) {
       if (!mountedRef.current || requestId !== requestIdRef.current) {
         return;
@@ -147,7 +197,7 @@ export function useInfiniteList<T>(
         setIsRefreshing(false);
       }
     }
-  }, [fetchPage, perPage]);
+  }, [fetchPage, perPage, saveItems]);
 
   return {
     items,

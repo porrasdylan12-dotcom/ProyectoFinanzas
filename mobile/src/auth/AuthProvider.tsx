@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState, type PropsWithChildren } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import { apiClient } from '../lib/apiClient';
+import { isNetworkError } from '../lib/asyncState';
+import { SESSION_USER_KEY, clearOfflineCache, readCache, writeCache } from '../lib/offlineCache';
 import { updateMyPassword, updateMyProfile } from '../lib/profile';
 import { tokenStore } from '../lib/secureStorage';
 
@@ -32,6 +34,8 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const startSession = useCallback(async (result: AuthResponse): Promise<void> => {
     await tokenStore.set(result.token);
+    await clearOfflineCache();
+    await writeCache(SESSION_USER_KEY, result.user);
     setUser(result.user);
     setStatus('authenticated');
   }, []);
@@ -57,6 +61,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const updateProfile = useCallback(async (payload: ProfilePayload): Promise<void> => {
     const updated = await updateMyProfile(payload);
 
+    await writeCache(SESSION_USER_KEY, updated);
     setUser(updated);
   }, []);
 
@@ -77,6 +82,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
       // La navegación a Login no debe depender del almacenamiento nativo.
     }
 
+    await clearOfflineCache();
     setUser(null);
     setStatus('guest');
     navigate('/login', { replace: true });
@@ -101,10 +107,21 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         const currentUser = await apiClient.get<UserResponse>('/user');
 
         if (!cancelled) {
+          await writeCache(SESSION_USER_KEY, currentUser.data);
           setUser(currentUser.data);
           setStatus('authenticated');
         }
-      } catch {
+      } catch (error) {
+        if (isNetworkError(error)) {
+          const cachedUser = await readCache<AuthUser>(SESSION_USER_KEY);
+
+          if (!cancelled && cachedUser !== null) {
+            setUser(cachedUser);
+            setStatus('authenticated');
+            return;
+          }
+        }
+
         if (!cancelled) {
           setUser(null);
           setStatus('guest');
@@ -120,7 +137,8 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    apiClient.setUnauthorizedHandler(() => {
+    apiClient.setUnauthorizedHandler(async () => {
+      await clearOfflineCache();
       setUser(null);
       setStatus('guest');
       navigate('/login', { replace: true });

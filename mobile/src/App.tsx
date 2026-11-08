@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 
 import { AuthProvider } from './auth/AuthProvider';
 import { GuestOnly, RequireAuth, RootRedirect } from './auth/guards';
+import OfflineBanner from './components/OfflineBanner';
 import SessionLoading from './components/SessionLoading';
 import AppTabs from './navigation/AppTabs';
 
@@ -50,6 +51,7 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <AuthProvider>
+        <OfflineBanner />
         <IonRouterOutlet>
           <Route path="/login" element={<GuestOnly>{withSuspense(<Login />)}</GuestOnly>} />
           <Route path="/register" element={<GuestOnly>{withSuspense(<Register />)}</GuestOnly>} />

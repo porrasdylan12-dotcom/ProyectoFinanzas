@@ -195,7 +195,14 @@ const PresupuestoFormFields: React.FC<PresupuestoFormFieldsProps> = ({ categorie
 
 const PresupuestoForm: React.FC = () => {
   const navigate = useNavigate();
-  const { data: categories, status, error, reload } = useAsyncData(fetchAllCategories);
+  const {
+    data: categories,
+    status,
+    error,
+    reload,
+  } = useAsyncData(fetchAllCategories, {
+    cacheKey: 'categories:all',
+  });
 
   const handleSubmit = async (values: BudgetFormValues): Promise<void> => {
     await createBudget(buildBudgetPayload(values));

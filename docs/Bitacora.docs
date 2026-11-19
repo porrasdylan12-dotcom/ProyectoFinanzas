@@ -72,8 +72,8 @@ Registro cronológico de los cambios realizados mediante commits en el proyecto.
 | 2026-10-04 | e83c94f | Create Lab07-ui.md | ErickSerrano19 | Copilot / GPT-5.6 Luna / Gemini |
 | 2026-10-04 | 89ef16d | Merge pull request #14 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
 | 2026-10-09 | d13eb69 | Mapa de navegación y bosquejos, actualización de bitácora | ErickSerrano19 | |
-| 2026-10-09 | a594a88 | Create html with 3 main views | ErickSerrano19 | Github Copilot |
-| 2026-10-09 | 5507e33 | Create login.html and css | ErickSerrano19 | Sonnet 5.5 |
+| 2026-10-09 | a594a88 | Create html with 3 main views | ErickSerrano19 | |
+| 2026-10-09 | 5507e33 | Create login.html and css | ErickSerrano19 | |
 | 2026-10-09 | 7de5daa | Merge pull request #15 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
 | 2026-10-11 | b3f7ec5 | style: actualizacion los estilos de la interfaz | Eddy Mora | |
 | 2026-10-11 | d894937 | feat: actualizacion los prototipos de la aplicación | Eddy Mora | |
@@ -93,15 +93,46 @@ Registro cronológico de los cambios realizados mediante commits en el proyecto.
 | 2026-10-16 | 147357a | chore: configurar phpstan y memoria para superar la verificación estática del CI | Eddy Mora | |
 | 2026-10-16 | 88e0946 | fix: registrar ruta de token Sanctum y configurar PHPStan para CI | Eddy Mora | |
 | 2026-10-16 | 6861d32 | Merge pull request #16 from porrasdylan12-dotcom/Edd | Eddy-Mora-P | |
-| 2026-10-17 | 0ea2f1f | Views Complete | ErickSerrano19 | Github Copilot / GPT-5.6 Luna |
-| 2026-10-17 | 88434aa | Create JS, modules, and Config API | ErickSerrano19 | Opencode |
-| 2026-10-17 | 9d4acd9 | Create JS of Users, with modules | ErickSerrano19 | Opencode |
-| 2026-10-17 | 26ca85a | Create JS of accounts with modules js | ErickSerrano19 | Opencode |
-| 2026-10-17 | 0945950 | Create JS of Groups | ErickSerrano19 | Opencode |
-| 2026-10-17 | 52e3f0f | Configure password and authentication | ErickSerrano19 | Opencode |
+| 2026-10-17 | 0ea2f1f | Views Complete | ErickSerrano19 | opencode |
+| 2026-10-17 | 88434aa | Create JS, modules, and Config API | ErickSerrano19 | opencode |
+| 2026-10-17 | 9d4acd9 | Create JS of Users, with modules | ErickSerrano19 | opencode |
+| 2026-10-17 | 26ca85a | Create JS of accounts with modules js | ErickSerrano19 | opencode |
+| 2026-10-17 | 0945950 | Create JS of Groups | ErickSerrano19 | opencode |
+| 2026-10-17 | 52e3f0f | Configure password and authentication | ErickSerrano19 | opencode |
+| 2026-10-17 | d18f8a5 | Update bitacora | ErickSerrano19 | GPT-5.6 Luna |
+| 2026-10-17 | 39418b8 | Merge pull request #19 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-10-18 | 3a72d9d | refactor: migracio0n de cadenas de .then/.catch a async/await usando Promise.all y try/catch | Eddy Mora | |
+| 2026-10-18 | 235e347 | feat: implementacion de  persistencia de borradores en formularios ante redirecciones 401 | Eddy Mora | |
+| 2026-10-18 | d30b95f | chore: actualizacion de gitignore y agregar pnpm-lock.yaml | Eddy Mora | |
+| 2026-10-18 | 659dbc5 | style: correccion de formato y espacios en blanco que rompían vp check | Eddy Mora | |
+| 2026-10-18 | bd889cc | Merge pull request #20 from porrasdylan12-dotcom/edd | ErickSerrano19 | |
+| 2026-10-18 | 39a1f75 | lab 9, punto 3 y 6 | porrasdylan12-dotcom | |
+| 2026-10-20 | 5006048 | chore(deps): bump the github-actions group with 2 updates | dependabot[bot] | |
+| 2026-11-05 | 2b69487 | Implements Ionic witch react-vite for the app | ErickSerrano19 | |
+| 2026-11-05 | b4b3485 | Merge https://github.com/porrasdylan12-dotcom/ProyectoFinanzas into Erick | ErickSerrano19 | |
+| 2026-11-05 | f04d5ea | Merge pull request #23 from porrasdylan12-dotcom/Erick | ErickSerrano19 | |
+| 2026-11-05 | acbe63e | Merge pull request #22 from porrasdylan12-dotcom/dependabot/github_actions/github-actions-0982b03464 | ErickSerrano19 | |
+| 2026-11-05 | 2b361bc | Merge pull request #21 from porrasdylan12-dotcom/Edd | ErickSerrano19 | |
+| 2026-11-05 | f28826b | Adjust website | ErickSerrano19 | opencode |
+| 2026-11-06 | 6abda67 | configure the environment for the user | ErickSerrano19 | opencode |
+| 2026-11-06 | 8e82055 | Create and init app for Android | ErickSerrano19 | opencode |
+| 2026-11-06 | 26664c5 | Create bussiness-rules Android (exceptions, tokens) | ErickSerrano19 | opencode |
+| 2026-11-06 | 308aa45 | Add and manage items to the app | ErickSerrano19 | opencode |
+| 2026-11-06 | ae616dc | Implements in app, Login and auth with validations | ErickSerrano19 | opencode |
+| 2026-11-06 | 40f05a0 | Validations for Login in app | ErickSerrano19 | opencode |
+| 2026-11-06 | fc641f8 | Return login | ErickSerrano19 | opencode |
+| 2026-11-06 | f187ac0 | Create the pages navegation of app | ErickSerrano19 | opencode |
+| 2026-11-06 | 6c904bf | Implements buttoms and adjust Data for app | ErickSerrano19 | opencode |
+| 2026-11-06 | 2ed2ff0 | Implements UI panels | ErickSerrano19 | opencode |
+| 2026-11-06 | 79bab77 | Makes tests | ErickSerrano19 | opencode |
+| 2026-11-06 | 6d0573b | Create module accounts | ErickSerrano19 | opencode |
+| 2026-11-07 | 8d4e245 | Create transaction and budget | ErickSerrano19 | opencode |
+| 2026-11-07 | eb4a8ff | Configurate variables for the app | ErickSerrano19 | opencode |
+| 2026-11-07 | a261d92 | Create and implements group and groupdebts in app | ErickSerrano19 | opencode |
+| 2026-11-07 | b8b8d9d | Create verify password and user in login | ErickSerrano19 | opencode |
+| 2026-11-07 | 62a181e | Implements mode offline in the app | ErickSerrano19 | opencode |
 
 ---Observaciones
 
 - La información se obtuvo del historial de Git del proyecto.
 - Los commits están ordenados cronológicamente del más antiguo al más reciente.
-- Formato generado por IA.

@@ -34,7 +34,7 @@ class GroupResource extends JsonResource
                         'fecha_ingreso' => $pivot->joined_at,
                     ];
                 }
-            )),
+            )->all()),
         ];
     }
 }

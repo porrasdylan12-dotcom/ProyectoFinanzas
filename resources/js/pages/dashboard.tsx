@@ -101,7 +101,7 @@ export default function Dashboard() {
     }, [debouncedSearch]);
 
     useEffect(() => {
-        fetchTransactions(debouncedSearch, page);
+        void fetchTransactions(debouncedSearch, page);
 
         return () => {
             abortRef.current?.abort();
@@ -419,7 +419,7 @@ export default function Dashboard() {
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Buscar por descripción…"
-                                className="min-h-[2.5rem] w-full rounded-md border border-[var(--border-color)] bg-[var(--color-bg-deep)] pl-[var(--space-10)] pr-[var(--space-3)] py-[var(--space-2)] text-[var(--color-text)] text-[var(--text-sm)] placeholder:text-[var(--color-text-muted)] focus-visible:outline-2 focus-visible:outline-[var(--color-focus)] transition-colors"
+                                className="min-h-[2.5rem] w-full rounded-md border border-[var(--border-color)] bg-[var(--color-bg-deep)] py-[var(--space-2)] pr-[var(--space-3)] pl-[var(--space-10)] text-[var(--color-text)] text-[var(--text-sm)] transition-colors placeholder:text-[var(--color-text-muted)] focus-visible:outline-2 focus-visible:outline-[var(--color-focus)]"
                             />
                             <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-[var(--space-3)] text-[var(--color-text-muted)]">
                                 {status === 'loading' ? (
@@ -509,41 +509,39 @@ export default function Dashboard() {
                         </div>
                     )}
 
-                    {status === 'success' &&
-                        transactions.length === 0 && (
-                            <div className="flex flex-col items-center justify-center gap-[var(--space-3)] p-[var(--space-10)] text-center">
-                                <div className="flex size-14 items-center justify-center rounded-full bg-[var(--color-surface-alt)]">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="size-7 text-[var(--color-text-muted)]"
-                                        aria-hidden="true"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm5.845 17.03a.75.75 0 0 0 1.06 0l2.22-2.22a.75.75 0 0 0-1.06-1.06l-.97.97V12a.75.75 0 0 0-1.5 0v4.19l-.97-.97a.75.75 0 1 0-1.06 1.06l2.28 2.25Z"
-                                            clipRule="evenodd"
-                                        />
-                                        <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
-                                    </svg>
-                                </div>
-                                <p className="font-medium text-[var(--color-text-secondary)] text-[var(--text-sm)]">
-                                    {search
-                                        ? 'No se encontraron movimientos para esa búsqueda.'
-                                        : 'Aún no hay movimientos registrados.'}
-                                </p>
-                                <p className="text-[var(--color-text-muted)] text-[var(--text-xs)]">
-                                    {search
-                                        ? 'Intenta con otro término de búsqueda.'
-                                        : 'Registra tu primera transacción usando el formulario.'}
-                                </p>
+                    {status === 'success' && transactions.length === 0 && (
+                        <div className="flex flex-col items-center justify-center gap-[var(--space-3)] p-[var(--space-10)] text-center">
+                            <div className="flex size-14 items-center justify-center rounded-full bg-[var(--color-surface-alt)]">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="size-7 text-[var(--color-text-muted)]"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm5.845 17.03a.75.75 0 0 0 1.06 0l2.22-2.22a.75.75 0 0 0-1.06-1.06l-.97.97V12a.75.75 0 0 0-1.5 0v4.19l-.97-.97a.75.75 0 1 0-1.06 1.06l2.28 2.25Z"
+                                        clipRule="evenodd"
+                                    />
+                                    <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                                </svg>
                             </div>
-                        )}
+                            <p className="font-medium text-[var(--color-text-secondary)] text-[var(--text-sm)]">
+                                {search
+                                    ? 'No se encontraron movimientos para esa búsqueda.'
+                                    : 'Aún no hay movimientos registrados.'}
+                            </p>
+                            <p className="text-[var(--color-text-muted)] text-[var(--text-xs)]">
+                                {search
+                                    ? 'Intenta con otro término de búsqueda.'
+                                    : 'Registra tu primera transacción usando el formulario.'}
+                            </p>
+                        </div>
+                    )}
 
                     {(status === 'success' ||
-                        (status === 'loading' &&
-                            transactions.length > 0)) &&
+                        (status === 'loading' && transactions.length > 0)) &&
                         transactions.length > 0 && (
                             <>
                                 <div className="overflow-x-auto">
@@ -592,13 +590,10 @@ export default function Dashboard() {
                                                     className="transition-colors hover:bg-[var(--color-surface-alt)]"
                                                 >
                                                     <td className="px-[var(--space-6)] py-[var(--space-4)] font-mono whitespace-nowrap text-[var(--color-text-secondary)] text-[var(--text-xs)]">
-                                                        {formatDate(
-                                                            tx.fecha,
-                                                        )}
+                                                        {formatDate(tx.fecha)}
                                                     </td>
                                                     <td className="px-[var(--space-6)] py-[var(--space-4)] font-medium text-[var(--color-text)]">
-                                                        {tx.descripcion ??
-                                                            '—'}
+                                                        {tx.descripcion ?? '—'}
                                                     </td>
                                                     <td className="px-[var(--space-6)] py-[var(--space-4)]">
                                                         <span
@@ -623,8 +618,7 @@ export default function Dashboard() {
                                                                 : 'text-[var(--color-error-text)]'
                                                         }`}
                                                     >
-                                                        {tx.tipo ===
-                                                        'ingreso'
+                                                        {tx.tipo === 'ingreso'
                                                             ? '+ '
                                                             : '- '}
                                                         {formatCurrency(

@@ -16,6 +16,10 @@ class AuthService
 
     private const DECAY_SECONDS = 60;
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array{user: User, token: string}
+     */
     public function register(array $data): array
     {
         $user = User::create([
@@ -37,6 +41,9 @@ class AuthService
         ];
     }
 
+    /**
+     * @return array{user: User, token: string}
+     */
     public function login(string $email, string $password): array
     {
         $throttleKey = $this->throttleKey($email);

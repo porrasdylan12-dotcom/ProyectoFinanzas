@@ -14,6 +14,10 @@ class GroupDebtService
 
     private const SORTABLE_FIELDS = ['total_amount', 'status', 'created_at'];
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, GroupDebt>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = GroupDebt::query()->with(['debtor', 'creditor', 'sharedExpense']);
@@ -58,6 +62,9 @@ class GroupDebtService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): GroupDebt
     {
         $this->validateNotSelfDebt($data);
@@ -67,6 +74,9 @@ class GroupDebtService
         });
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(GroupDebt $groupDebt, array $data): GroupDebt
     {
         $this->validateNotSelfDebt($data);
@@ -102,6 +112,9 @@ class GroupDebtService
         return $groupDebt->delete();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     private function validateNotSelfDebt(array $data): void
     {
         if (
@@ -116,6 +129,9 @@ class GroupDebtService
         }
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     private function validateStatusTransition(GroupDebt $groupDebt, array $data): void
     {
         $newStatus = $data['status'] ?? $groupDebt->status;

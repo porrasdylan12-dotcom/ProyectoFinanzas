@@ -13,6 +13,10 @@ class AccountService
 
     private const SORTABLE_FIELDS = ['name', 'balance', 'type', 'created_at'];
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Account>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = Account::query();
@@ -54,6 +58,9 @@ class AccountService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): Account
     {
         $this->validateNoDuplicateCashAccount($data);
@@ -61,6 +68,9 @@ class AccountService
         return Account::create($data);
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(Account $account, array $data): Account
     {
         unset($data['user_id']);
@@ -85,6 +95,9 @@ class AccountService
         });
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     private function validateNoDuplicateCashAccount(array $data): void
     {
         if (

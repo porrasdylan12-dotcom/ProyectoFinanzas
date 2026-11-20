@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 test('sirve una página del prototipo con contenido HTML', function () {
     $response = $this->get('/prototipo/login.html');
 
@@ -19,9 +21,15 @@ test('inyecta el bootstrap de módulos en las páginas del prototipo', function 
 });
 
 test('serve módulos JavaScript de los dominios', function () {
-    $this->get('/js/prototipo/usuarios/state.js')
-        ->assertOk()
-        ->assertSee('iniciarSesion', false);
+    $response = $this->get('/js/prototipo/usuarios/state.js');
+
+    $response->assertOk();
+
+    $archivo = $response->baseResponse;
+    assert($archivo instanceof BinaryFileResponse);
+
+    expect($response->headers->get('Content-Type'))->toContain('text/javascript');
+    expect((string) file_get_contents($archivo->getFile()->getPathname()))->toContain('iniciarSesion');
 });
 
 test('sirve una hoja de estilos del prototipo', function () {

@@ -1,16 +1,21 @@
-name: tests
+name: ci
 
 on:
+  workflow_call:
   push:
     branches:
       - main
+      - Erick
   pull_request:
 
 permissions:
   contents: read
 
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+
 jobs:
-  ci:
+  verify:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +28,7 @@ jobs:
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
         with:
           php-version: '8.3'
+          extensions: mbstring, intl, pdo_sqlite, pdo_mysql
           tools: composer:v2
           coverage: none
 
@@ -30,9 +36,34 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
+          cache: npm
 
-      - name: Setup Application
+      - name: Setup application
         run: composer setup
 
-      - name: Run CI Checks
+      - name: Check backend and frontend
         run: composer ci:check
+
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Check mobile
+        working-directory: mobile
+        run: npm run lint
+
+      - name: Build mobile
+        working-directory: mobile
+        run: npm run build
+
+      - name: Test mobile units
+        working-directory: mobile
+        run: npm run test:unit
+
+      - name: Install Chromium
+        working-directory: mobile
+        run: npx playwright install --with-deps chromium
+
+      - name: Test mobile end to end
+        working-directory: mobile
+        run: npm run test:e2e

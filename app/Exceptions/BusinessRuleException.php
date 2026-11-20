@@ -10,8 +10,12 @@ class BusinessRuleException extends RuntimeException
 
     protected int $statusCode;
 
+    /** @var array<string, mixed> */
     protected array $extraData;
 
+    /**
+     * @param  array<string, mixed>  $extraData
+     */
     public function __construct(
         string $message,
         string $businessCode,
@@ -36,6 +40,9 @@ class BusinessRuleException extends RuntimeException
         return $this->statusCode;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getExtraData(): array
     {
         return $this->extraData;

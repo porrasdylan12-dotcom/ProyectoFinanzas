@@ -15,6 +15,10 @@ class TransactionService
 
     private const SORTABLE_FIELDS = ['transaction_date', 'amount', 'created_at'];
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Transaction>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = Transaction::query()->with(['account', 'category']);
@@ -83,6 +87,9 @@ class TransactionService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): Transaction
     {
         $this->assertRelationsBelongToUser($data);
@@ -99,6 +106,9 @@ class TransactionService
         });
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(Transaction $transaction, array $data): Transaction
     {
         $this->assertRelationsBelongToUser(array_merge(
@@ -159,6 +169,9 @@ class TransactionService
         });
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     private function assertRelationsBelongToUser(array $data): void
     {
         $userId = (int) ($data['user_id'] ?? 0);

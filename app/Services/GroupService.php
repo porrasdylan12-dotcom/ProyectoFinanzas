@@ -16,6 +16,10 @@ class GroupService
 
     private const SORTABLE_FIELDS = ['name', 'created_at'];
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Group>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = Group::query()->with('users');
@@ -54,6 +58,9 @@ class GroupService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): Group
     {
         $ownerId = (int) ($data['owner_id'] ?? 0);
@@ -104,6 +111,9 @@ class GroupService
         return $group;
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(Group $group, array $data): Group
     {
         $group->update($data);

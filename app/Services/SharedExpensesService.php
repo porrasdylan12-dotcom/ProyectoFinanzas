@@ -14,6 +14,10 @@ class SharedExpensesService
 
     private const SORTABLE_FIELDS = ['date', 'amount', 'created_at'];
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, SharedExpenses>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = SharedExpenses::query()->with(['group', 'user', 'debts']);
@@ -61,6 +65,9 @@ class SharedExpensesService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): SharedExpenses
     {
         return DB::transaction(function () use ($data) {
@@ -72,6 +79,9 @@ class SharedExpensesService
         });
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(SharedExpenses $sharedExpense, array $data): SharedExpenses
     {
         $sharedExpense->update($data);

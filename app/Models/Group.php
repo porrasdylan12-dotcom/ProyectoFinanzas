@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\GroupFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Group extends Model
 {
+    /** @use HasFactory<GroupFactory> */
     use HasFactory;
 
     protected $table = 'groups';
@@ -33,6 +35,7 @@ class Group extends Model
             ->withTimestamps();
     }
 
+    /** @return HasMany<SharedExpenses, $this> */
     public function sharedExpenses(): HasMany
     {
         return $this->hasMany(SharedExpenses::class);

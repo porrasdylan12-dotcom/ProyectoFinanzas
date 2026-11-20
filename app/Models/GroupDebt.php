@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\GroupDebtFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GroupDebt extends Model
 {
+    /** @use HasFactory<GroupDebtFactory> */
     use HasFactory;
 
     protected $table = 'group_debts';
@@ -26,6 +28,7 @@ class GroupDebt extends Model
         'total_amount' => 'decimal:2',
     ];
 
+    /** @return BelongsTo<SharedExpenses, $this> */
     public function sharedExpense(): BelongsTo
     {
         return $this->belongsTo(
@@ -34,6 +37,7 @@ class GroupDebt extends Model
         );
     }
 
+    /** @return BelongsTo<User, $this> */
     public function debtor(): BelongsTo
     {
         return $this->belongsTo(
@@ -42,6 +46,7 @@ class GroupDebt extends Model
         );
     }
 
+    /** @return BelongsTo<User, $this> */
     public function creditor(): BelongsTo
     {
         return $this->belongsTo(

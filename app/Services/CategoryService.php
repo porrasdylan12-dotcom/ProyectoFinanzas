@@ -13,6 +13,10 @@ class CategoryService
 
     private const SORTABLE_FIELDS = ['name', 'type', 'created_at'];
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Category>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = Category::query()->with(['transactions', 'budgets']);
@@ -54,11 +58,17 @@ class CategoryService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): Category
     {
         return Category::create($data);
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(Category $category, array $data): Category
     {
         $category->update($data);

@@ -18,6 +18,10 @@ class BudgetService
 
     private const DISCOUNT_PERCENTAGE = 10;
 
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Budget>
+     */
     public function list(array $filters = []): LengthAwarePaginator
     {
         $query = Budget::query()->with('category');
@@ -67,6 +71,9 @@ class BudgetService
             ->firstOrFail();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): Budget
     {
         $this->validateNotRetroactive($data);
@@ -77,6 +84,9 @@ class BudgetService
         });
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function update(Budget $budget, array $data): Budget
     {
         $data = $this->applyDiscountIfApplicable($data);
@@ -103,6 +113,9 @@ class BudgetService
         return $budget->delete();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     private function validateNotRetroactive(array $data): void
     {
         $now = Carbon::now();
@@ -121,6 +134,10 @@ class BudgetService
         }
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     private function applyDiscountIfApplicable(array $data): array
     {
         $maxAmount = (float) ($data['maxAmount'] ?? 0);

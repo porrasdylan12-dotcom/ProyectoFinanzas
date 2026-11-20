@@ -1,0 +1,62 @@
+name: deploy-api
+
+on:
+  workflow_run:
+    workflows:
+      - ci
+    types:
+      - completed
+    branches:
+      - main
+      - Erick
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-api-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    if: github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/tests.yml
+
+  deploy:
+    needs: ci
+    if: >-
+      always() &&
+      (
+        (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success') ||
+        (github.event_name == 'workflow_dispatch' && needs.ci.result == 'success')
+      )
+    runs-on: ubuntu-latest
+
+    env:
+      API_URL: https://proyectofinanzas-oqqh.onrender.com
+      RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+
+    steps:
+      - name: Validar deploy hook
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+            echo "Falta el secreto RENDER_DEPLOY_HOOK en GitHub Actions." >&2
+            exit 1
+          fi
+
+      - name: Desplegar API en Render
+        run: curl --fail --silent --show-error --request POST "$RENDER_DEPLOY_HOOK"
+
+      - name: Esperar health check
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$API_URL/up" >/dev/null; then
+              echo "API disponible en $API_URL/up"
+              exit 0
+            fi
+            echo "Esperando health check ($attempt/30)"
+            sleep 10
+          done
+          echo "La API no respondió /up después de 5 minutos." >&2
+          exit 1

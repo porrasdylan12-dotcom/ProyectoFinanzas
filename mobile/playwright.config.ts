@@ -17,6 +17,14 @@ export default defineConfig({
       name: 'Mobile Chrome',
       use: { ...devices['Pixel 7'] },
     },
+    {
+      name: 'Tablet Chrome',
+      use: {
+        browserName: 'chromium',
+        viewport: { width: 1024, height: 768 },
+        hasTouch: true,
+      },
+    },
   ],
   webServer: {
     command: 'npm run dev -- --port 5173 --strictPort',

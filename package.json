@@ -5,6 +5,7 @@
     "scripts": {
         "build": "vp build",
         "build:ssr": "vp build && vp build --ssr",
+        "build:web": "node scripts/build-static-web.mjs",
         "dev": "vp dev",
         "check": "vp check",
         "check:fix": "vp check --fix",

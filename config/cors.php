@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_values(array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', 'http://localhost,capacitor://localhost,http://localhost:8100'))))),
+    'allowed_origins' => array_values(array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', 'http://localhost,capacitor://localhost,http://localhost:8100,https://erick-serrano.workers.dev,https://proyecto-finanzas.erick-serrano.workers.dev'))))),
 
     'allowed_origins_patterns' => [],
 

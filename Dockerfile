@@ -2,6 +2,12 @@ FROM node:22-bookworm-slim AS node
 
 FROM serversideup/php:8.4-cli AS frontend
 
+USER root
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/bin/npm /usr/local/bin/npm
 COPY --from=node /usr/local/bin/npx /usr/local/bin/npx
@@ -25,7 +31,8 @@ ENV APP_ENV=production \
     PHP_OPCACHE_ENABLE=1 \
     AUTORUN_ENABLED=true \
     HEALTHCHECK_PATH=/up \
-    NGINX_HTTP_PORT=8080
+    NGINX_HTTP_PORT=8080 \
+    SSL_MODE=off
 
 WORKDIR /var/www/html
 

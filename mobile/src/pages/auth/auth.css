@@ -1,6 +1,6 @@
 .auth-content {
-  --padding-top: 1.5rem;
-  --padding-bottom: 2rem;
+  --padding-top: calc(1.5rem + var(--app-safe-area-top, env(safe-area-inset-top, 0px)));
+  --padding-bottom: calc(2rem + var(--app-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
 }
 
 .auth-container {

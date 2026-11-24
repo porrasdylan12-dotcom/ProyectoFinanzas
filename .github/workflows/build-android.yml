@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: mobile/package-lock.json
+          cache-dependency-path: movil/package-lock.json
 
       - name: Validar secretos de firma
         env:
@@ -84,19 +84,19 @@ jobs:
           keytool -list -keystore "$ANDROID_KEYSTORE_FILE" -storepass "$ANDROID_KEYSTORE_PASSWORD" >/dev/null
 
       - name: Instalar dependencias móviles
-        working-directory: mobile
+        working-directory: movil
         run: npm ci
 
       - name: Compilar web móvil
-        working-directory: mobile
+        working-directory: movil
         run: npm run build
 
       - name: Sincronizar Capacitor
-        working-directory: mobile
+        working-directory: movil
         run: npm run cap:sync
 
       - name: Compilar APK firmado
-        working-directory: mobile/android
+        working-directory: movil/android
         run: |
           chmod +x ./gradlew
           ./gradlew assembleRelease --no-daemon
@@ -104,7 +104,7 @@ jobs:
       - name: Preparar APK
         run: |
           shopt -s nullglob
-          apks=(mobile/android/app/build/outputs/apk/release/*.apk)
+          apks=(movil/android/app/build/outputs/apk/release/*.apk)
           if [ ${#apks[@]} -eq 0 ]; then
             echo "No se generó ningún APK release." >&2
             exit 1

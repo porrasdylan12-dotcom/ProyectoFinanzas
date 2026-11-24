@@ -1,0 +1,120 @@
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-5);
+}
+
+.panel-form {
+    width: min(100%, 34rem);
+    margin-inline: auto;
+}
+
+.grupo-campos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-4);
+    padding: var(--espacio-4);
+    border: 1px solid;
+    border-radius: var(--radio-md);
+    min-width: 0;
+}
+
+.grupo-campos + .grupo-campos {
+    margin-top: var(--espacio-4);
+}
+
+legend {
+    padding: 0 var(--espacio-2);
+    font-weight: 600;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-1);
+}
+
+label {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.campo__etiqueta {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.campo input:not([type='checkbox']):not([type='radio']),
+.campo select,
+.campo textarea {
+    min-height: var(--alto-control);
+    padding: var(--espacio-2) var(--espacio-3);
+    border: 1px solid;
+    border-radius: var(--radio-sm);
+    font: inherit;
+}
+
+.campo textarea {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+.campo__ayuda {
+    font-size: 0.8125rem;
+}
+
+.campo__error {
+    display: none;
+    font-size: 0.8125rem;
+}
+
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+    border-width: 2px;
+}
+
+.campo:has(input:user-invalid, select:user-invalid, textarea:user-invalid)
+    .campo__error {
+    display: block;
+}
+
+.campo--check {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--espacio-2);
+}
+
+.campo--check label {
+    font-weight: 400;
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+}
+
+.opcion {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-2);
+}
+
+.opcion label {
+    font-weight: 400;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+@media (min-width: 40rem) {
+    .opciones {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--espacio-5);
+    }
+}

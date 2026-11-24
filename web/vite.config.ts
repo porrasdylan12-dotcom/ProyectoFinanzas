@@ -8,10 +8,19 @@ import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig, lazyPlugins } from 'vite-plus';
 
 export default defineConfig({
+    envDir: '../backend',
     plugins: lazyPlugins(() => [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
-            refresh: true,
+            publicDirectory: '../backend/public',
+            refresh: {
+                paths: [
+                    '../backend/app/**/*.php',
+                    '../backend/routes/**',
+                    'resources/js/**',
+                    'resources/views/**',
+                ],
+            },
             fonts: [
                 bunny('Instrument Sans', {
                     weights: [400, 500, 600],
@@ -35,6 +44,12 @@ export default defineConfig({
         tailwindcss(),
         wayfinder({
             formVariants: true,
+            path: 'resources/js',
+            command: 'php ../backend/artisan wayfinder:generate',
+            patterns: [
+                '../backend/routes/**/*.php',
+                '../backend/app/**/Http/**/*.php',
+            ],
         }),
     ]),
     server: {
@@ -50,18 +65,16 @@ export default defineConfig({
     },
     lint: {
         ignorePatterns: [
-            'vendor/**',
+            '../backend/bootstrap/ssr/**',
+            '../backend/public/**',
+            '../backend/vendor/**',
+            '../movil/**',
             'node_modules/**',
-            'public/**',
-            'bootstrap/ssr/**',
-            'tailwind.config.js',
             'resources/js/actions/**',
             'resources/js/components/ui/*',
             'resources/js/routes/**',
             'resources/js/wayfinder/**',
-            'mobile/**',
-            'capacitor.config.ts',
-            'ionic.config.json',
+            'tailwind.config.js',
         ],
         options: {
             denyWarnings: true,
@@ -77,12 +90,8 @@ export default defineConfig({
         htmlWhitespaceSensitivity: 'css',
         ignorePatterns: [
             '.github/**',
-            'composer.json',
             'resources/js/components/ui/*',
             'resources/views/mail/*',
-            'mobile/**',
-            'capacitor.config.ts',
-            'ionic.config.json',
         ],
         sortTailwindcss: {
             functions: ['clsx', 'cn', 'cva'],

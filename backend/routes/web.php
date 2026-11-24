@@ -47,7 +47,7 @@ Route::get('/docs', function () {
 
 Route::get('/docs/openapi.yaml', function () {
     return response()
-        ->file(base_path('docs/openapi.yaml'), ['Content-Type' => 'application/yaml']);
+        ->file(dirname(base_path()).'/docs/openapi.yaml', ['Content-Type' => 'application/yaml']);
 });
 
 require __DIR__.'/prototipo.php';

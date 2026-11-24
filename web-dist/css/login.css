@@ -1,0 +1,13 @@
+.contenido--login {
+    display: grid;
+    place-items: center;
+    align-self: center;
+}
+
+.login {
+    width: min(100%, 26rem);
+}
+
+.login__registro {
+    font-size: 0.875rem;
+}

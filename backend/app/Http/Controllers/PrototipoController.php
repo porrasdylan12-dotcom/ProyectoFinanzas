@@ -12,7 +12,7 @@ class PrototipoController extends Controller
 
     public function page(string $pagina): Response
     {
-        $archivo = $this->resolver('resources/views/prototipo', "{$pagina}.html");
+        $archivo = $this->resolver('web/resources/views/prototipo', "{$pagina}.html");
 
         return new Response(
             $this->inyectarBootstrap((string) file_get_contents($archivo)),
@@ -23,12 +23,12 @@ class PrototipoController extends Controller
 
     public function css(string $archivo): BinaryFileResponse
     {
-        return $this->serve('resources/css', $archivo, 'text/css');
+        return $this->serve('web/resources/css', $archivo, 'text/css');
     }
 
     public function js(string $ruta): BinaryFileResponse
     {
-        return $this->serve('resources/js/prototipo', $ruta, 'text/javascript');
+        return $this->serve('web/resources/js/prototipo', $ruta, 'text/javascript');
     }
 
     private function inyectarBootstrap(string $html): string
@@ -59,7 +59,7 @@ class PrototipoController extends Controller
             throw new NotFoundHttpException;
         }
 
-        $base = realpath(base_path($root));
+        $base = realpath(dirname(base_path()).DIRECTORY_SEPARATOR.$root);
 
         if ($base === false) {
             throw new NotFoundHttpException;

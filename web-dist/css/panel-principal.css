@@ -1,0 +1,36 @@
+.dato {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--espacio-4);
+    padding: var(--espacio-2) 0;
+    border-bottom: 1px solid;
+}
+
+.dato:last-child {
+    border-bottom: 0;
+}
+
+.dato__valor {
+    font-family: var(--fuente-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.enlace-accion--suave {
+    margin-top: 0;
+    font-weight: 400;
+}
+
+@media (min-width: 40rem) {
+    .grilla-resumen {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--espacio-5);
+    }
+}
+
+@media (min-width: 70rem) {
+    .grilla-resumen {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}

@@ -84,12 +84,12 @@ return [
             /*
              * Absolute path to location where parsed annotations will be stored
              */
-            'docs' => base_path('docs'),
+            'docs' => dirname(base_path()).'/docs',
 
             /*
              * Absolute path to directory where to export views
              */
-            'views' => base_path('resources/views/vendor/l5-swagger'),
+            'views' => dirname(base_path()).'/web/resources/views/vendor/l5-swagger',
 
             /*
              * Edit to set the api's base path

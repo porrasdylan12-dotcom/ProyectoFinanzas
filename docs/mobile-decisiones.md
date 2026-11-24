@@ -2,14 +2,14 @@
 
 ## Arquitectura
 
-- La app móvil vive en `mobile/` como proyecto npm independiente con Ionic React, Capacitor y React 19.
+- La app móvil vive en `movil/` como proyecto npm independiente con Ionic React, Capacitor y React 19.
 - Toda comunicación con el backend pasa por `src/lib/apiClient.ts`; el token Sanctum se guarda solo en almacenamiento seguro.
 - Las rutas privadas usan `RequireAuth`, las públicas `GuestOnly` y `/` redirige según sesión con `RootRedirect`.
 - Todas las páginas se cargan con `React.lazy` + `Suspense`.
 
 ## Safe areas
 
-- `mobile/index.html` usa `viewport-fit=cover`.
+- `movil/index.html` usa `viewport-fit=cover`.
 - `src/theme/variables.css` expone `--app-safe-area-*` desde `env(safe-area-inset-*)` y aplica padding a `ion-content.ion-padding` y `ion-tab-bar`.
 - Las pantallas de autenticación suman el inset superior e inferior en `src/pages/auth/auth.css`.
 - `OfflineBanner` ya compensaba el inset superior; se mantiene como está.
@@ -29,7 +29,7 @@
 ## Verificación
 
 ```bash
-cd mobile
+cd movil
 npm run lint
 npm run test:unit
 npm run build

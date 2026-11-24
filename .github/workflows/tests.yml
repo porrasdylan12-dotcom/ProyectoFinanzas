@@ -37,33 +37,36 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            movil/package-lock.json
 
       - name: Setup application
-        run: composer setup
+        run: composer --working-dir=backend setup
 
       - name: Check backend and frontend
-        run: composer ci:check
+        run: composer --working-dir=backend ci:check
 
       - name: Install mobile dependencies
-        working-directory: mobile
+        working-directory: movil
         run: npm ci
 
       - name: Check mobile
-        working-directory: mobile
+        working-directory: movil
         run: npm run lint
 
       - name: Build mobile
-        working-directory: mobile
+        working-directory: movil
         run: npm run build
 
       - name: Test mobile units
-        working-directory: mobile
+        working-directory: movil
         run: npm run test:unit
 
       - name: Install Chromium
-        working-directory: mobile
+        working-directory: movil
         run: npx playwright install --with-deps chromium
 
       - name: Test mobile end to end
-        working-directory: mobile
+        working-directory: movil
         run: npm run test:e2e

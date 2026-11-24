@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Panel principal de la aplicación de finanzas personales y gastos compartidos."
+        />
+        <title>Panel principal · finanzas</title>
+        <link rel="stylesheet" href="../../css/estilos.css" />
+        <link rel="stylesheet" href="../../css/panel-principal.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="barra">
+            <div class="barra__marca">
+                <a class="barra__logo" href="panel-principal.html">finanzas</a>
+            </div>
+
+            <input type="checkbox" id="menu-toggle" class="barra__checkbox" />
+            <label for="menu-toggle" class="barra__toggle">Menú</label>
+
+            <nav class="barra__nav" aria-label="Menú principal">
+                <ul class="barra__lista">
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="panel-principal.html"
+                            aria-current="page"
+                            >Inicio</a
+                        >
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="cuentas.html">Cuentas</a>
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="grupos.html">Grupos</a>
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="AjustesUsuarios.html"
+                            >Usuario<span class="barra__usuario"
+                                >[Nombre de usuario]</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="contenido">
+            <section class="bienvenida" aria-labelledby="bienvenida">
+                <h1 id="bienvenida">Hola, [Nombre]</h1>
+                <p>Elige a dónde ir.</p>
+            </section>
+
+            <div class="grilla-resumen">
+                <article class="card" aria-labelledby="resumen-cuentas">
+                    <h2 id="resumen-cuentas">Cuentas</h2>
+                    <p class="card__intro">
+                        Tus cuentas, saldos y presupuestos.
+                    </p>
+                    <ul class="datos">
+                        <li class="dato">
+                            <span class="dato__etiqueta">Cuentas</span>
+                            <strong class="dato__valor">[N]</strong>
+                        </li>
+                        <li class="dato">
+                            <span class="dato__etiqueta">Saldo total</span>
+                            <strong class="dato__valor">$ [0.00]</strong>
+                        </li>
+                        <li class="dato">
+                            <span class="dato__etiqueta"
+                                >Presupuestos cerca del límite</span
+                            >
+                            <strong class="dato__valor">[N]</strong>
+                        </li>
+                    </ul>
+                    <a class="enlace-accion" href="cuentas.html"
+                        >Ir a Cuentas<span aria-hidden="true"> →</span></a
+                    >
+                </article>
+
+                <article class="card" aria-labelledby="resumen-grupos">
+                    <h2 id="resumen-grupos">Grupos</h2>
+                    <p class="card__intro">Tus gastos compartidos y deudas.</p>
+                    <ul class="datos">
+                        <li class="dato">
+                            <span class="dato__etiqueta">Debes</span>
+                            <strong class="dato__valor">$ [0.00]</strong>
+                        </li>
+                        <li class="dato">
+                            <span class="dato__etiqueta">Te deben</span>
+                            <strong class="dato__valor">$ [0.00]</strong>
+                        </li>
+                    </ul>
+                    <a class="enlace-accion" href="grupos.html"
+                        >Ir a Grupos<span aria-hidden="true"> →</span></a
+                    >
+                </article>
+
+                <article
+                    class="card"
+                    id="usuario"
+                    aria-labelledby="resumen-usuario"
+                >
+                    <h2 id="resumen-usuario">Usuario</h2>
+                    <p class="card__intro">Tu información y tus ajustes.</p>
+                    <ul class="datos">
+                        <li class="dato">
+                            <span class="dato__etiqueta">Nombre</span>
+                            <strong class="dato__valor">[Nombre]</strong>
+                        </li>
+                        <li class="dato">
+                            <span class="dato__etiqueta">Correo</span>
+                            <strong class="dato__valor">[correo]</strong>
+                        </li>
+                    </ul>
+                    <p class="card__nota">Cambiar contraseña y más.</p>
+                    <a class="enlace-accion" href="AjustesUsuarios.html"
+                        >Ir a Usuario<span aria-hidden="true"> →</span></a
+                    >
+                    <a
+                        class="enlace-accion enlace-accion--suave"
+                        href="login.html"
+                        >Cerrar sesión</a
+                    >
+                </article>
+            </div>
+        </main>
+            <script type="module" src="/js/prototipo/main.js"></script>
+    </body>
+</html>

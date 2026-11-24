@@ -54,6 +54,7 @@ jobs:
           fi
 
       - name: Generar web estática
+        working-directory: web
         run: npm run build:web
         env:
           VITE_API_URL: https://proyectofinanzas-oqqh.onrender.com/api
@@ -64,6 +65,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: web
 
       - name: Verificar web estática
         env:

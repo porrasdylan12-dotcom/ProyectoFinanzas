@@ -13,37 +13,44 @@ COPY --from=node /usr/local/bin/npm /usr/local/bin/npm
 COPY --from=node /usr/local/bin/npx /usr/local/bin/npx
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 
-WORKDIR /var/www/html
+WORKDIR /var/www/html/backend
 
-COPY composer.json composer.lock ./
+COPY backend/composer.json backend/composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --prefer-dist
 
-COPY . .
+COPY backend . .
 RUN cp .env.example .env \
-    && composer dump-autoload --optimize --no-dev \
-    && npm ci \
-    && npm run build
+    && composer dump-autoload --optimize --no-dev
+
+WORKDIR /var/www/html/web
+
+COPY web/package.json web/package-lock.json web/.npmrc ./
+RUN npm ci
+
+COPY web . .
+RUN npm run build
 
 FROM serversideup/php:8.4-fpm-nginx
 
 ENV APP_ENV=production \
     APP_DEBUG=false \
+    APP_BASE_DIR=/var/www/html/backend \
+    NGINX_WEBROOT=/var/www/html/backend/public \
     PHP_OPCACHE_ENABLE=1 \
     AUTORUN_ENABLED=true \
     HEALTHCHECK_PATH=/up \
     NGINX_HTTP_PORT=8080 \
     SSL_MODE=off
 
-WORKDIR /var/www/html
+WORKDIR /var/www/html/backend
 
-COPY --chown=www-data:www-data composer.json composer.lock ./
+COPY --chown=www-data:www-data backend/composer.json backend/composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --prefer-dist
 
-COPY --chown=www-data:www-data . .
-COPY --from=frontend --chown=www-data:www-data /var/www/html/public/build ./public/build
-COPY --from=frontend --chown=www-data:www-data /var/www/html/resources/js/actions ./resources/js/actions
-COPY --from=frontend --chown=www-data:www-data /var/www/html/resources/js/routes ./resources/js/routes
-COPY --from=frontend --chown=www-data:www-data /var/www/html/resources/js/wayfinder ./resources/js/wayfinder
+COPY --chown=www-data:www-data backend . .
+COPY --chown=www-data:www-data docs ../docs
+COPY --from=frontend --chown=www-data:www-data /var/www/html/backend/public/build ./public/build
+COPY --from=frontend --chown=www-data:www-data /var/www/html/web/resources ../web/resources
 
 RUN composer dump-autoload --optimize --no-dev && php artisan package:discover --ansi
 

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Creación de un presupuesto mensual por categoría en la aplicación de finanzas personales."
+        />
+        <title>Crear presupuesto · finanzas</title>
+        <link rel="stylesheet" href="../../css/estilos.css" />
+        <link rel="stylesheet" href="../../css/formulario.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="barra">
+            <div class="barra__marca">
+                <a class="barra__logo" href="panel-principal.html">finanzas</a>
+            </div>
+
+            <input type="checkbox" id="menu-toggle" class="barra__checkbox" />
+            <label for="menu-toggle" class="barra__toggle">Menú</label>
+
+            <nav class="barra__nav" aria-label="Menú principal">
+                <ul class="barra__lista">
+                    <li>
+                        <a class="barra__enlace" href="panel-principal.html"
+                            >Inicio</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="cuentas.html"
+                            aria-current="page"
+                            >Cuentas</a
+                        >
+                    </li>
+                    <li>
+                        <a class="barra__enlace" href="grupos.html">Grupos</a>
+                    </li>
+                    <li>
+                        <a
+                            class="barra__enlace"
+                            href="panel-principal.html#usuario"
+                            >Usuario<span class="barra__usuario"
+                                >[Nombre de usuario]</span
+                            ></a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="contenido">
+            <div class="cabecera-pagina">
+                <h1>Crear presupuesto</h1>
+                <a class="enlace-accion" href="cuentas.html"
+                    ><span aria-hidden="true">←</span> Volver a cuentas</a
+                >
+            </div>
+
+            <section class="card panel-form" aria-labelledby="presupuesto-form">
+                <h2 id="presupuesto-form">Límite mensual por categoría</h2>
+
+                <form class="formulario" action="cuentas.html" method="post">
+                    <fieldset class="grupo-campos">
+                        <legend>Categoría</legend>
+
+                        <div class="campo">
+                            <label for="categoria">Categoría</label>
+                            <select
+                                id="categoria"
+                                name="category_id"
+                                required
+                                aria-describedby="categoria-error"
+                            >
+                                <option value="" selected disabled>
+                                    Elige una categoría
+                                </option>
+                                <option value="1">Alimentación</option>
+                                <option value="2">Transporte</option>
+                                <option value="3">Vivienda</option>
+                                <option value="4">Ocio</option>
+                            </select>
+                            <p
+                                class="campo__error"
+                                id="categoria-error"
+                                role="alert"
+                            >
+                                Selecciona una categoría existente.
+                            </p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="presupuesto-nombre"
+                                >Nombre del presupuesto</label
+                            >
+                            <input
+                                type="text"
+                                id="presupuesto-nombre"
+                                name="name"
+                                required
+                                minlength="3"
+                                maxlength="100"
+                                autocomplete="off"
+                                placeholder="Mercado del mes"
+                                aria-describedby="presupuesto-nombre-ayuda presupuesto-nombre-error"
+                            />
+                            <p
+                                class="campo__ayuda"
+                                id="presupuesto-nombre-ayuda"
+                            >
+                                Entre 3 y 100 caracteres.
+                            </p>
+                            <p
+                                class="campo__error"
+                                id="presupuesto-nombre-error"
+                                role="alert"
+                            >
+                                El nombre debe tener entre 3 y 100 caracteres.
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="grupo-campos">
+                        <legend>Límite y periodo</legend>
+
+                        <div class="campo">
+                            <label for="presupuesto-limite"
+                                >Límite de gasto</label
+                            >
+                            <input
+                                type="number"
+                                id="presupuesto-limite"
+                                name="maxAmount"
+                                required
+                                min="0.01"
+                                max="999999999999.99"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder="0.00"
+                                aria-describedby="presupuesto-limite-ayuda presupuesto-limite-error"
+                            />
+                            <p
+                                class="campo__ayuda"
+                                id="presupuesto-limite-ayuda"
+                            >
+                                Monto máximo a gastar en el periodo.
+                            </p>
+                            <p
+                                class="campo__error"
+                                id="presupuesto-limite-error"
+                                role="alert"
+                            >
+                                El límite debe ser mayor que cero.
+                            </p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="presupuesto-mes">Mes</label>
+                            <select
+                                id="presupuesto-mes"
+                                name="month"
+                                required
+                                aria-describedby="presupuesto-mes-error"
+                            >
+                                <option value="" selected disabled>
+                                    Elige un mes
+                                </option>
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                            <p
+                                class="campo__error"
+                                id="presupuesto-mes-error"
+                                role="alert"
+                            >
+                                Selecciona un mes entre enero y diciembre.
+                            </p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="presupuesto-anio">Año</label>
+                            <input
+                                type="number"
+                                id="presupuesto-anio"
+                                name="year"
+                                required
+                                min="2020"
+                                max="2100"
+                                step="1"
+                                inputmode="numeric"
+                                placeholder="2026"
+                                aria-describedby="presupuesto-anio-error"
+                            />
+                            <p
+                                class="campo__error"
+                                id="presupuesto-anio-error"
+                                role="alert"
+                            >
+                                El año debe estar entre 2020 y 2100.
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <div class="acciones">
+                        <button class="btn btn--primario" type="submit">
+                            Guardar presupuesto
+                        </button>
+                        <a class="enlace-accion" href="cuentas.html"
+                            >Cancelar</a
+                        >
+                    </div>
+                </form>
+            </section>
+        </main>
+            <script type="module" src="/js/prototipo/main.js"></script>
+    </body>
+</html>

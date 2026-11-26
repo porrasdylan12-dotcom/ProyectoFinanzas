@@ -65,11 +65,7 @@ export default defineConfig({
     },
     lint: {
         ignorePatterns: [
-            '../backend/bootstrap/ssr/**',
-            '../backend/public/**',
-            '../backend/vendor/**',
-            '../movil/**',
-            'node_modules/**',
+            'nodeNodes/**',
             'resources/js/actions/**',
             'resources/js/components/ui/*',
             'resources/js/routes/**',

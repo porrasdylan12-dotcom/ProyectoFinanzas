@@ -44,7 +44,7 @@ jobs:
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
       ANDROID_VERSION_CODE: ${{ github.run_number }}
       ANDROID_VERSION_NAME: ${{ github.run_number }}.0
-      VITE_API_BASE_URL: https://proyectofinanzas-oqqh.onrender.com/api
+      VITE_API_BASE_URL: https://proyectofinanzas-29kv.onrender.com/api
 
     steps:
       - name: Checkout code
